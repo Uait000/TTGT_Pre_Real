@@ -14,10 +14,10 @@ import {
   UtensilsCrossed,
   Waves,
   Wrench,
-  // --- ДОБАВЛЕНЫ ИКОНКИ ДЛЯ НОВЫХ ССЫЛОК ---
-  CalendarDays, // Для расписания
-  Replace,      // Для замен
-  BookHeadphones // Для электронной библиотеки (чтобы отличать)
+  
+  CalendarDays, 
+  Replace,      
+  BookHeadphones 
 } from 'lucide-react';
 
 interface SidebarItem {
@@ -27,7 +27,6 @@ interface SidebarItem {
 }
 
 const Sidebar = () => {
-  // --- 1. "ОСОБО ЗАМЕТНЫЕ" ССЫЛКИ (КАК НА СКРИНШОТЕ) ---
   const quickAccessItems: SidebarItem[] = [
     { 
       label: 'Электронная библиотека', 
@@ -36,7 +35,7 @@ const Sidebar = () => {
     },
     { 
       label: 'Расписание', 
-      href: '/schedule', // Добавлена ссылка
+      href: '/schedule', 
       icon: <CalendarDays className="w-5 h-5" /> 
     },
     {
@@ -46,7 +45,6 @@ const Sidebar = () => {
     },
   ];
 
-  // --- 2. ВСЕ ОСТАЛЬНЫЕ ССЫЛКИ СГРУППИРОВАНЫ (ВСЕ ДАННЫЕ СОХРАНЕНЫ) ---
   const groupedItems: { title: string; items: SidebarItem[] }[] = [
     {
       title: 'О техникуме',

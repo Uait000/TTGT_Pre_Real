@@ -1,24 +1,21 @@
-// src/api/files.ts
-
-// import { BASE_URL } from './config'; // УДАЛЯЕМ неиспользуемый импорт
 import { getAuthHeaders } from "@/api/auth.ts";
+import { BASE_URL } from "@/api/config.ts"; // ✅ 1. ИМПОРТИРУЕМ BASE_URL
 
 export const filesApi = {
-    // URL для файлов - просто /files, чтобы проксирование сработало
+
     upload: async (file: File): Promise<string | undefined> => {
-        // Используем абсолютный путь, который перехватит прокси Vite
-        const url = `/files?filename=${encodeURIComponent(file.name)}`; 
+
+        // ✅ 2. ДОБАВЛЯЕМ BASE_URL, ЧТОБЫ ПОЛУЧИЛСЯ ПОЛНЫЙ АДРЕС БЭКЕНДА
+        const url = `${BASE_URL}/files?filename=${encodeURIComponent(file.name)}`; 
 
         try {
-            // Используем getAuthHeaders(true) для исключения Content-Type: application/json
             const response = await fetch(url, {
                 method: 'POST',
                 headers: getAuthHeaders(true), 
-                body: file, // Отправляем файл
+                body: file, 
             });
 
             if (!response.ok) {
-                // Улучшенное логирование ошибки
                 const status = response.status;
                 const errorData = await response.json().catch(() => ({ detail: `Не удалось загрузить файл. Статус: ${status}` }));
                 console.error(`Ошибка при загрузке файла ${file.name}:`, status, errorData);

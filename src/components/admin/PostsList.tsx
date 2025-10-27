@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 
 interface PostsListProps {
   onEdit: (post: Post) => void; 
-  onDelete: (post: Post) => void; 
+  onDelete: (post: Post) => void; // Эта функция передается от родителя
   onCreate: () => void;
   refreshTrigger?: number;
 }
@@ -21,11 +21,10 @@ export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger }
   const loadPosts = async () => {
     try {
       setLoading(true);
-      // ИСПРАВЛЕНИЕ: Явно указываем PostCategory.News (0) для устранения ошибки 422
       const data = await postsApi.getAll({ 
-          limit: 500, // Используем большой лимит, как в ошибке
+          limit: 500,
           offset: 0,
-          category: PostCategory.News, // Явно фильтруем по новостям
+          category: PostCategory.News,
       });
 
       if (Array.isArray(data)) {
@@ -69,9 +68,10 @@ export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger }
     return <div className="text-center py-8">Загрузка...</div>;
   }
 
-  function setDeleteId(id: number): void {
-    throw new Error('Function not implemented.');
-  }
+  // ✅ ИСПРАВЛЕНИЕ: Удалена ненужная функция setDeleteId
+  // function setDeleteId(id: number): void {
+  //     throw new Error('Function not implemented.');
+  // }
 
   return (
     <div className="space-y-4">
@@ -118,7 +118,8 @@ export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger }
                       <Button variant="ghost" size="sm" onClick={() => onEdit(JSON.parse(JSON.stringify(post)))} className="gap-1">
                         <Pencil className="h-4 w-4" /> Редактировать
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => setDeleteId(post.id)} className="gap-1 text-red-600 hover:text-red-700 hover:bg-red-50">
+                      {/* ✅ ИСПРАВЛЕНИЕ: Вызываем функцию onDelete из пропсов и передаем ей весь объект post */}
+                      <Button variant="ghost" size="sm" onClick={() => onDelete(post)} className="gap-1 text-red-600 hover:text-red-700 hover:bg-red-50">
                         <Trash2 className="h-4 w-4" /> Удалить
                       </Button>
                     </div>

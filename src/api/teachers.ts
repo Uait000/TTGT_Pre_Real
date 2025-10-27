@@ -12,14 +12,30 @@ export interface CreateTeacherPayload {
   department?: string;
 }
 
+// 1. Создаем интерфейс для всех параметров
+export interface GetAllTeachersParams {
+  limit?: number;
+  offset?: number;
+  // Параметр для сортировки (А-Я или Я-А)
+  sortBy?: 'initials_asc' | 'initials_desc';
+  // Параметр для быстрого поиска по фамилии (initials)
+  search?: string;
+}
+
 export const teachersApi = {
-  // Добавляем возможность передавать параметры, такие как limit
-  getAll: async (params?: { limit?: number; offset?: number }): Promise<Teacher[]> => {
+  // 2. Используем новый интерфейс параметров
+  getAll: async (params?: GetAllTeachersParams): Promise<Teacher[]> => {
     const queryParams = new URLSearchParams();
     if (params?.limit) queryParams.append('limit', params.limit.toString());
     if (params?.offset) queryParams.append('offset', params.offset.toString());
     
-    // Добавляем параметры к URL
+    // 3. Добавляем параметр сортировки в URL, если он передан
+    if (params?.sortBy) queryParams.append('sort_by', params.sortBy);
+
+    // 4. Добавляем параметр поиска в URL, если он передан
+    if (params?.search) queryParams.append('search', params.search);
+
+    // Убедимся, что BASE_URL используется
     const url = `${BASE_URL}/admin/teachers?${queryParams.toString()}`;
 
     const response = await fetch(url, {

@@ -31,7 +31,7 @@ const Header = () => {
       label: 'Студентам',
       href: '#',
       submenu: [
-        { label: 'Замены', href: '#' },
+        { label: 'Замены', href: '/zamena' },
         { label: 'Правила внутреннего распорядка', href: '/internal-rules' },
         { label: 'Расписание занятий', href: '/schedule' },
         { label: 'Расписание звонков', href: '/bell-schedule' },

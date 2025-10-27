@@ -4,20 +4,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useToast } from '@/hooks/use-toast'; // Предполагаю, что вы хотите использовать useToast для уведомлений
+import { useToast } from '@/hooks/use-toast'; 
 
-// --- ИЗМЕНЕНИЕ №1: Определяем, какие пропсы компонент принимает ---
 interface AdminLoginProps {
   onSuccess: () => void;
 }
 
-// --- ИЗМЕНЕНИЕ №2: Принимаем onSuccess как пропс ---
 export default function AdminLogin({ onSuccess }: AdminLoginProps) {
   const [second_name, setsecond_name] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast(); // Используем хук для уведомлений
+  const { toast } = useToast(); 
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,11 +27,10 @@ export default function AdminLogin({ onSuccess }: AdminLoginProps) {
 
       if (data.token) {
         authApi.setToken(data.token);
-        toast({ // Показываем уведомление об успехе
+        toast({ 
           title: 'Успешно',
           description: 'Вы вошли в систему.',
         });
-        // --- ИЗМЕНЕНИЕ №3: Вызываем функцию родителя, чтобы сообщить об успехе ---
         onSuccess();
       } else {
         throw new Error('Токен не получен');
@@ -41,7 +38,7 @@ export default function AdminLogin({ onSuccess }: AdminLoginProps) {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Ошибка входа';
       setError(errorMessage);
-      toast({ // Показываем уведомление об ошибке
+      toast({ 
         title: 'Ошибка входа',
         description: errorMessage,
         variant: 'destructive',
@@ -51,8 +48,6 @@ export default function AdminLogin({ onSuccess }: AdminLoginProps) {
     }
   };
   
-  // Компонент теперь отображает ТОЛЬКО форму входа.
-  // Логика "что показать после входа" теперь находится в родительском компоненте AdminPanel.
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
