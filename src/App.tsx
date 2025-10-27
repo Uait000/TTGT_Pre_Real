@@ -53,6 +53,7 @@ import Anniversary95 from "./pages/Anniversary95";
 import Victory80 from "./pages/Victory80";
 import StartInScience from "./pages/StartInScience";
 import AdminPanel from "./pages/AdminPanel";
+import Zamena from "./pages/Zamena";
 
 const queryClient = new QueryClient();
 
@@ -88,6 +89,7 @@ const App = () => (
           {/* Student pages */}
           <Route path="/internal-rules" element={<InternalRules />} />
           <Route path="/schedule" element={<Schedule />} />
+          <Route path="/zamena" element={<Zamena />} />
           <Route path="/bell-schedule" element={<BellSchedule />} />
           <Route path="/classroom-layout" element={<ClassroomLayout />} />
           <Route path="/memo" element={<Memo />} />

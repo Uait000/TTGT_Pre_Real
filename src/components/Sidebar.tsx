@@ -39,10 +39,10 @@ const Sidebar = () => {
       href: '/schedule', // Добавлена ссылка
       icon: <CalendarDays className="w-5 h-5" /> 
     },
-    { 
-      label: 'Замены', 
-      href: '/substitutions', // Добавлена ссылка
-      icon: <Replace className="w-5 h-5" /> 
+    {
+      label: 'Замены',
+      href: '/zamena',
+      icon: <Replace className="w-5 h-5" />
     },
   ];
 
@@ -63,6 +63,7 @@ const Sidebar = () => {
         { label: 'Воспитательная работа', href: '/educational-work', icon: <Users className="w-4 h-4" /> },
         { label: 'Библиотека', href: '/library', icon: <BookOpen className="w-4 h-4" /> },
         { label: 'Электронная ИОС', href: '/ios', icon: <Monitor className="w-4 h-4" /> },
+        { label: 'Замены', href: '/zamena', icon: <Replace className="w-4 h-4" /> },
       ]
     },
     {

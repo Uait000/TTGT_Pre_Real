@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Users, Shield, Trophy, MessageSquare, AlertTriangle, FileText, Video } from 'lucide-react';
+import { Users, Shield, Trophy, MessageSquare, AlertTriangle, FileText, Video, Replace } from 'lucide-react';
 
 const InfoBlocks = () => {
   const infoBlocks = [
@@ -52,6 +52,13 @@ const InfoBlocks = () => {
       href: 'https://rutube.ru/channel/25410608/',
       gradient: 'from-pink-500 to-pink-600',
       external: true
+    },
+    {
+      id: 8,
+      title: 'Замены',
+      icon: <Replace className="w-8 h-8" />,
+      href: '/zamena',
+      gradient: 'from-cyan-500 to-cyan-600'
     }
   ];
 
