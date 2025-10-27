@@ -1,0 +1,311 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* EduCenter Design System - Based on the provided mockup */
+
+@layer base {
+  :root {
+    /* Brand Colors from EduCenter design */
+    --background: 0 0% 98%;
+    --foreground: 220 9% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 9% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 9% 14%;
+
+    /* EduCenter Blue - Main brand color */
+    --primary: 220 92% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 220 92% 45%;
+
+    /* Secondary blue tones */
+    --secondary: 220 20% 95%;
+    --secondary-foreground: 220 9% 14%;
+
+    --muted: 220 13% 91%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 220 92% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Sidebar colors */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 9% 14%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-accent: 220 20% 95%;
+
+    /* News category colors */
+    --education-badge: 220 92% 55%;
+    --achievements-badge: 144 52% 47%;
+    --news-badge: 263 83% 57%;
+    --events-badge: 25 95% 53%;
+
+    /* Anniversary colors */
+    --anniversary-95: 220 92% 55%;
+    --anniversary-85: 220 70% 65%;
+    --victory-80: 0 84% 60%;
+    --science-start: 220 92% 55%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 92% 55%;
+
+    --radius: 8px;
+
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(220, 92%, 55%), hsl(220, 92%, 45%));
+    --gradient-anniversary: linear-gradient(135deg, hsl(220, 92%, 55%), hsl(220, 70%, 65%));
+    --gradient-victory: linear-gradient(135deg, hsl(0, 84%, 60%), hsl(15, 84%, 60%));
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Navigation hover effects */
+  .nav-item {
+    @apply relative px-4 py-2 text-sm font-medium text-foreground transition-all duration-300 hover:text-primary;
+    
+    &::after {
+      content: '';
+      @apply absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300;
+    }
+    
+    &:hover::after {
+      @apply w-full;
+    }
+    
+    &:hover {
+      transform: translateX(2px);
+    }
+  }
+
+  /* Sidebar menu items */
+  .sidebar-item {
+    @apply flex items-center gap-3 p-3 text-sm text-sidebar-foreground transition-all duration-300 rounded-lg hover:bg-sidebar-accent hover:text-primary cursor-pointer;
+    
+    &:hover {
+      transform: translateX(5px);
+    }
+  }
+
+  /* Blue info blocks */
+  .info-block {
+    @apply bg-gradient-to-br from-white to-primary/5 border-2 border-primary text-primary px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 cursor-pointer shadow-sm;
+    
+    &:hover {
+      @apply bg-primary text-white shadow-lg;
+    }
+  }
+
+  /* News cards */
+  .news-card {
+    @apply bg-gradient-to-br from-white to-gray-50/50 rounded-xl shadow-md border border-border/50 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  /* Fixed right panel - stays in place during scroll */
+  .fixed-right-panel {
+    position: fixed;
+    top: 4rem; /* Header height */
+    right: 0;
+    width: 20rem; /* 320px */
+    height: calc(100vh - 4rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: white;
+    border-left: 1px solid hsl(var(--border));
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
+    z-index: 30;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+    /* Webkit scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  .fixed-right-panel::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .fixed-right-panel::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .fixed-right-panel::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .fixed-right-panel::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground));
+  }
+
+  /* Central content area with margin for fixed panel */
+  .central-content-area {
+    margin-right: 20rem; /* Match right panel width */
+  }
+
+  /* Sidebar info cards - ИСПРАВЛЕНО: единообразная структура */
+  .sidebar-card {
+    @apply rounded-xl p-6 text-white text-center transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer;
+  }
+
+  .sidebar-card-95 {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(220, 92%, 45%));
+  }
+
+  .sidebar-card-85 {
+    @apply bg-gradient-to-br from-blue-500 to-blue-600;
+  }
+
+  .sidebar-card-victory {
+    @apply bg-gradient-to-br from-red-500 to-red-600;
+  }
+
+  .sidebar-card-science {
+    @apply bg-gradient-to-br from-blue-600 to-blue-700;
+  }
+
+  .sidebar-card-conference {
+    @apply bg-gradient-to-br from-red-500 to-red-600;
+  }
+
+  .sidebar-card-digital {
+    @apply bg-gradient-to-br from-green-500 to-green-600;
+  }
+
+  .sidebar-card-info {
+    @apply bg-gradient-to-br from-purple-500 to-purple-600;
+  }
+
+  .sidebar-card-ministry {
+    @apply bg-gradient-to-br from-indigo-500 to-indigo-600;
+  }
+
+  .sidebar-card-education {
+    @apply bg-gradient-to-br from-pink-500 to-pink-600;
+  }
+
+  .sidebar-card-employers {
+    @apply bg-gradient-to-br from-orange-500 to-orange-600;
+  }
+
+  /* Badge styles */
+  .badge-education {
+    @apply bg-primary text-white;
+  }
+
+  .badge-achievements {
+    @apply bg-green-500 text-white;
+  }
+
+  .badge-news {
+    @apply bg-purple-600 text-white;
+  }
+
+  .badge-events {
+    @apply bg-orange-500 text-white;
+  }
+
+  /* Modal styles */
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4;
+  }
+
+  .modal-content {
+    @apply bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto;
+  }
+
+  /* Animations */
+  .fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  .slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
