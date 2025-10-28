@@ -1,11 +1,9 @@
 import { getAuthHeaders } from "@/api/auth.ts";
-import { BASE_URL } from "@/api/config.ts"; // ✅ 1. ИМПОРТИРУЕМ BASE_URL
+import { BASE_URL } from "@/api/config.ts"; 
 
 export const filesApi = {
 
     upload: async (file: File): Promise<string | undefined> => {
-
-        // ✅ 2. ДОБАВЛЯЕМ BASE_URL, ЧТОБЫ ПОЛУЧИЛСЯ ПОЛНЫЙ АДРЕС БЭКЕНДА
         const url = `${BASE_URL}/files?filename=${encodeURIComponent(file.name)}`; 
 
         try {
