@@ -1,29 +1,51 @@
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
-import { FileText, Phone, Mail } from 'lucide-react';
+import { 
+  FileText, 
+  Phone, 
+  Mail, 
+  Gavel, 
+  Shield, 
+  AlertTriangle, 
+  Download,
+  Megaphone,
+  BookOpen
+} from 'lucide-react';
+import corp1 from '@/assets/pictures/corp.jpg';
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
+// --- ИМПОРТ PDF ---
+import planMeropriyatiy from '@/assets/file/corp/Plan_mer_korr_30_08_2024.pdf';
+import polozhenieOKomissii from '@/assets/file/corp/Pol_korr.pdf';
+import prikazOKomissii from '@/assets/file/corp/Plan_mer_korr_30_08_2024.pdf'; 
+import izmeneniyaVPrikaz from '@/assets/file/corp/pr_o_kom_korr_izm_03_09_2024.pdf';
+import zapretNaPodarki from '@/assets/file/corp/podarki.pdf';
+
 
 const CorruptionReport = () => {
   const documents = [
     {
-      title: 'План мероприятий ТТЖТ - филиала РГУПС по противодействию коррупции и формированию антикоррупционного мировоззрения на 2024-2025 учебный год',
-      url: '#'
+      title: 'План мероприятий ТТЖТ - филиала РГУПС по противодействию коррупции... на 2024-2025 учебный год',
+      url: planMeropriyatiy
     },
     {
       title: 'Положение о комиссии по противодействию коррупции ТТЖТ - филиала РГУПС',
-      url: '#'
+      url: polozhenieOKomissii
     },
     {
-      title: 'Приказ "О комиссии по противодействию коррупции и урегулированию конфликта интересов ТТЖТ - филиала РГУПС"',
-      url: '#'
+      title: 'Приказ "О комиссии по противодействию коррупции и урегулированию конфликта интересов..."',
+      url: prikazOKomissii
     },
     {
-      title: 'Изменения в приказ "О комиссии по противодействию коррупции и урегулированию конфликта интересов ТТЖТ - филиала РГУПС"',
-      url: '#'
+      title: 'Изменения в приказ "О комиссии по противодействию коррупции..."',
+      url: izmeneniyaVPrikaz
     },
     {
       title: 'Запрет на дарение подарков',
-      url: '#'
+      url: zapretNaPodarki
     }
   ];
 
@@ -36,115 +58,188 @@ const CorruptionReport = () => {
         
         <main className="flex-1 min-h-screen">
           <div className="container mx-auto px-6 py-8">
-            <div className="bg-white rounded-lg shadow-sm border border-border p-8">
-              <h1 className="text-3xl font-bold text-primary mb-8 text-center">Сообщить о коррупции</h1>
-              
-              <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
-                {/* Hero image */}
-                <div className="w-full aspect-[16/6] bg-gradient-to-br from-red-100 to-red-200 rounded-lg overflow-hidden shadow-lg mb-8">
-                  <img
-                    src="https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg"
-                    alt="Противодействие коррупции"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                <div className="bg-white rounded-lg p-8 shadow-sm space-y-6">
-                  <div className="prose prose-gray max-w-none">
-                    <div className="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 p-6 rounded-lg mb-6">
-                      <h2 className="text-xl font-bold text-red-700 mb-4">Определение коррупции</h2>
-                      <p className="text-foreground leading-relaxed mb-4">
-                        В соответствии с пунктом 1 статьи 1 Федерального закона от 25 декабря 2008 года No 273-ФЗ «О противодействии коррупции» <strong>КОРРУПЦИЯ</strong> – это:
-                      </p>
-                      <p className="text-foreground leading-relaxed mb-4">
-                        – злоупотребление служебным положением, дача взятки, получение взятки, злоупотребление полномочиями, коммерческий подкуп либо иное незаконное использование физическим лицом своего должностного положения вопреки законным интересам общества и государства в целях получения выгоды в виде денег, ценностей, иного имущества или услуг имущественного характера, иных имущественных прав для себя или для третьих лиц либо незаконное предоставление такой выгоды указанному лицу другими физическими лицами;
-                      </p>
-                      <p className="text-foreground leading-relaxed">
-                        – совершение деяний, указанных выше, от имени или в интересах юридического лица.
-                      </p>
-                    </div>
-
-                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 p-6 rounded-lg mb-6">
-                      <h2 className="text-xl font-bold text-blue-700 mb-4">Противодействие коррупции</h2>
-                      <p className="text-foreground leading-relaxed mb-4">
-                        В соответствии с пунктом 2 статьи 1 Федерального закона от 25 декабря 2008 года No 273-ФЗ «О противодействии коррупции» противодействием коррупции является:
-                      </p>
-                      <p className="text-foreground leading-relaxed mb-4">
-                        деятельность федеральных органов государственной власти, органов государственной власти субъектов Российской Федерации, органов местного самоуправления, институтов гражданского общества, организаций и физических лиц в пределах их полномочий:
-                      </p>
-                      <ul className="space-y-2 text-foreground text-sm">
-                        <li>а) по предупреждению коррупции, в том числе по выявлению и последующему устранению причин коррупции (профилактика коррупции);</li>
-                        <li>б) по выявлению, предупреждению, пресечению, раскрытию и расследованию коррупционных правонарушений (борьба с коррупцией);</li>
-                        <li>в) по минимизации и (или) ликвидации последствий коррупционных правонарушений.</li>
-                      </ul>
-                    </div>
-
-                    <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 border-l-4 border-yellow-500 p-6 rounded-lg mb-6">
-                      <p className="text-foreground leading-relaxed">
-                        <strong>Обращаем внимание</strong> на то, что статьей 306 Уголовного кодекса Российской Федерации предусмотрена уголовная ответственность за заведомо ложный донос о совершении преступления.
-                      </p>
-                    </div>
-
-                    <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-6 mb-6">
-                      <h2 className="text-xl font-bold text-primary mb-4">Контактная информация</h2>
-                      <p className="text-foreground leading-relaxed mb-4">
-                        Если вы считаете, что вам стали известны факты коррупции в Тихорецком техникуме железнодорожного транспорта – филиал РГУПС, можете сообщить об этом:
-                      </p>
-                      
-                      <div className="space-y-4">
-                        <div className="flex items-center space-x-3">
-                          <Phone className="w-5 h-5 text-primary" />
-                          <span className="text-foreground font-semibold">8(86196) 6-20-03 доб.101</span>
-                        </div>
-                        
-                        <div className="bg-white rounded-lg p-4 border border-border/50">
-                          <p className="text-foreground mb-2">
-                            В соответствии с приказом ТТЖТ – филиала РГУПС от 31 августа 2023 г. № 161/од председателем комиссии по противодействию коррупции назначена:
-                          </p>
-                          <p className="text-primary font-semibold mb-2">Ярошевская Ольга Николаевна</p>
-                          <p className="text-muted-foreground text-sm mb-3">заместитель директора по воспитательной работе</p>
-                          
-                          <div className="space-y-2">
-                            <div className="flex items-center space-x-2">
-                              <Phone className="w-4 h-4 text-primary" />
-                              <span className="text-foreground">8(86196) 6-20-03, доп. 127</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Mail className="w-4 h-4 text-primary" />
-                              <span className="text-foreground">zamvr@ttgt.org</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg p-6 shadow-sm">
-                      <h2 className="text-xl font-semibold text-primary mb-6">Нормативные документы</h2>
-                      <div className="space-y-4">
-                        {documents.map((doc, index) => (
-                          <a
-                            key={index}
-                            href={doc.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center space-x-4 p-4 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-lg border border-border/50 hover:shadow-lg hover:scale-105 transition-all duration-300 group"
-                          >
-                            <FileText className="w-5 h-5 text-primary group-hover:text-primary-hover transition-colors flex-shrink-0" />
-                            <span className="text-foreground font-medium group-hover:text-primary transition-colors">
-                              {doc.title}
-                            </span>
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            
+            {/* --- Hero-блок --- */}
+            <div className="w-full h-64 md:h-80 relative rounded-xl overflow-hidden mb-12 shadow-lg">
+              <img
+                src={corp1}
+                alt="Противодействие коррупции"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-6 md:p-10">
+                <h1 className="text-4xl lg:text-5xl font-bold text-white" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                  Сообщить о коррупции
+                </h1>
               </div>
             </div>
+
+            {/* --- "Timeline" --- */}
+            <div className="relative flex flex-col items-start pl-10 md:pl-12">
+              
+              {/* --- Вертикальная линия-градиент --- */}
+              <div className="absolute left-4 md:left-6 top-1 bottom-1 w-1.5 bg-gradient-to-b from-primary via-blue-700 to-red-500 rounded-full"></div>
+
+              {/* --- Шаг 1: Контакты (Яркий) --- */}
+              <div className="mb-10 w-full relative">
+                {/* Иконка на линии */}
+                <div className="absolute left-[-42px] md:left-[-48px] top-5 z-10 w-10 h-10 bg-primary rounded-full flex items-center justify-center ring-8 ring-background">
+                  <Megaphone className="w-5 h-5 text-white" />
+                </div>
+                {/* Карточка */}
+                <Card className="bg-gradient-to-r from-primary to-blue-700 text-white shadow-xl border-none">
+                  <CardHeader>
+                    <CardTitle className="text-3xl font-bold">Сообщить о факте коррупции</CardTitle>
+                    <CardDescription className="text-primary-foreground/90 text-base">
+                      Телефоны доверия и контакты ответственных лиц.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Левая часть: Телефоны */}
+                    <div className="space-y-4">
+                      <p className="text-lg font-semibold">Общий телефон доверия:</p>
+                      <div className="flex items-center space-x-3">
+                        <Phone className="w-6 h-6" />
+                        <span className="font-semibold text-2xl tracking-wider">8(86196) 6-20-03 доб.101</span>
+                      </div>
+                    </div>
+                    {/* Правая часть: Ответственный */}
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-5">
+                      <p className="text-sm mb-2 text-primary-foreground/80">
+                        Председатель комиссии по противодействию коррупции:
+                      </p>
+                      <p className="font-bold text-xl mb-1">Ярошевская Ольга Николаевна</p>
+                      <p className="text-sm mb-4 text-primary-foreground/80">Зам. директора по воспитательной работе</p>
+                      
+                      <div className="space-y-2 border-t border-white/20 pt-4">
+                        <div className="flex items-center space-x-3">
+                          <Phone className="w-4 h-4" />
+                          <span className="font-medium">8(86196) 6-20-03, доп. 127</span>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <Mail className="w-4 h-4" />
+                          <span className="font-medium">zamvr@ttgt.org</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* --- Шаг 2: Что нужно знать (Аккордеон) --- */}
+              <div className="mb-10 w-full relative">
+                {/* Иконка на линии */}
+                <div className="absolute left-[-42px] md:left-[-48px] top-5 z-10 w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center ring-8 ring-background">
+                  <BookOpen className="w-5 h-5 text-white" />
+                </div>
+                {/* Карточка */}
+                <Card className="shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-2xl">Что нужно знать</CardTitle>
+                    <CardDescription>
+                      Определения, виды противодействия и ответственность.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Accordion type="single" collapsible className="w-full" defaultValue='item-3'>
+                      <AccordionItem value="item-1">
+                        <AccordionTrigger className="text-base font-semibold text-red-700">
+                          <Gavel className="w-5 h-5 mr-3 text-red-700" />
+                          Определение коррупции
+                        </AccordionTrigger>
+                        <AccordionContent className="pl-8 text-base">
+                          <p className="mb-2">
+                            В соответствии с ФЗ от 25.12.2008 No 273-ФЗ <strong>КОРРУПЦИЯ</strong> – это:
+                          </p>
+                          <ul className="list-disc list-inside space-y-2">
+                            <li>
+                              Злоупотребление служебным положением, дача/получение взятки, злоупотребление полномочиями, коммерческий подкуп... в целях получения выгоды.
+                            </li>
+                            <li>
+                              Cовершение этих деяний от имени или в интересах юридического лица.
+                            </li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="item-2">
+                        <AccordionTrigger className="text-base font-semibold text-blue-700">
+                           <Shield className="w-5 h-5 mr-3 text-blue-700" />
+                          Противодействие коррупции
+                        </AccordionTrigger>
+                        <AccordionContent className="pl-8 text-base">
+                          <p className="mb-2">Деятельность в пределах полномочий по:</p>
+                          <ul className="list-disc list-inside space-y-2">
+                            <li><strong>Профилактике</strong> (предупреждение, устранение причин).</li>
+                            <li><strong>Борьбе</strong> (выявление, пресечение, расследование).</li>
+                            <li><strong>Ликвидации последствий</strong> (минимизация).</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="item-3" className="border-b-0">
+                        <AccordionTrigger className="text-base font-semibold text-yellow-700">
+                          <AlertTriangle className="w-5 h-5 mr-3 text-yellow-700" />
+                          Внимание! (Заведомо ложный донос)
+                        </AccordionTrigger>
+                        <AccordionContent className="pl-8 text-base">
+                          <p>
+                            Обращаем внимание на то, что <strong>статьей 306 Уголовного кодекса РФ</strong> предусмотрена уголовная ответственность за заведомо ложный донос о совершении преступления.
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* --- Шаг 3: Документы --- */}
+              <div className="w-full relative">
+                {/* Иконка на линии */}
+                <div className="absolute left-[-42px] md:left-[-48px] top-5 z-10 w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center ring-8 ring-background">
+                  <FileText className="w-5 h-5 text-white" />
+                </div>
+                {/* Карточка */}
+                <Card className="shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-2xl">Нормативные документы</CardTitle>
+                    <CardDescription>
+                      Планы, приказы и положения, регламентирующие антикоррупционную деятельность.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {/* --- ИЗМЕНЕНИЯ ЗДЕСЬ --- 
+                      - Синего прямоугольника нет.
+                      - Добавлены классы для плавной и красивой анимации hover.
+                    */}
+                    <div className="space-y-3"> 
+                      {documents.map((doc, index) => (
+                        <a
+                          key={index}
+                          href={doc.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between space-x-3 p-4 rounded-lg border bg-background/50 
+                                     transition-all duration-300 ease-in-out group 
+                                     hover:shadow-xl hover:border-primary/30 hover:scale-[1.02] hover:-translate-y-1"
+                        >
+                          <div className="flex items-center space-x-3 min-w-0">
+                            <FileText className="w-5 h-5 text-primary/80 group-hover:text-primary transition-colors flex-shrink-0" />
+                            <span className="text-foreground font-medium group-hover:text-primary transition-colors text-sm truncate">
+                              {doc.title}
+                            </span>
+                          </div>
+                          <Download className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                        </a>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
           </div>
         </main>
         
-        <aside className="w-80 bg-white border-l border-border p-6 sticky top-16 h-screen overflow-y-auto">
+        <aside className="hidden lg:block w-80 bg-white border-l border-border p-6 sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
           <SidebarCards />
         </aside>
       </div>

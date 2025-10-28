@@ -4,13 +4,12 @@ import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import { Button } from '@/components/ui/button';
 import { Download, QrCode, FileWarning, RefreshCw } from 'lucide-react';
-import { motion } from 'framer-motion'; // Убедись, что 'framer-motion' установлен
+import { motion } from 'framer-motion'; 
 
 const Zamena = () => {
   const wsRef = useRef<WebSocket | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
-  // --- WebSocket логика (остается без изменений) ---
   useEffect(() => {
     const connectWebSocket = () => {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -68,12 +67,7 @@ const Zamena = () => {
       <Header />
       <div className="flex relative">
         <Sidebar />
-
-        {/* ✅ ИСПРАВЛЕНИЕ: Оставляем ТОЛЬКО 'central-content-area'. 
-           Он уже имеет правильные отступы от боковых панелей. */}
         <main className="flex-1 min-h-screen central-content-area">
-          {/* ✅ ИСПРАВЛЕНИЕ: Убираем 'container mx-auto', чтобы контент
-               занял всю ширину центральной колонки. */}
           <div className="px-4 md:px-6 py-8 md:py-12">
             
             <motion.div 
@@ -91,7 +85,6 @@ const Zamena = () => {
               </div>
             </motion.div>
 
-            {/* Блок "Скачать" (Яркий дизайн) */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -124,24 +117,18 @@ const Zamena = () => {
                 </div>
               </div>
             </motion.div>
-
-            {/* Блок PDF (Новый дизайн) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               className="bg-card rounded-2xl shadow-lg border border-border p-4 md:p-6"
             >
-              <h2 className="text-2xl font-bold text-foreground mb-5">
-                Расписание замен
-              </h2>
               <div className="pdf-container border-4 border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-inner bg-white">
                 <iframe
                   ref={iframeRef} 
                   id="zamena-pdf-iframe"
                   src="https://ttgt.org/images/pdf/zamena.pdf#toolbar=0&navpanes=0&view=fitH"
-                  // ✅ ИСПРАВЛЕНИЕ: Уменьшаем высоту, как ты просила
-                  className="w-full h-[800px] border-0" // Было min-h-[800px]
+                  className="w-full h-[800px] border-0" 
                   title="Расписание замен"
                 />
               </div>
@@ -153,8 +140,6 @@ const Zamena = () => {
 
           </div>
         </main>
-
-        {/* Правая боковая панель (без изменений) */}
         <aside className="fixed-right-panel hidden lg:block">
           <div className="p-6">
             <SidebarCards />
