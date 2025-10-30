@@ -1,35 +1,37 @@
-import { useState, useEffect } from 'react';
-// ИСПРАВЛЕНИЕ 1: Импортируем Post и PostCategory из posts.ts
+import { useState } from 'react';
+// --- ИЗМЕНЕНО: убираем useEffect, добавляем useQuery ---
 import { postsApi, Post, PostCategory } from '@/api/posts'; 
-// Используем Post под именем NewsPost для совместимости
 import type { Post as NewsPost } from '@/api/posts'; 
+// --- ИСПРАВЛЕНЫ ПУТИ (судя по вашей структуре) ---
 import NewsCard from './NewsCard';
 import NewsModal from './NewsModal';
+// --- ДОБАВЛЕНО: ---
+import { useQuery } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
+
+// --- ДОБАВЛЕНО: Функция загрузки данных для useQuery ---
+const fetchNewsPosts = async () => {
+  return await postsApi.getAll({ 
+    limit: 100, // Загружаем больше для "Загрузить ещё"
+    category: PostCategory.News,
+  });
+};
 
 const NewsSection = () => {
-    const [posts, setPosts] = useState<NewsPost[]>([]);
+    // --- ИЗМЕНЕНО: Получаем посты через useQuery ---
+    const { data: posts = [], isLoading: isLoadingPosts } = useQuery<NewsPost[]>({
+      // Ключ ['posts', PostCategory.News] позволяет WS-хуку найти эти данные
+      queryKey: ['posts', PostCategory.News], 
+      queryFn: fetchNewsPosts,
+    });
+    // ---
+    
     const [visibleCount, setVisibleCount] = useState(6);
     const [selectedPost, setSelectedPost] = useState<NewsPost | null>(null);
     const [isLoadingDetails, setIsLoadingDetails] = useState(false);
     const [abortController, setAbortController] = useState<AbortController | null>(null);
 
-    useEffect(() => {
-        const loadPosts = async () => {
-            try {
-                // ИСПРАВЛЕНИЕ: Теперь getAll в posts.ts работает с '0'
-                const fetchedPosts = await postsApi.getAll({ 
-                    limit: 9,
-                    category: PostCategory.News,
-                });
-                
-                // Нормализация больше не нужна
-                setPosts(fetchedPosts as NewsPost[]); 
-            } catch (error) {
-                console.error("Failed to fetch posts:", error);
-            }
-        };
-        loadPosts();
-    }, []);
+    // --- УДАЛЕНО: useEffect(loadPosts) больше не нужен ---
 
     const handleReadMore = async (post: NewsPost) => {
         if (abortController) {
@@ -42,7 +44,7 @@ const NewsSection = () => {
         setIsLoadingDetails(true);
 
         try {
-            // ИСПРАВЛЕНИЕ: postsApi.getById
+            // (Ваша логика getById остается без изменений)
             const detailData = await postsApi.getById(post.id.toString());
             
             if (!newAbortController.signal.aborted) {
@@ -79,22 +81,31 @@ const NewsSection = () => {
                 <p className="text-muted-foreground text-lg">Следите за последними новостями нашего образовательного центра</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {posts.slice(0, visibleCount).map((post) => (
-                    <NewsCard 
-                        key={post.id} 
-                        post={post} 
-                        onReadMore={handleReadMore}
-                    />
-                ))}
-            </div>
-
-            {visibleCount < posts.length && (
-                <div className="text-center">
-                    <button onClick={loadMore} className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-lg font-medium">
-                        Загрузить ещё новости
-                    </button>
+            {/* --- ДОБАВЛЕНО: Состояние загрузки --- */}
+            {isLoadingPosts ? (
+              <div className="flex justify-center items-center h-64">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    {posts.slice(0, visibleCount).map((post) => (
+                        <NewsCard 
+                            key={post.id} 
+                            post={post} 
+                            onReadMore={handleReadMore}
+                        />
+                    ))}
                 </div>
+
+                {visibleCount < posts.length && (
+                    <div className="text-center">
+                        <button onClick={loadMore} className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-lg font-medium">
+                            Загрузить ещё новости
+                        </button>
+                    </div>
+                )}
+              </>
             )}
 
             {selectedPost && <NewsModal post={selectedPost} onClose={closeModal} isLoading={isLoadingDetails} />}

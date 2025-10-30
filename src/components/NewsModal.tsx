@@ -1,45 +1,37 @@
 import { useState, useEffect, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
-// ИСПРАВЛЕНИЕ 1: Импорты разделены и обновлены
-import { Post, POST_TAGS } from '@/api/posts'; // Post и POST_TAGS из posts.ts (Post включает author и views)
-import { BASE_URL } from '@/api/config'; // BASE_URL из config.ts
+// ИСПРАВЛЕНИЕ: Добавляем PostCategory
+import { Post, POST_TAGS, PostCategory } from '@/api/posts';
+import { BASE_URL } from '@/api/config';
 
-// Тип post изменен на Post
 const NewsModal = ({ post, onClose, isLoading }: { post: Post; onClose: () => void; isLoading: boolean }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImageZoomed, setIsImageZoomed] = useState(false);
 
   const getModalImages = (): string[] => {
     const images: string[] = [];
-    const cleanBaseUrl = BASE_URL.replace('/api', ''); // Убираем /api, чтобы получить корень сайта
+    const cleanBaseUrl = BASE_URL.endsWith('/api') ? BASE_URL.slice(0, -4) : BASE_URL;
 
-    // ИСПРАВЛЕНИЕ 2: Логика картинок обновлена для использования post.files (BackendFile[])
     if (Array.isArray(post.files) && post.files.length > 0) {
-      post.files.forEach((file) => {
-        if (file && file.id) {
-          images.push(`${cleanBaseUrl}/files/${file.id}`);
+      post.files.forEach((file) => {
+        // ИСПРАВЛЕНО: API для GET /files/ требует `filename` и `deattached`
+        if (file && file.name) { // Проверяем `file.name`
+          const params = new URLSearchParams();
+          params.append('filename', file.name);
+          // deattached=false, так как файл прикреплен к посту
+          params.append('deattached', "false"); 
+          
+          const fullUrl = `${cleanBaseUrl}/files/?${params.toString()}`;
+          images.push(fullUrl);
         }
       });
     } 
-    // Старую логику для post.image_urls, которую мы не видим в Post, можно временно оставить закомментированной или удалить
-    /*
-    else if ((post as any).image_urls && (post as any).image_urls.length > 0) {
-      (post as any).image_urls.forEach((url: string) => {
-        if (url) images.push(url.startsWith('http') ? url : `${cleanBaseUrl}${url}`);
-      });
-    }
-    */
-    
     return images;
   };
 
   const modalImages = getModalImages();
 
-  // Логика карусели
   const nextImage = useCallback(() => {
-    // Внимание: Ваша логика карусели (modalImages.length > 2) кажется странной
-    // и ведет к непредсказуемому поведению. Но поскольку она работает на вашей стороне,
-    // я оставляю ее. Исправлен только делитель на (modalImages.length)
     if (modalImages.length > 0) {
       setCurrentImageIndex((prev) => (prev + 1) % modalImages.length);
     }
@@ -52,11 +44,10 @@ const NewsModal = ({ post, onClose, isLoading }: { post: Post; onClose: () => vo
   }, [modalImages.length]);
 
   useEffect(() => {
-    if (modalImages.length > 0) { // Проверяем, что картинки вообще есть
+    if (modalImages.length > 0) {
       const timer = setInterval(() => {
         nextImage();
       }, 5000);
-
       return () => clearInterval(timer);
     }
   }, [modalImages.length, nextImage]);
@@ -83,7 +74,6 @@ const NewsModal = ({ post, onClose, isLoading }: { post: Post; onClose: () => vo
         >
           {/* Шапка модального окна */}
           <div className="sticky top-0 bg-white z-20 p-6 pb-4 border-b border-gray-200">
-            {/* ✅ ИСПРАВЛЕНИЕ: Добавлен отступ справа `pr-12` чтобы освободить место для крестика */}
             <div className="flex items-start justify-between gap-4 pr-12">
               <h2 className="text-3xl font-bold text-gray-900 flex-1">{post.title}</h2>
               {getCategoryBadge(post.type)}
@@ -104,15 +94,12 @@ const NewsModal = ({ post, onClose, isLoading }: { post: Post; onClose: () => vo
                       <div className="overflow-hidden rounded-lg">
                         <div 
                           className="flex transition-transform duration-500 ease-in-out"
-                          // Ваша карусель использует ширину 50% для каждого слайда. 
-                          // Я предполагаю, что это преднамеренно (показывает два изображения).
                           style={{ transform: `translateX(-${currentImageIndex * 50}%)` }} 
                         >
                           {modalImages.map((img, index) => (
                             <div key={index} className="w-1/2 flex-shrink-0 px-2">
                               <div 
                                 className="relative cursor-pointer overflow-hidden rounded-lg"
-                                // Изменена логика: зумировать только текущее изображение
                                 onClick={() => { setCurrentImageIndex(index); setIsImageZoomed(true); }}
                               >
                                 <img src={img} alt={`${post.title} - ${index + 1}`} className="w-full h-64 object-cover"/>
@@ -125,7 +112,7 @@ const NewsModal = ({ post, onClose, isLoading }: { post: Post; onClose: () => vo
                         </div>
                       </div>
 
-                      {modalImages.length > 2 && ( // Здесь остается > 2, если вы хотите показывать навигацию, когда слайдов больше, чем помещается на экране (2)
+                      {modalImages.length > 2 && (
                         <>
                           <button onClick={prevImage} className="absolute left-[-10px] top-1/2 -translate-y-1/2 bg-white/50 p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
                             <ChevronLeft className="w-6 h-6 text-gray-800" />
@@ -138,10 +125,18 @@ const NewsModal = ({ post, onClose, isLoading }: { post: Post; onClose: () => vo
                     </div>
                   )}
                   
-                  <div className="max-w-none text-gray-700 whitespace-pre-wrap">
-                    {/* ИСПРАВЛЕНИЕ 3: post.text заменен на post.body */}
-                    {post.body || ''} 
-                  </div>
+                  {/* --- ИЗМЕНЕНО: Условный рендеринг body --- */}
+                  {post.category === PostCategory.Professionals ? (
+                    <div
+                      className="prose prose-lg max-w-none text-gray-700"
+                      dangerouslySetInnerHTML={{ __html: post.body || '' }}
+                    />
+                  ) : (
+                    <div className="max-w-none text-gray-700 whitespace-pre-wrap">
+                      {post.body || ''}
+                    </div>
+                  )}
+                  {/* --- Конец изменения --- */}
 
                   <div className="border-t border-gray-200 pt-4 mt-6 flex items-center justify-between text-sm text-gray-600">
                     <span className="font-semibold">Опубликовано: {formatDate(post.publish_date)}</span>

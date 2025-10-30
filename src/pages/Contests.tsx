@@ -1,40 +1,55 @@
-import { useState, useEffect } from 'react';
-// ИСПРАВЛЕНИЕ 1: contestsApi заменен на postsApi. Добавлен Post и PostCategory.
-import { postsApi, Post, PostCategory } from '@/api/posts'; 
-// ИСПРАВЛЕНИЕ 2: Contest (из config) заменен на Post (из posts)
+import { useQuery } from '@tanstack/react-query';
+import { postsApi, Post, PostCategory, BackendFile } from '@/api/posts'; 
+import { BASE_URL } from '@/api/config';
 import type { Post as Contest } from '@/api/posts'; 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
-import ContestCard from '@/components/admin/ContestCard';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Loader2, FileText, Download } from 'lucide-react';
+
+/**
+ * --- ИСПРАВЛЕНИЕ ОШИБКИ 405 (Попытка 2) ---
+ * Генерирует URL, используя ID как параметр ПУТИ.
+ */
+const getPdfUrl = (file: BackendFile | undefined): string | null => {
+  if (!file || !file.id) return null; // Используем file.id
+  
+  // Убираем /api, если он есть, чтобы получить корень
+  const cleanBaseUrl = BASE_URL.endsWith('/api') ? BASE_URL.slice(0, -4) : BASE_URL;
+  
+  // ИЗМЕНЕНО: Пробуем формат /files/{file_id}
+  return `${cleanBaseUrl}/files/${file.id}`;
+};
+
+/**
+ * Форматирует дату
+ */
+const formatDate = (dateInSeconds: number) => {
+  if (!dateInSeconds) return '';
+  const date = new Date(dateInSeconds * 1000);
+  return date.toLocaleDateString('ru-RU', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+// Функция загрузки данных для useQuery
+const fetchContests = async () => {
+  return await postsApi.getAll({ 
+    category: PostCategory.Contests,
+    limit: 100,
+  });
+};
 
 const Contests = () => {
-  const [contests, setContests] = useState<Contest[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadContests();
-  }, []);
-
-  const loadContests = async () => {
-    try {
-      setLoading(true);
-      // ИСПРАВЛЕНИЕ 3: Используем postsApi.getAll с фильтром по категории "Конкурсы"
-      const data = await postsApi.getAll({ 
-        category: PostCategory.Contests,
-        limit: 100, // Добавим лимит, если он не указан явно, для безопасности
-      });
-      
-      // Поскольку мы импортировали Post как Contest (type { Post as Contest }), 
-      // TypeScript не будет ругаться, а данные будут корректными.
-      setContests(data as Contest[]); 
-    } catch (error) {
-      console.error('Failed to load contests:', error);
-      setContests([]); // Очищаем список при ошибке
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Используем useQuery (как в NewsSection)
+  const { data: contests = [], isLoading } = useQuery<Contest[]>({
+    queryKey: ['posts', PostCategory.Contests],
+    queryFn: fetchContests,
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -47,20 +62,59 @@ const Contests = () => {
           <div className="container mx-auto px-6 py-8">
             <h1 className="text-4xl font-bold text-foreground mb-8">Конкурсы</h1>
 
-            {loading ? (
+            {isLoading ? (
               <div className="text-center py-12">
-                <p className="text-muted-foreground">Загрузка...</p>
+                <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto" />
               </div>
             ) : contests.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">Нет активных конкурсов</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {contests.map((contest) => (
-                  <ContestCard key={contest.id} contest={contest} />
-                ))}
+              // --- ИЗМЕНЕНИЕ ДИЗАЙНА: ---
+              // Убран grid, используется вертикальный список (space-y-6)
+              <div className="max-w-4xl mx-auto space-y-6">
+                {contests.map((contest) => {
+                  // Логика для PDF перенесена сюда
+                  const polozhenieUrl = getPdfUrl(contest.files?.[0]);
+                  const reglamentUrl = getPdfUrl(contest.files?.[1]);
+
+                  return (
+                    <Card key={contest.id} className="shadow-md">
+                      <CardHeader>
+                        <CardTitle className="text-xl">{contest.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="flex flex-col sm:flex-row gap-4">
+                        {polozhenieUrl ? (
+                          <Button asChild className="w-full sm:w-auto justify-start gap-2">
+                            {/* `target="_blank"` открывает PDF в новой вкладке */}
+                            <a href={polozhenieUrl} target="_blank" rel="noopener noreferrer">
+                              <FileText className="h-4 w-4 flex-shrink-0" />
+                              <span>Положение о конкурсе</span>
+                            </a>
+                          </Button>
+                        ) : (
+                          <p className="text-sm text-muted-foreground">Положение не найдено.</p>
+                        )}
+
+                        {reglamentUrl && (
+                          <Button asChild variant="secondary" className="w-full sm:w-auto justify-start gap-2">
+                            <a href={reglamentUrl} target="_blank" rel="noopener noreferrer">
+                              <Download className="h-4 w-4 flex-shrink-0" />
+                              <span>Регламент</span>
+                            </a>
+                          </Button>
+                        )}
+                      </CardContent>
+                      <CardFooter className="text-sm text-muted-foreground justify-between pt-4 border-t">
+                        <span>{formatDate(contest.publish_date)}</span>
+                        <span>{contest.author}</span>
+                      </CardFooter>
+                    </Card>
+                  );
+                })}
               </div>
+              // --- КОНЕЦ ИЗМЕНЕНИЯ ДИЗАЙНА ---
             )}
           </div>
         </main>

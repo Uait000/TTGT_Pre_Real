@@ -19,15 +19,20 @@ const NewsCard = ({ post, onReadMore }: NewsCardProps) => {
 
     // ✅ ИСПРАВЛЕНИЕ: Логика сборки URL картинок
     const images: string[] = [];
-    const cleanBaseUrl = BASE_URL.replace('/api', '');
+    const cleanBaseUrl = BASE_URL.endsWith('/api') ? BASE_URL.slice(0, -4) : BASE_URL;
 
     // Используем post.files (как в IncompletePost), где каждый элемент - BackendFile
     if (Array.isArray(post.files) && post.files.length > 0) { 
-        // В BackendFile есть id: string, который используется для ссылки
-        post.files.forEach((file) => { 
-            if (file && file.id) {
-                const fullUrl = `${cleanBaseUrl}/files/${file.id}`; 
-                images.push(fullUrl);
+        post.files.forEach((file) => { 
+            // ИСПРАВЛЕНО: API для GET /files/ требует `filename` и `deattached`
+            if (file && file.name) { // Проверяем `file.name`
+                const params = new URLSearchParams();
+                params.append('filename', file.name);
+                // deattached=false, так как файл прикреплен к посту
+                params.append('deattached', "false"); 
+                
+                const fullUrl = `${cleanBaseUrl}/files/?${params.toString()}`;
+                images.push(fullUrl);
             }
         });
     } 

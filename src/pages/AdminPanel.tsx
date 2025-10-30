@@ -8,11 +8,15 @@ import PostForm from '@/components/admin/PostForm';
 import DeletePostDialog from '@/components/admin/DeletePostDialog';
 import VacanciesList from '@/components/admin/VacanciesList';
 import VacancyForm from '@/components/admin/VacancyForm';
-import FileManager from '@/components/admin/FileManager';
-import SiteContentEditor from '@/components/admin/SiteContentEditor';
+// --- УДАЛЕНО ---
+// import FileManager from '@/components/admin/FileManager';
+// import SiteContentEditor from '@/components/admin/SiteContentEditor';
+// import CodeEditor from '@/components/admin/CodeEditor';
+// --- ДОБАВЛЕНО ---
+import ZamenaManager from '@/components/admin/ZamenaManager'; 
+// ---
 import ContestsList from '@/components/admin/ContestsList';
 import ProfessionalsList from '@/components/admin/ProfessionalsList';
-import CodeEditor from '@/components/admin/CodeEditor';
 import { authApi } from '@/api/auth';
 import { postsApi } from '@/api/posts';
 import { vacanciesApi } from '@/api/vacancies';
@@ -57,16 +61,14 @@ const AdminPanel = () => {
     setIsFormOpen(true);
   };
   
-  // ✅ ИСПРАВЛЕНИЕ: Единая функция для закрытия формы постов
   const handleFormClose = () => {
     setIsFormOpen(false);
-    setEditingPost(null); // Сбрасываем пост при любом закрытии
+    setEditingPost(null); 
   };
   
-  // Эта функция теперь более лаконичная
   const handleFormSuccess = () => {
-    handleFormClose(); // Закрываем форму и сбрасываем состояние
-    setRefreshTrigger((prev) => prev + 1); // Обновляем список
+    handleFormClose(); 
+    setRefreshTrigger((prev) => prev + 1); 
   };
 
   const handleDeleteClick = (post: NewsPost) => {
@@ -108,7 +110,6 @@ const AdminPanel = () => {
     setIsVacancyFormOpen(true);
   };
   
-  // ✅ ИСПРАВЛЕНИЕ: Единая функция для закрытия формы вакансий
   const handleVacancyFormClose = () => {
     setIsVacancyFormOpen(false);
     setEditingVacancy(null);
@@ -171,14 +172,15 @@ const AdminPanel = () => {
             ) : (
               <>
                 <Tabs defaultValue="posts" className="w-full">
-                  <TabsList className="grid w-full grid-cols-7 gap-1">
+                  {/* --- ИЗМЕНЕНО: Сетка на 5 колонок --- */}
+                  <TabsList className="grid w-full grid-cols-5 gap-1">
                     <TabsTrigger value="posts">Новости</TabsTrigger>
                     <TabsTrigger value="professionals">Профессионалы</TabsTrigger>
                     <TabsTrigger value="contests">Конкурсы</TabsTrigger>
                     <TabsTrigger value="vacancies">Вакансии</TabsTrigger>
-                    <TabsTrigger value="content">Контент</TabsTrigger>
-                    <TabsTrigger value="files">Файлы</TabsTrigger>
-                    <TabsTrigger value="code">Редактор кода</TabsTrigger>
+                    {/* --- ИЗМЕНЕНО: "Контент" заменен на "Замены" --- */}
+                    <TabsTrigger value="zamena">Замены</TabsTrigger>
+                    {/* --- УДАЛЕНО: "Файлы" и "Редактор кода" --- */}
                   </TabsList>
 
                   <TabsContent value="posts" className="mt-6">
@@ -190,9 +192,7 @@ const AdminPanel = () => {
                     />
                   </TabsContent>
 
-                  <TabsContent value="content" className="mt-6">
-                    <SiteContentEditor />
-                  </TabsContent>
+                  {/* --- УДАЛЕНО: TabsContent для "content" --- */}
 
                   <TabsContent value="vacancies" className="mt-6">
                     <VacanciesList
@@ -210,19 +210,18 @@ const AdminPanel = () => {
                   <TabsContent value="contests" className="mt-6">
                     <ContestsList />
                   </TabsContent>
-
-                  <TabsContent value="files" className="mt-6">
-                    <FileManager />
+                  
+                  {/* --- ДОБАВЛЕНО: TabsContent для "zamena" --- */}
+                  <TabsContent value="zamena" className="mt-6">
+                    <ZamenaManager />
                   </TabsContent>
 
-                  <TabsContent value="code" className="mt-6">
-                    <CodeEditor />
-                  </TabsContent>
+                  {/* --- УДАЛЕНО: TabsContent для "files" и "code" --- */}
                 </Tabs>
 
                 <PostForm
                   open={isFormOpen}
-                  onClose={handleFormClose} // <-- Используем новую функцию
+                  onClose={handleFormClose} 
                   onSuccess={handleFormSuccess}
                   editPost={editingPost}
                 />
@@ -236,7 +235,7 @@ const AdminPanel = () => {
 
                 <VacancyForm
                   open={isVacancyFormOpen}
-                  onClose={handleVacancyFormClose} // <-- Используем новую функцию
+                  onClose={handleVacancyFormClose} 
                   onSuccess={handleVacancyFormSuccess}
                   editVacancy={editingVacancy}
                 />
