@@ -3,8 +3,6 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import { FileText, School, Car, Home, HeartHandshake, Waves, Download, Banknote } from 'lucide-react';
-
-// ✅ ИСПРАВЛЕНО: Добавлен импорт PDF-файлов из вашего проекта
 import Rekvizity from '@/assets/file/rekviz_bank_scheta.pdf';
 import Obuchenie from '@/assets/file/2_Kvit_na_oplatu_za_ob.pdf';
 import Kursy from '@/assets/file/3_Kvit_na_oplatu_kursov.pdf';
@@ -14,7 +12,6 @@ import Pozhertvovaniya from '@/assets/file/7_Kvit_Dobr_pozertvovaniya.pdf';
 import Basseyn from '@/assets/file/8_Kvit_usl_basseyn.pdf';
 
 const PaymentReceipts = () => {
-    // ✅ ИСПРАВЛЕНО: Создан массив объектов для удобной работы с данными
     const receiptsData = [
         { title: 'Квитанция на оплату за обучение', file: Obuchenie, icon: School, color: 'from-blue-500 to-indigo-600' },
         { title: 'Квитанция на оплату курсов', file: Kursy, icon: School, color: 'from-sky-500 to-cyan-600' },
@@ -33,7 +30,6 @@ const PaymentReceipts = () => {
                 
                 <main className="flex-1 min-h-screen">
                     <div className="container mx-auto px-6 py-12">
-                        {/* ✅ ИСПРАВЛЕНО: Полностью новый дизайн */}
                         <div className="bg-white rounded-3xl shadow-lg border border-gray-200/80 overflow-hidden">
                             <div className="p-10 md:p-12 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-b border-gray-200">
                                 <div className="text-center">

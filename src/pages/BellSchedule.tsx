@@ -12,7 +12,7 @@ const BellSchedule = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-gray-50"> {/* Легкий фон */}
+    <div className="min-h-screen bg-gray-50"> 
       <Header />
       
       <div className="flex">
@@ -31,8 +31,8 @@ const BellSchedule = () => {
                 Актуальное расписание учебных занятий для всех курсов.
               </p>
               
-              {/* ✅ ИСПРАВЛЕНИЕ: Блоки теперь в одной колонке с отступом */}
-              <div className="flex flex-col gap-8 max-w-4xl mx-auto"> {/* Центрируем и задаем макс. ширину */}
+
+              <div className="flex flex-col gap-8 max-w-4xl mx-auto"> 
                 
                 {/* --- Карточка 1 --- */}
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl border border-blue-200 p-6 shadow-md transition-all duration-300 hover:shadow-lg">

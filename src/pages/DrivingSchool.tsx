@@ -8,10 +8,8 @@ import { CheckCircle, MapPin, Phone, User, FileText, Target, Car, GraduationCap,
 import avto1 from '@/assets/pictures/School.jpg';
 import avto2 from '@/assets/pictures/phoca_thumb_l_5237.jpg';
 
-// Убраны импорты react-image-lightbox
 
 const DrivingSchool = () => {
-  // Состояние для простого лайтбокса
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -20,13 +18,12 @@ const DrivingSchool = () => {
     { src: avto2, alt: 'Учебные автомобили' },
   ];
 
-  // Функция для ОТКРЫТИЯ лайтбокса
   const openLightbox = (index: number) => {
     setCurrentImageIndex(index);
-    setLightboxOpen(true); // <--- Устанавливает флаг открытия
+    setLightboxOpen(true); 
   };
 
-  // Функция для ЗАКРЫТИЯ лайтбокса
+
   const closeLightbox = () => {
     setLightboxOpen(false);
   };
@@ -55,10 +52,7 @@ const DrivingSchool = () => {
               <p className="text-center text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">Качественная подготовка водителей категории «В» с 2010 года.</p>
               
               <div className="space-y-12">
-
-                {/* Секция "Об автошколе" и Стоимость */}
                 <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                   {/* ... (код секции без изменений) ... */}
                    <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-md h-full">
                     <CardHeader className="pb-4">
                        <CardTitle className="text-2xl font-semibold text-blue-800 flex items-center">
@@ -86,9 +80,7 @@ const DrivingSchool = () => {
                   </Card>
                 </section>
 
-                 {/* Секция с изображениями */}
                  <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* ✅ КЛИК ПО ЭТОМУ DIV ОТКРЫВАЕТ ЛАЙТБОКС С ПЕРВОЙ КАРТИНКОЙ */}
                     <div 
                       className="rounded-xl overflow-hidden shadow-lg group relative cursor-pointer"
                       onClick={() => openLightbox(0)} 
@@ -97,7 +89,6 @@ const DrivingSchool = () => {
                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                        <p className="absolute bottom-4 left-4 text-white font-semibold text-lg z-10">{images[0].alt}</p>
                     </div>
-                     {/* ✅ КЛИК ПО ЭТОМУ DIV ОТКРЫВАЕТ ЛАЙТБОКС СО ВТОРОЙ КАРТИНКОЙ */}
                      <div 
                        className="rounded-xl overflow-hidden shadow-lg group relative cursor-pointer"
                        onClick={() => openLightbox(1)} 
@@ -108,9 +99,7 @@ const DrivingSchool = () => {
                     </div>
                  </section>
 
-                {/* Остальные секции без изменений... */}
                 <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                   {/* ... (код секции без изменений) ... */}
                    <Card className="p-6 border-gray-200 shadow-sm">
                      <CardHeader className="pb-4">
                        <CardTitle className="text-xl font-semibold text-gray-800 flex items-center">
@@ -147,7 +136,6 @@ const DrivingSchool = () => {
                 </section>
 
                  <section className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 p-8 shadow-sm">
-                   {/* ... (код секции без изменений) ... */}
                    <h2 className="text-2xl font-semibold text-indigo-800 mb-6 text-center">Наши преимущества</h2>
                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                      {[
@@ -165,7 +153,6 @@ const DrivingSchool = () => {
                  </section>
 
                 <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                   {/* ... (код секции без изменений) ... */}
                    <Card className="lg:col-span-2 p-8 bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200 shadow-sm">
                     <CardHeader className="pb-4">
                        <CardTitle className="text-2xl font-semibold text-gray-800">Контакты и запись</CardTitle>
@@ -194,7 +181,6 @@ const DrivingSchool = () => {
                 </section>
 
                  <section className="text-center bg-gradient-to-r from-primary to-blue-700 rounded-xl p-10 shadow-lg text-white">
-                   {/* ... (код секции без изменений) ... */}
                    <h2 className="text-3xl font-bold mb-4">До встречи в нашем техникуме!</h2>
                   <p className="text-lg font-medium max-w-2xl mx-auto">
                     Уметь качественно управлять транспортным средством – нелегкая задача.
@@ -210,9 +196,6 @@ const DrivingSchool = () => {
           <SidebarCards />
         </aside>
       </div>
-
-      {/* ✅ ЭТОТ БЛОК ОТВЕЧАЕТ ЗА ОТОБРАЖЕНИЕ ЛАЙТБОКСА */}
-      {/* Он показывается только когда lightboxOpen === true */}
       {lightboxOpen && (
         <div 
           className="fixed inset-0 bg-black/80 z-[70] flex items-center justify-center p-4" 

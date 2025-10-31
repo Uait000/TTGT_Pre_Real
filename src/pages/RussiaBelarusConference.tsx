@@ -51,7 +51,7 @@ const RussiaBelarusConference = () => {
   const documents2024 = [
     {
       title: 'Положение о проведении IV Всероссийской студенческой конференции с международным участием "Россия и Беларусь - вехи общей истории", посвященной Победе советского народа в Великой Отечественной войне',
-      url: '#' //не ставить файл
+      url: '#' 
     },
     {
       title: 'Список подавших документы для участия в IV Всероссийской студенческой конференции с международным участием "Россия и Беларусь - вехи общей истории", посвященной Победе советского народа в Великой Отечественной войне',
@@ -115,7 +115,6 @@ const RussiaBelarusConference = () => {
               <h1 className="text-3xl font-bold text-primary mb-8 text-center">Россия и Беларусь - вехи общей истории</h1>
               
               <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
-                {/* Hero image */}
                 <div className="w-full aspect-[16/6] bg-gradient-to-br from-red-100 to-red-200 rounded-lg overflow-hidden shadow-lg mb-8">
                   <img
                     src= {rushabel}

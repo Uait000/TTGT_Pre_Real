@@ -1,68 +1,69 @@
 import { useState, useEffect } from 'react';
-import { BASE_URL, POSTS_ENDPOINT, NewsPost } from '@/api/config';
+import { postsApi, Post, PostCategory } from '@/api/posts';
 
-const DEFAULT_CATEGORY = 0;
+export const useFetchNews = (category: PostCategory) => {
+	const [posts, setPosts] = useState<Post[]>([]); 
+	const [loading, setLoading] = useState(false);
+	const [offset, setOffset] = useState(0);
+	const [hasMore, setHasMore] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+	const loadMore = async (limit: number = 10, currentOffset: number) => {
+		
+		if (loading || !hasMore) return; 
 
-export const useFetchNews = () => {
-  const [posts, setPosts] = useState<NewsPost[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+		setLoading(true);
+		setError(null);
 
-  const loadMore = async (limit: number = 10, currentOffset: number) => {
-    if (loading) return;
+		try {
+			const safeLimit = Number(limit);
+			const safeOffset = Number(currentOffset);
 
-    setLoading(true);
-    setError(null);
+			if (isNaN(safeLimit) || isNaN(safeOffset)) {
+				throw new Error('Limit and offset must be valid numbers.');
+			}
 
-    try {
-        const safeLimit = Number(limit);
-        const safeOffset = Number(currentOffset);
+			const newPosts: Post[] = await postsApi.getPublicAll({
+				limit: safeLimit,
+				offset: safeOffset,
+				category: category, 
+			});
 
-        if (isNaN(safeLimit) || isNaN(safeOffset)) {
-            throw new Error('Limit and offset must be valid numbers.');
-        }
+			
+			const normalizedPosts = newPosts.map(post => ({
+				...post,
+				body: (post as any).text || post.body || '',
+			}));
 
-      const url = `${BASE_URL}${POSTS_ENDPOINT}?limit=${safeLimit}&offset=${safeOffset}&category=${DEFAULT_CATEGORY}`;
+			
+			setPosts(prev => (currentOffset === 0 ? normalizedPosts : [...prev, ...normalizedPosts]));
+			setOffset(currentOffset + normalizedPosts.length);
+			setHasMore(normalizedPosts.length === limit);
 
-      const response = await fetch(url);
+		} catch (err) {
+			const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+			setError(errorMessage);
+			console.error('Error loading news:', err);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-      if (!response.ok) {
-            const errorDetails = await response.json().catch(() => ({ detail: response.statusText }));
-            console.error('API Error:', errorDetails);
-        throw new Error(`Failed to fetch news: ${errorDetails.detail || response.statusText}`);
-      }
+	const refresh = () => {
+		setPosts([]);
+		setOffset(0);
+		setHasMore(true);
+		setError(null);
+		loadMore(9, 0); 
+	};
 
-      const newPosts: NewsPost[] = await response.json();
+	useEffect(() => {
+		
+		setPosts([]);
+		setOffset(0);
+		setHasMore(true);
+		setError(null);
+		loadMore(9, 0); 
+	}, [category]); 
 
-      const normalizedPosts = newPosts.map(post => ({
-        ...post,
-        body: (post as any).text || post.body || '',
-      }));
-
-      setPosts(prev => [...prev, ...normalizedPosts]);
-      setOffset(currentOffset + normalizedPosts.length);
-      setHasMore(normalizedPosts.length === limit);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      console.error('Error loading news:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const refresh = () => {
-    setPosts([]);
-    setOffset(0);
-    setHasMore(true);
-    setError(null);
-    loadMore(9, 0);
-  };
-
-  useEffect(() => {
-    loadMore(9, 0);
-  }, []);
-
-  return { posts, loading, offset, hasMore, loadMore, error, refresh };
+	return { posts, loading, offset, hasMore, loadMore, error, refresh };
 };

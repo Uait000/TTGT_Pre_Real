@@ -13,11 +13,8 @@ import {
   BookOpen
 } from 'lucide-react';
 import corp1 from '@/assets/pictures/corp.jpg';
-
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
-// --- ИМПОРТ PDF ---
 import planMeropriyatiy from '@/assets/file/corp/Plan_mer_korr_30_08_2024.pdf';
 import polozhenieOKomissii from '@/assets/file/corp/Pol_korr.pdf';
 import prikazOKomissii from '@/assets/file/corp/Plan_mer_korr_30_08_2024.pdf'; 
@@ -59,7 +56,6 @@ const CorruptionReport = () => {
         <main className="flex-1 min-h-screen">
           <div className="container mx-auto px-6 py-8">
             
-            {/* --- Hero-блок --- */}
             <div className="w-full h-64 md:h-80 relative rounded-xl overflow-hidden mb-12 shadow-lg">
               <img
                 src={corp1}
@@ -74,19 +70,14 @@ const CorruptionReport = () => {
               </div>
             </div>
 
-            {/* --- "Timeline" --- */}
             <div className="relative flex flex-col items-start pl-10 md:pl-12">
               
-              {/* --- Вертикальная линия-градиент --- */}
               <div className="absolute left-4 md:left-6 top-1 bottom-1 w-1.5 bg-gradient-to-b from-primary via-blue-700 to-red-500 rounded-full"></div>
 
-              {/* --- Шаг 1: Контакты (Яркий) --- */}
               <div className="mb-10 w-full relative">
-                {/* Иконка на линии */}
                 <div className="absolute left-[-42px] md:left-[-48px] top-5 z-10 w-10 h-10 bg-primary rounded-full flex items-center justify-center ring-8 ring-background">
                   <Megaphone className="w-5 h-5 text-white" />
                 </div>
-                {/* Карточка */}
                 <Card className="bg-gradient-to-r from-primary to-blue-700 text-white shadow-xl border-none">
                   <CardHeader>
                     <CardTitle className="text-3xl font-bold">Сообщить о факте коррупции</CardTitle>
@@ -95,7 +86,6 @@ const CorruptionReport = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Левая часть: Телефоны */}
                     <div className="space-y-4">
                       <p className="text-lg font-semibold">Общий телефон доверия:</p>
                       <div className="flex items-center space-x-3">
@@ -103,7 +93,6 @@ const CorruptionReport = () => {
                         <span className="font-semibold text-2xl tracking-wider">8(86196) 6-20-03 доб.101</span>
                       </div>
                     </div>
-                    {/* Правая часть: Ответственный */}
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-5">
                       <p className="text-sm mb-2 text-primary-foreground/80">
                         Председатель комиссии по противодействию коррупции:
@@ -126,13 +115,10 @@ const CorruptionReport = () => {
                 </Card>
               </div>
 
-              {/* --- Шаг 2: Что нужно знать (Аккордеон) --- */}
               <div className="mb-10 w-full relative">
-                {/* Иконка на линии */}
                 <div className="absolute left-[-42px] md:left-[-48px] top-5 z-10 w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center ring-8 ring-background">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
-                {/* Карточка */}
                 <Card className="shadow-lg">
                   <CardHeader>
                     <CardTitle className="text-2xl">Что нужно знать</CardTitle>
@@ -191,13 +177,11 @@ const CorruptionReport = () => {
                 </Card>
               </div>
 
-              {/* --- Шаг 3: Документы --- */}
+
               <div className="w-full relative">
-                {/* Иконка на линии */}
                 <div className="absolute left-[-42px] md:left-[-48px] top-5 z-10 w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center ring-8 ring-background">
                   <FileText className="w-5 h-5 text-white" />
                 </div>
-                {/* Карточка */}
                 <Card className="shadow-lg">
                   <CardHeader>
                     <CardTitle className="text-2xl">Нормативные документы</CardTitle>
@@ -206,10 +190,6 @@ const CorruptionReport = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {/* --- ИЗМЕНЕНИЯ ЗДЕСЬ --- 
-                      - Синего прямоугольника нет.
-                      - Добавлены классы для плавной и красивой анимации hover.
-                    */}
                     <div className="space-y-3"> 
                       {documents.map((doc, index) => (
                         <a

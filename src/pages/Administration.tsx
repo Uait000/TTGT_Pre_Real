@@ -86,7 +86,6 @@ const Administration = () => {
         
         <main className="flex-1 min-h-screen">
           <div className="container mx-auto px-6 py-8">
-            {/* Info Blocks */}
             <InfoBlocks />
             
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">

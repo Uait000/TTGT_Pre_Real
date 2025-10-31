@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { postsApi, Post, PostCategory } from '@/api/posts'; // ИСПРАВЛЕНИЕ 1: Импортируем Post и PostCategory
-import { POST_TAGS } from '@/api/posts'; // ИСПРАВЛЕНИЕ 2: POST_TAGS из posts.ts
+import { postsApi, Post, PostCategory } from '@/api/posts'; 
+import { POST_TAGS } from '@/api/posts'; 
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -25,26 +25,26 @@ import {
 import ProfessionalForm from './ProfessionalForm';
 
 export default function ProfessionalsList() {
-  const [posts, setPosts] = useState<Post[]>([]); // ИСПРАВЛЕНИЕ 3: NewsPost заменен на Post
+  const [posts, setPosts] = useState<Post[]>([]); 
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [formOpen, setFormOpen] = useState(false);
-  const [editPost, setEditPost] = useState<Post | null>(null); // ИСПРАВЛЕНИЕ 4: NewsPost заменен на Post
+  const [editPost, setEditPost] = useState<Post | null>(null); 
   const { toast } = useToast();
 
   const loadPosts = async () => {
     try {
       setLoading(true);
       
-      // ИСПРАВЛЕНИЕ 5: Используем postsApi.getAll с параметром category (Пункт 8)
+      
       const data = await postsApi.getAll({ 
-        category: PostCategory.Professionals, // Категория "Профессионалы" (1)
+        category: PostCategory.Professionals, 
         limit: 100, 
         offset: 0 
       });
 
       if (Array.isArray(data)) {
-        // Убираем ручную нормализацию. data уже должно быть Post[]
+        
         setPosts(data); 
       } else {
         setPosts([]);
@@ -86,7 +86,7 @@ export default function ProfessionalsList() {
     }
   };
 
-  const handleEdit = (post: Post) => { // ИСПРАВЛЕНИЕ 6: NewsPost заменен на Post
+  const handleEdit = (post: Post) => { 
     setEditPost(post);
     setFormOpen(true);
   };

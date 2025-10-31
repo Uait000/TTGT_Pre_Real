@@ -7,8 +7,6 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Pride = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-
-  // Placeholder images for the pride gallery
   const prideImages = [
     { id: 1, src: 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg', alt: 'Выпускники техникума' },
     { id: 2, src: 'https://images.pexels.com/photos/1181533/pexels-photo-1181533.jpeg', alt: 'Достижения студентов' },
@@ -41,7 +39,6 @@ const Pride = () => {
         
         <main className="flex-1 min-h-screen">
           <div className="container mx-auto px-6 py-8">
-            {/* Info Blocks */}
             <InfoBlocks />
             
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
@@ -54,7 +51,6 @@ const Pride = () => {
                 </p>
               </div>
 
-              {/* Carousel */}
               <div className="relative max-w-4xl mx-auto">
                 <div className="aspect-[16/10] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl overflow-hidden shadow-lg">
                   <img
@@ -64,7 +60,6 @@ const Pride = () => {
                   />
                 </div>
 
-                {/* Navigation arrows */}
                 <button
                   onClick={prevSlide}
                   className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white border border-border rounded-full p-3 hover:shadow-lg transition-all duration-200"
@@ -79,7 +74,6 @@ const Pride = () => {
                   <ChevronRight className="w-6 h-6 text-primary" />
                 </button>
 
-                {/* Image title */}
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="bg-black/70 text-white px-4 py-2 rounded-lg">
                     <p className="text-center font-medium">{prideImages[currentSlide].alt}</p>
@@ -87,7 +81,6 @@ const Pride = () => {
                 </div>
               </div>
 
-              {/* Dots indicator */}
               <div className="flex justify-center space-x-2 mt-6">
                 {prideImages.map((_, index) => (
                   <button
@@ -102,14 +95,12 @@ const Pride = () => {
                 ))}
               </div>
 
-              {/* Image counter */}
               <div className="text-center mt-4">
                 <span className="text-muted-foreground text-sm">
                   {currentSlide + 1} из {prideImages.length}
                 </span>
               </div>
 
-              {/* Additional info */}
               <div className="mt-8 bg-gradient-to-r from-secondary/5 to-accent/5 rounded-lg p-6">
                 <h2 className="text-xl font-semibold text-primary mb-4 text-center">О наших достижениях</h2>
                 <p className="text-foreground leading-relaxed text-center">

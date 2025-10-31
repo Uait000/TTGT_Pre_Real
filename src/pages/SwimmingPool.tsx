@@ -70,9 +70,7 @@ const SwimmingPool = () => {
 
               <div className="space-y-12">
 
-                {/* --- Секция "Приветствие" --- */}
                 <section className="text-center bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-200 p-8 shadow-sm">
-                   {/* ... (текст без изменений) ... */}
                    <p className="text-lg text-gray-700 leading-relaxed mb-4">
                      <em>"Плавать рекомендуется с детства и до глубокой старости."</em> - Заведующая бассейном Г.А. Лапова
                    </p>
@@ -89,7 +87,6 @@ const SwimmingPool = () => {
 
                 {/* --- Карусель --- */}
                 <section className="relative max-w-5xl mx-auto group">
-                   {/* ... (карусель без изменений) ... */}
                    <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-200">
                     <div className="flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
                       {images.map((image) => (
@@ -112,28 +109,25 @@ const SwimmingPool = () => {
                   </div>
                 </section>
 
-                {/* --- Секция "Цены" --- */}
                 <section className="space-y-8">
                    <h2 className="text-3xl font-semibold text-gray-800 text-center mb-8">Прейскурант цен</h2>
 
                    {/* Таблица 1 */}
-                   <Card className="border-green-300 shadow-sm overflow-hidden"> {/* Изменен цвет рамки */}
-                     <CardHeader className="bg-green-100 p-4 border-b border-green-300"> {/* Изменен фон */}
+                   <Card className="border-green-300 shadow-sm overflow-hidden"> 
+                     <CardHeader className="bg-green-100 p-4 border-b border-green-300"> 
                        <CardTitle className="text-xl font-semibold text-green-800 text-center">Групповые занятия для детей с 7 лет</CardTitle>
                        <p className="text-sm text-green-700 text-center">Дополнительные общеобразовательные программы</p>
                      </CardHeader>
                      <CardContent className="p-0">
                         <Table>
                           <TableHeader>
-                            <TableRow className="bg-green-50"> {/* Изменен фон */}
-                              {/* ✅ ИСПРАВЛЕНИЕ: Добавлен text-center */}
+                            <TableRow className="bg-green-50"> 
                               <TableHead className="font-semibold text-green-900 text-center">Наименование услуги</TableHead>
                               <TableHead className="font-semibold text-green-900 text-center">Количество занятий</TableHead>
                               <TableHead className="font-semibold text-green-900 text-center">Стоимость (руб.)</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {/* ✅ ИСПРАВЛЕНИЕ: Добавлен text-center */}
                             <TableRow><TableCell className="text-center">Обучение спортивному плаванию</TableCell><TableCell className="text-center">4 (1 раз в неделю)</TableCell><TableCell className="text-center font-medium">2000</TableCell></TableRow>
                             <TableRow><TableCell className="text-center">Обучение первичным навыкам плавания</TableCell><TableCell className="text-center">4 (1 раз в неделю)</TableCell><TableCell className="text-center font-medium">2000</TableCell></TableRow>
                             <TableRow><TableCell className="text-center">Обучение спортивному плаванию</TableCell><TableCell className="text-center">8 (2 раза в неделю)</TableCell><TableCell className="text-center font-medium">4000</TableCell></TableRow>
@@ -146,23 +140,21 @@ const SwimmingPool = () => {
                    </Card>
 
                    {/* Таблица 2 */}
-                   <Card className="border-blue-300 shadow-sm overflow-hidden"> {/* Изменен цвет рамки */}
-                     <CardHeader className="bg-blue-100 p-4 border-b border-blue-300"> {/* Изменен фон */}
+                   <Card className="border-blue-300 shadow-sm overflow-hidden"> 
+                     <CardHeader className="bg-blue-100 p-4 border-b border-blue-300"> 
                        <CardTitle className="text-xl font-semibold text-blue-800 text-center">Для взрослых и детей старше 14 лет</CardTitle>
                        <p className="text-sm text-blue-700 text-center">Оказание услуг по плаванию с 01.01.2025 г.</p>
                      </CardHeader>
                       <CardContent className="p-0">
                          <Table>
                           <TableHeader>
-                            <TableRow className="bg-blue-50"> {/* Изменен фон */}
-                              {/* ✅ ИСПРАВЛЕНИЕ: Добавлен text-center */}
+                            <TableRow className="bg-blue-50"> 
                               <TableHead className="font-semibold text-blue-900 text-center">Наименование услуги</TableHead>
                               <TableHead className="font-semibold text-blue-900 text-center">Количество занятий</TableHead>
                               <TableHead className="font-semibold text-blue-900 text-center">Стоимость (руб.)</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                             {/* ✅ ИСПРАВЛЕНИЕ: Добавлен text-center */}
                             <TableRow><TableCell className="text-center">Разовое посещение</TableCell><TableCell className="text-center">1</TableCell><TableCell className="text-center font-medium">450</TableCell></TableRow>
                             <TableRow><TableCell className="text-center">Абонемент</TableCell><TableCell className="text-center">4 в месяц</TableCell><TableCell className="text-center font-medium">1 600</TableCell></TableRow>
                             <TableRow><TableCell className="text-center">Абонемент</TableCell><TableCell className="text-center">8 в месяц</TableCell><TableCell className="text-center font-medium">3 200</TableCell></TableRow>
@@ -172,23 +164,21 @@ const SwimmingPool = () => {
                    </Card>
 
                    {/* Таблица 3 */}
-                   <Card className="border-purple-300 shadow-sm overflow-hidden"> {/* Изменен цвет рамки */}
-                     <CardHeader className="bg-purple-100 p-4 border-b border-purple-300"> {/* Изменен фон */}
+                   <Card className="border-purple-300 shadow-sm overflow-hidden"> 
+                     <CardHeader className="bg-purple-100 p-4 border-b border-purple-300"> 
                        <CardTitle className="text-xl font-semibold text-purple-800 text-center">Для работников и студентов ТТЖТ</CardTitle>
                         <p className="text-sm text-purple-700 text-center">Оказание услуг по плаванию с 01.01.2025 г.</p>
                      </CardHeader>
                      <CardContent className="p-0">
                        <Table>
                          <TableHeader>
-                            <TableRow className="bg-purple-50"> {/* Изменен фон */}
-                              {/* ✅ ИСПРАВЛЕНИЕ: Добавлен text-center */}
+                            <TableRow className="bg-purple-50"> 
                               <TableHead className="font-semibold text-purple-900 text-center">Наименование услуги</TableHead>
                               <TableHead className="font-semibold text-purple-900 text-center">Количество занятий</TableHead>
                               <TableHead className="font-semibold text-purple-900 text-center">Стоимость (руб.)</TableHead>
                             </TableRow>
                           </TableHeader>
                          <TableBody>
-                             {/* ✅ ИСПРАВЛЕНИЕ: Добавлен text-center */}
                             <TableRow><TableCell className="text-center">Разовое посещение для работников</TableCell><TableCell className="text-center">1</TableCell><TableCell className="text-center font-medium text-green-600">Бесплатно</TableCell></TableRow>
                             <TableRow><TableCell className="text-center">Абонемент для работников</TableCell><TableCell className="text-center">2 в неделю</TableCell><TableCell className="text-center font-medium">1600 / месяц</TableCell></TableRow>
                             <TableRow><TableCell className="text-center">Разовое посещение для студентов (внеурочно)</TableCell><TableCell className="text-center">1</TableCell><TableCell className="text-center font-medium">200</TableCell></TableRow>
@@ -203,7 +193,6 @@ const SwimmingPool = () => {
                    <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center flex items-center justify-center">
                       <FileText className="w-7 h-7 mr-3 text-gray-500"/> Документы для скачивания
                    </h2>
-                   {/* ... (секция документов без изменений) ... */}
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {documents.map((doc, index) => (
                       <a
@@ -223,7 +212,6 @@ const SwimmingPool = () => {
 
                  {/* --- Секция Инструкторы и Контакты --- */}
                 <section className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 p-8 shadow-sm">
-                   {/* ... (секция инструкторов и контактов без изменений) ... */}
                    <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center flex items-center justify-center">
                      <Users className="w-7 h-7 mr-3 text-gray-500"/> Наши инструкторы и контакты
                    </h2>
@@ -282,7 +270,6 @@ const SwimmingPool = () => {
                   rel="noopener noreferrer"
                   className="block bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-8 shadow-sm hover:shadow-lg hover:border-purple-400 transition-all duration-300 group transform hover:-translate-y-1"
                 >
-                   {/* ... (секция видео без изменений) ... */}
                     <div className="flex items-center mb-4">
                      <Film className="w-8 h-8 text-purple-600 mr-4 flex-shrink-0" />
                     <h2 className="text-2xl font-semibold text-purple-800 group-hover:text-purple-900 transition-colors">Ролик о НОКО</h2>

@@ -71,7 +71,6 @@ const Accreditation = () => {
                 <Card className="p-6">
                   <h2 className="text-xl font-semibold text-primary mb-4">QR-код для проверки</h2>
                   <div className="aspect-square bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border-2 border-primary/20 flex items-center justify-center">
-                    {/* ✅ ИСПРАВЛЕНИЕ: Убран `text-center` с этого контейнера */}
                     <div>
                       <div 
                         className="w-48 h-48 bg-white rounded-lg shadow-lg border border-border overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 mb-4 mx-auto"
@@ -83,7 +82,6 @@ const Accreditation = () => {
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                         />
                       </div>
-                      {/* ✅ ИСПРАВЛЕНИЕ: Добавлен `mx-auto`, чтобы центрировать сам блок текста */}
                       <div className="text-sm text-muted-foreground max-w-xs mx-auto">
                         <p className="font-semibold mb-2 text-center">Как скачать выписку из ГИС «Реестр организаций, осуществляющих образовательную деятельность по имеющим государственную аккредитацию образовательным программам»</p>
                         <ol className="text-left space-y-1">

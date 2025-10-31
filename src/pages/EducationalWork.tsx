@@ -55,14 +55,11 @@ const EducationalWork = () => {
               <h1 className="text-3xl font-bold text-primary mb-8 text-center">Воспитательная работа</h1>
               
               <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
-                {/* Карусель изображений */}
                 <div className="relative max-w-4xl mx-auto mb-8">
-                  {/* ✅ ИСПРАВЛЕНИЕ: Убраны классы, задающие фиксированную высоту/пропорции */}
                   <div className="rounded-xl overflow-hidden shadow-lg">
                     <img
                       src={images[currentSlide].src}
                       alt={images[currentSlide].alt}
-                      // ✅ ИСПРАВЛЕНИЕ: Высота теперь подстраивается автоматически
                       className="w-full h-auto"
                     />
                   </div>
@@ -96,7 +93,6 @@ const EducationalWork = () => {
                   </div>
                 </div>
 
-                {/* Основной текст */}
                 <div className="bg-white rounded-lg p-6 mb-6">
                   <h2 className="text-2xl font-bold text-primary mb-6 text-center">
                     ОПЕРАТИВНО – ПРОФИЛАКТИЧЕСКОЕ МЕРОПРИЯТИЕ «ЗАЩИТА» С 1 ПО 10 ИЮНЯ 2024 ГОДА В ТТЖТ – ФИЛИАЛЕ РГУПС
@@ -122,7 +118,6 @@ const EducationalWork = () => {
                   </div>
                 </div>
 
-                {/* PDF документы */}
                 <div className="bg-white rounded-lg p-6">
                   <h3 className="text-xl font-semibold text-primary mb-6 text-center">Документы для скачивания</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

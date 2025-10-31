@@ -128,7 +128,7 @@ const AccessibleEnvironment = () => {
                             rel="noopener noreferrer"
                             className="flex items-center justify-between space-x-4 p-4 pr-5 bg-white rounded-lg border border-border/70 shadow-sm hover:shadow-md hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 group"
                           >
-                            <div className="flex items-center space-x-4 min-w-0"> {/* Обертка для text-truncate */}
+                            <div className="flex items-center space-x-4 min-w-0"> 
                               <FileText className="w-6 h-6 text-primary/80 group-hover:text-primary transition-colors flex-shrink-0" />
                               <span className="text-foreground font-medium group-hover:text-primary transition-colors truncate">
                                 {doc.title}
@@ -139,7 +139,7 @@ const AccessibleEnvironment = () => {
                         ))}
                       </div>
                     ) : (
-                      // Улучшенный 'empty state'
+                      
                       <div className="flex items-center justify-center space-x-3 bg-white/50 rounded-lg p-6 text-center border border-dashed border-border">
                         <Info className="w-5 h-5 text-muted-foreground" />
                         <p className="text-muted-foreground">Информация для данного раздела будет добавлена позже.</p>

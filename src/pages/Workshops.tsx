@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react'; // Добавлен useEffect
+import { useState, useEffect } from 'react'; 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import InfoBlocks from '@/components/InfoBlocks';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; // Используем Card
-import { Button } from '@/components/ui/button'; // Используем Button для ссылки
-import { ChevronLeft, ChevronRight, Wrench, GalleryThumbnails, ListChecks, Accessibility, FileText } from 'lucide-react'; // Добавлены иконки
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; 
+import { Button } from '@/components/ui/button'; 
+import { ChevronLeft, ChevronRight, Wrench, GalleryThumbnails, ListChecks, Accessibility, FileText } from 'lucide-react'; 
 
-// Импорты изображений для карусели
+
 import workshop1 from '@/assets/pictures/phoca_thumb_l_442.jpg';
 import workshop2 from '@/assets/pictures/phoca_thumb_l_443.jpg';
 import workshop3 from '@/assets/pictures/phoca_thumb_l_444.jpg';
@@ -44,9 +44,9 @@ const Workshops = () => {
     setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  // Автопрокрутка
+  
   useEffect(() => {
-    const slideInterval = setInterval(nextSlide, 5000); // 5 секунд
+    const slideInterval = setInterval(nextSlide, 10000); 
     return () => clearInterval(slideInterval);
   }, []);
 
@@ -67,7 +67,7 @@ const Workshops = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50"> {/* Фон страницы */}
+    <div className="min-h-screen bg-gray-50"> 
       <Header />
       <div className="flex">
         <Sidebar />
@@ -75,16 +75,15 @@ const Workshops = () => {
           <div className="container mx-auto px-6 py-8">
             <InfoBlocks />
             
-            <div className="bg-white rounded-2xl shadow-xl border border-border p-8 md:p-12"> {/* Основной контейнер */}
+            <div className="bg-white rounded-2xl shadow-xl border border-border p-8 md:p-12"> 
               <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
-                <Wrench className="w-10 h-10 mr-4 text-orange-500" /> {/* Иконка */}
+                <Wrench className="w-10 h-10 mr-4 text-orange-500" /> 
                 Учебно-производственные мастерские
               </h1>
               <p className="text-center text-lg text-muted-foreground mb-12 max-w-3xl mx-auto">
                 Учебная база ТТЖТ – филиала РГУПС для формирования практических умений и получения первоначального опыта.
               </p>
               
-              {/* ✅ Новый дизайн секций */}
               <div className="space-y-12">
 
                 {/* --- Секция "О мастерских" --- */}
@@ -111,14 +110,12 @@ const Workshops = () => {
                       ))}
                     </div>
                   </div>
-                  {/* Стрелки */}
                   <button onClick={prevSlide} className="absolute left-[-15px] md:left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100">
                     <ChevronLeft className="w-6 h-6 text-primary" />
                   </button>
                   <button onClick={nextSlide} className="absolute right-[-15px] md:right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100">
                     <ChevronRight className="w-6 h-6 text-primary" />
                   </button>
-                  {/* Индикаторы */}
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1.5">
                     {images.map((_, index) => (
                       <button key={index} onClick={() => setCurrentSlide(index)} className={`w-2 h-2 rounded-full transition-all duration-300 ${ index === currentSlide ? 'bg-white scale-150 ring-2 ring-white/50' : 'bg-white/50 hover:bg-white/80' }`} />

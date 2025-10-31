@@ -2,11 +2,9 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import InfoBlocks from '@/components/InfoBlocks';
-import { XCircle, CheckCircle, AlertTriangle } from 'lucide-react'; // Импортируем иконки
+import { XCircle, CheckCircle, AlertTriangle } from 'lucide-react'; 
 
 const InternalRules = () => {
-  
-  // Данные для секции "Запрещено"
   const forbiddenRules = [
     { id: 1, text: 'Пропускать и опаздывать на занятия без уважительной причины.' },
     { id: 2, text: 'Употреблять спиртные напитки, наркотические и токсические средства.' },
@@ -16,15 +14,13 @@ const InternalRules = () => {
     { id: 6, text: 'Употреблять жевательные резинки в помещении.' },
     { id: 7, text: 'Пользоваться переносными радиоприемниками, магнитофонами (плеерами) и сотовыми телефонами во время учебных занятий.' },
   ];
-
-  // Данные для секции "Обязательно"
   const requiredRules = [
     { id: 1, text: 'Соблюдать частоту и порядок в помещениях и на территории техникума.' },
     { id: 2, text: 'Приходить на занятия, имея опрятный внешний вид и одежду, соответствующую учебному заведению (не допускается наличие головного убора в помещениях, одежды спортивного или пляжного стиля, в том числе шорты, спортивные брюки, пляжные тапочки и т.п.).' },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50"> {/* Фон страницы */}
+    <div className="min-h-screen bg-gray-50"> 
       <Header />
       
       <div className="flex">
@@ -43,10 +39,7 @@ const InternalRules = () => {
                 Соблюдение этих правил — основа уважения к себе и окружающим, а также залог успешного и безопасного обучения.
               </p>
 
-              {/* ✅ Новый дизайн в 2 колонки */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-
-                {/* --- Колонка "Запрещено" (Красная) --- */}
                 <section className="bg-gradient-to-br from-red-50 to-pink-100 rounded-xl border border-red-200 p-8 shadow-inner">
                   <h2 className="text-3xl font-bold text-red-700 mb-8 flex items-center">
                     <XCircle className="w-8 h-8 mr-3 flex-shrink-0" />
@@ -64,8 +57,6 @@ const InternalRules = () => {
                     ))}
                   </div>
                 </section>
-
-                {/* --- Колонка "Обязательно" (Зеленая) --- */}
                 <section className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl border border-green-200 p-8 shadow-inner">
                   <h2 className="text-3xl font-bold text-green-700 mb-8 flex items-center">
                     <CheckCircle className="w-8 h-8 mr-3 flex-shrink-0" />

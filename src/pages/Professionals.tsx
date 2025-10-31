@@ -1,35 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 import { postsApi, Post, PostCategory } from '@/api/posts'; 
 import type { Post as NewsPost } from '@/api/posts';
-import NewsCard from '@/components/NewsCard';
-import NewsModal from '@/components/NewsModal'; 
+import NewsCard from '@/components//NewsCard'; 
+import NewsModal from '@/components//NewsModal'; 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 
+
+const fetchProfessionalsPosts = async () => {
+  return await postsApi.getPublicAll({ 
+    limit: 100,
+    category: PostCategory.Professionals,
+  });
+};
+
 const Professionals = () => {
-  const [posts, setPosts] = useState<NewsPost[]>([]);
+  const { data: posts = [], isLoading: isLoadingPosts } = useQuery<NewsPost[]>({
+    queryKey: ['posts', PostCategory.Professionals], 
+    queryFn: fetchProfessionalsPosts,
+  });
+
   const [visibleCount, setVisibleCount] = useState(6);
   const [selectedPost, setSelectedPost] = useState<NewsPost | null>(null);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [abortController, setAbortController] = useState<AbortController | null>(null);
-
-  useEffect(() => {
-    const loadPosts = async () => {
-      try {
-        const fetchedPosts = await postsApi.getAll({ 
-          limit: 100,
-          category: PostCategory.Professionals,
-        });
-        
-        setPosts(fetchedPosts as NewsPost[]); 
-      } catch (error) {
-        console.error("Failed to fetch professionals:", error);
-      }
-    };
-    loadPosts();
-  }, []);
-
   const handleReadMore = async (post: NewsPost) => {
     if (abortController) {
       abortController.abort();
@@ -41,9 +38,8 @@ const Professionals = () => {
     setIsLoadingDetails(true);
 
     try {
-      // ИСПРАВЛЕНИЕ: getById ожидает ID. 
-      // Если ваш API ожидает строку, используйте post.id.toString()
-      const detailData = await postsApi.getById(post.id); 
+      
+      const detailData = await postsApi.getPublicById(post.id); 
       
       if (!newAbortController.signal.aborted) {
         const finalPost: NewsPost = {
@@ -81,8 +77,11 @@ const Professionals = () => {
         <main className="flex-1 min-h-screen central-content-area">
           <div className="container mx-auto px-6 py-8">
             <h1 className="text-4xl font-bold text-foreground mb-8">Наши профессионалы</h1>
-            
-            {posts.length === 0 ? (
+            {isLoadingPosts ? (
+              <div className="flex justify-center items-center h-64">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              </div>
+            ) : posts.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">Нет записей о профессионалах</p>
               </div>

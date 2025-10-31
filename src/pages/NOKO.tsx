@@ -2,7 +2,7 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import InfoBlocks from '@/components/InfoBlocks';
-import { ExternalLink, FileText, CheckSquare, Film } from 'lucide-react'; // Добавлены иконки
+import { ExternalLink, FileText, CheckSquare, Film } from 'lucide-react'; 
 import VNOKO from '@/assets/file/Pol_VNOKO_31.08.2021.pdf';
 
 const NOKO = () => {
@@ -20,11 +20,8 @@ const NOKO = () => {
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
               <h1 className="text-3xl font-bold text-primary mb-2 text-center">Независимая оценка качества образования</h1>
               <p className="text-center text-muted-foreground mb-10">(НОКО)</p>
-              
-              {/* ✅ ИЗМЕНЕНИЕ 1: Новый дизайн страницы с секциями */}
               <div className="space-y-10">
 
-                {/* --- Секция опроса --- */}
                 <section className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-8 shadow-sm">
                   <div className="flex items-center mb-6">
                     <CheckSquare className="w-8 h-8 text-blue-600 mr-4 flex-shrink-0" />
@@ -56,14 +53,12 @@ const NOKO = () => {
                   </div>
                 </section>
 
-                {/* --- Секция документов --- */}
                 <section className="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl border border-green-200 p-8 shadow-sm">
                    <div className="flex items-center mb-6">
                      <FileText className="w-8 h-8 text-green-600 mr-4 flex-shrink-0" />
                     <h2 className="text-2xl font-semibold text-green-800">Нормативные документы</h2>
                   </div>
                   <div className="space-y-4">
-                    {/* ✅ ИСПРАВЛЕНИЕ 2: Подключен локальный PDF */}
                     <a
                       href={VNOKO}
                       target="_blank"
@@ -73,8 +68,6 @@ const NOKO = () => {
                       <span className="text-foreground font-medium group-hover:text-green-700 transition-colors">Положение о проведении внутренней независимой оценки качества образования в ТТЖТ - филиале РГУПС</span>
                       <FileText className="w-5 h-5 text-gray-400 group-hover:text-green-600 transition-colors flex-shrink-0 ml-4" />
                     </a>
-
-                    {/* ✅ ИСПРАВЛЕНИЕ 3: Подключена внешняя ссылка на PDF */}
                     <a
                       href="https://rgups.ru/site/assets/files/90788/othet_o_samoobsledovanii_26_03_2024.pdf"
                       target="_blank"
@@ -87,8 +80,6 @@ const NOKO = () => {
                   </div>
                 </section>
 
-                {/* --- Секция видео ролика --- */}
-                {/* ✅ ИСПРАВЛЕНИЕ 4: Секция сделана кликабельной ссылкой */}
                 <a
                   href="https://open.edu.gov.ru/quality-of-education/"
                   target="_blank"

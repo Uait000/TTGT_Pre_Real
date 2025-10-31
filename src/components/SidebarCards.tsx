@@ -2,7 +2,6 @@ import { Star, TrendingUp, Trophy, Microscope } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const SidebarCards = () => {
-  // ИСПРАВЛЕНО: Стандартизирована структура всех плашек
   const cards = [
     {
       id: 1,
@@ -98,7 +97,6 @@ const SidebarCards = () => {
     }
   ];
 
-  // ИСПРАВЛЕНО: Единый компонент для рендера плашек с одинаковой структурой
   const CardContent = ({ card }: { card: typeof cards[0] }) => (
     <>
       <div className="flex justify-center mb-3">{card.icon}</div>
@@ -112,12 +110,10 @@ const SidebarCards = () => {
 
   return (
     <div className="space-y-4 pb-4">
-      {/* ИСПРАВЛЕНО: Заголовок панели */}
       <div className="bg-primary text-white rounded-xl p-5 text-center shadow-md">
         <h3 className="text-lg font-bold">Ресурсы</h3>
       </div>
 
-      {/* ИСПРАВЛЕНО: Единообразный рендер плашек */}
       {cards.map((card) => {
         const cardClasses = `${card.className} flex flex-col items-center justify-center min-h-[180px]`;
 

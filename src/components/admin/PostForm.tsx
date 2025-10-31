@@ -79,9 +79,6 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  // --- ИЗМЕНЕНО: useEffect для поиска авторов ---
-  // Теперь он запускается всегда, когда меняется teacherSearch
-  // Если teacherSearch пустой - он загрузит список по умолчанию
   useEffect(() => {
     setIsTeacherSearching(true);
     const timerId = setTimeout(() => {
@@ -92,12 +89,12 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
           toast({ title: 'Ошибка', description: 'Не удалось найти автора', variant: 'destructive' });
         })
         .finally(() => setIsTeacherSearching(false));
-    }, 300); // 300ms debounce
+    }, 300); 
 
     return () => clearTimeout(timerId);
-  }, [teacherSearch, toast]); // ---
+  }, [teacherSearch, toast]); 
 
-  // --- useEffect для заполнения формы ---
+  
   useEffect(() => {
     setTitleError(null);
     const postDate = editPost ? new Date(editPost.publish_date * 1000) : new Date();
@@ -118,7 +115,7 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
       });
       setSelectedDate(postDate);
       setImageFiles([]);
-      // Устанавливаем поиск на текущего автора (это вызовет useEffect выше)
+      
       setTeacherSearch(editPost.author);
     } else if (open && !editPost) {
       const initialDate = new Date();
@@ -135,7 +132,7 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
       });
       setSelectedDate(initialDate);
       setImageFiles([]);
-      // Сбрасываем поиск на пустую строку (это вызовет useEffect выше)
+      
       setTeacherSearch('');
     }
   }, [editPost, open]);
@@ -240,7 +237,7 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
                     <CommandInput
                       placeholder="Поиск по фамилии..."
                       value={teacherSearch}
-                      onValueChange={setTeacherSearch} // При вводе меняем search
+                      onValueChange={setTeacherSearch} 
                     />
                     <CommandList>
                       {isTeacherSearching && (
@@ -259,7 +256,7 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
                             onSelect={() => {
                               const selectedInitials = teacher.initials;
                               setFormData({ ...formData, author: selectedInitials });
-                              // Также обновляем search, чтобы инпут показал полное имя
+                              
                               setTeacherSearch(selectedInitials); 
                               setIsTeacherPopoverOpen(false);
                             }}
@@ -278,12 +275,10 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
                   </Command>
                 </PopoverContent>
               </Popover>
-              {/* --- Конец блока Combobox --- */}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="type">Тип поста *</Label>
-              {/* --- Select --- */}
               <Select value={formData.type.toString()} onValueChange={(value) => setFormData({ ...formData, type: parseInt(value) })}>
                 <SelectTrigger><SelectValue placeholder="Выберите тип" /></SelectTrigger>
                 <SelectContent>

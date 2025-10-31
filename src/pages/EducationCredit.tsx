@@ -1,27 +1,21 @@
 import React, { useRef } from 'react';
 import { BookOpen, CheckCircle, Users, Briefcase, Phone, Banknote, ArrowRight, Link as LinkIcon, Menu, X } from 'lucide-react';
-
-// --- Ваши реальные импорты ---
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
-
-// --- Импорт изображений ---
 import HeroImage from '@/assets/pictures/1_ObrKredit_ObrKredit.jfif';
 import AboutImage from '@/assets/pictures/2_ObrKredit_O_Proekte.jfif';
 import ConditionsImage from '@/assets/pictures/3_ObrKredit_Usloviya_Predost.jfif';
 import StudentsImage from '@/assets/pictures/4_ObrKredit_Materialy_Stud.jfif';
 import TeachersImage from '@/assets/pictures/5_ObrKredit_Mater_Pedag.jfif';
 import ContactsImage from '@/assets/pictures/6_ObrKredit_Kontakty.jfif';
-
-// --- Импорт PDF документов ---
 import SberCreditPdf from '@/assets/file/obcred/Sber_Obr_Kredit.pdf';
 import RnkBCreditPdf from '@/assets/file/obcred/RNKB.pdf';
 import RekomCreditPdf from '@/assets/file/obcred/Rekom_Obr_kredit.pdf';
 
-// Функция для парсинга текста и замены ключевых фраз на ссылки
+
 const parseContent = (text: string) => {
-    // Добавлена проверка на случай, если text будет undefined
+    
     if (!text) return null;
 
     const links: Record<string, string> = {
@@ -107,14 +101,13 @@ const EducationCredit = () => {
         { id: 'banks', title: 'Банки партнёры', image: HeroImage, content: `БАНКИ ПАРТНЕРЫ\n\nСбербанк\nОбразовательный кредит Сбербанка с государственной поддержкой\nТихорецкий техникум ЖД транспорта добавлен в список кредитуемых учебных заведений по Образовательному кредиту в Сбербанке.\n\nКонсультация и оказание помощи в оформлении по номеру тел. 8(995)7396091 Евгения или по адресу г. Тихорецк, ул. Энгельса, 91 кабинет 13(вход ближе к библиотеке), также возможен выезд сотрудника в учебное заведение.\n\nРНКБ Банк\nОбразовательный кредит с господержкой\nБанк стал участником программы, согласно постановления Правительства РФ от 15 сентября 2020 г. №1448 "О государственной поддержке образовательного кредитования" и запустил Образовательный кредит с государственной поддержкой под 3%.\n\nОбращаться по адресу: ДО №349 РНКБ Банк (ПАО). г. Тихорецк, ул. Подвойского55 /Энгельса78. Телефон для справок: +7989-215-56-72 Наталья; +7967-654-77-11 Яна. +7961-509-05-88 Екатерина; +7928-929-56-31 Ольга\n\nПАО Сбербанк, РНКБ Банк (ПАО) информируют студентов, получивших кредит на образование`},
     ];
     
-    // Объединение контента для секций
+ 
     const contentData = [
         { id: 'about', title: 'О Проекте', image: AboutImage, content: originalBlocks[0].content + '\n\n' + originalBlocks[1].content },
         { id: 'conditions', title: 'Условия предоставления', image: ConditionsImage, content: originalBlocks[2].content },
         { id: 'students', title: 'Материалы для студентов и абитуриентов', image: StudentsImage, content: originalBlocks[3].content },
         { id: 'teachers', title: 'Материалы для педагогов и руководителей', image: TeachersImage, content: originalBlocks[4].content },
         { id: 'contacts', title: 'Контакты оператора Проекта', image: ContactsImage, content: originalBlocks[5].content },
-        // ✅ ИСПРАВЛЕНО: Источник данных для 'banks' изменен на originalBlocks[6]
         { id: 'banks', title: 'Банки партнёры', image: HeroImage, content: originalBlocks[6].content.split('БАНКИ ПАРТНЕРЫ')[1] }
     ];
 

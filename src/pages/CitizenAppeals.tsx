@@ -35,12 +35,12 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// --- Импорт PDF-файлов ---
+
 import polObrac2022 from '@/assets/file/form/Pol_obrac_grazdan_2022.pdf';
 import polObracIzm2024 from '@/assets/file/form/Pol_obrac_grazdan_izm_2024.pdf';
 import polObracIzm2025 from '@/assets/file/form/Pol_obrac_grazdan_izm_2025.pdf';
 
-// Начальное состояние для сброса формы
+
 const initialFormData = {
   lastName: '',
   firstName: '',
@@ -52,7 +52,7 @@ const initialFormData = {
   agreement: false
 };
 
-// Хелпер для форматирования размера файла
+
 const formatBytes = (bytes: number, decimals = 2) => {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -85,7 +85,7 @@ const CitizenAppeals = () => {
     }
   ];
 
-  // ... (handleInputChange, handleFileUpload, removeFile, resetForm, handleSubmit) ...
+  
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };

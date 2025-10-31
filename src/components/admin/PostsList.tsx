@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 
 interface PostsListProps {
   onEdit: (post: Post) => void; 
-  onDelete: (post: Post) => void; // Эта функция передается от родителя
+  onDelete: (post: Post) => void; 
   onCreate: () => void;
   refreshTrigger?: number;
 }
@@ -68,11 +68,6 @@ export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger }
     return <div className="text-center py-8">Загрузка...</div>;
   }
 
-  // ✅ ИСПРАВЛЕНИЕ: Удалена ненужная функция setDeleteId
-  // function setDeleteId(id: number): void {
-  //     throw new Error('Function not implemented.');
-  // }
-
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -118,7 +113,6 @@ export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger }
                       <Button variant="ghost" size="sm" onClick={() => onEdit(JSON.parse(JSON.stringify(post)))} className="gap-1">
                         <Pencil className="h-4 w-4" /> Редактировать
                       </Button>
-                      {/* ✅ ИСПРАВЛЕНИЕ: Вызываем функцию onDelete из пропсов и передаем ей весь объект post */}
                       <Button variant="ghost" size="sm" onClick={() => onDelete(post)} className="gap-1 text-red-600 hover:text-red-700 hover:bg-red-50">
                         <Trash2 className="h-4 w-4" /> Удалить
                       </Button>

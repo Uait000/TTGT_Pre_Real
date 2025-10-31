@@ -1,37 +1,31 @@
 import { useState } from 'react';
-// --- ИЗМЕНЕНО: убираем useEffect, добавляем useQuery ---
-import { postsApi, Post, PostCategory } from '@/api/posts'; 
-import type { Post as NewsPost } from '@/api/posts'; 
-// --- ИСПРАВЛЕНЫ ПУТИ (судя по вашей структуре) ---
-import NewsCard from './NewsCard';
-import NewsModal from './NewsModal';
-// --- ДОБАВЛЕНО: ---
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
+import { postsApi, Post, PostCategory } from '@/api/posts'; 
+import type { Post as NewsPost } from '@/api/posts';
+import NewsCard from '@/components/NewsCard';
+import NewsModal from '@/components/NewsModal';
 
-// --- ДОБАВЛЕНО: Функция загрузки данных для useQuery ---
+
 const fetchNewsPosts = async () => {
-  return await postsApi.getAll({ 
-    limit: 100, // Загружаем больше для "Загрузить ещё"
+  
+  return await postsApi.getPublicAll({ 
+    limit: 100, 
     category: PostCategory.News,
   });
 };
 
 const NewsSection = () => {
-    // --- ИЗМЕНЕНО: Получаем посты через useQuery ---
+    
     const { data: posts = [], isLoading: isLoadingPosts } = useQuery<NewsPost[]>({
-      // Ключ ['posts', PostCategory.News] позволяет WS-хуку найти эти данные
       queryKey: ['posts', PostCategory.News], 
       queryFn: fetchNewsPosts,
     });
-    // ---
     
     const [visibleCount, setVisibleCount] = useState(6);
     const [selectedPost, setSelectedPost] = useState<NewsPost | null>(null);
     const [isLoadingDetails, setIsLoadingDetails] = useState(false);
     const [abortController, setAbortController] = useState<AbortController | null>(null);
-
-    // --- УДАЛЕНО: useEffect(loadPosts) больше не нужен ---
 
     const handleReadMore = async (post: NewsPost) => {
         if (abortController) {
@@ -44,8 +38,8 @@ const NewsSection = () => {
         setIsLoadingDetails(true);
 
         try {
-            // (Ваша логика getById остается без изменений)
-            const detailData = await postsApi.getById(post.id.toString());
+            
+            const detailData = await postsApi.getPublicById(post.id);
             
             if (!newAbortController.signal.aborted) {
                 const finalPost: NewsPost = {
@@ -81,10 +75,13 @@ const NewsSection = () => {
                 <p className="text-muted-foreground text-lg">Следите за последними новостями нашего образовательного центра</p>
             </div>
 
-            {/* --- ДОБАВЛЕНО: Состояние загрузки --- */}
             {isLoadingPosts ? (
               <div className="flex justify-center items-center h-64">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              </div>
+            ) : posts.length === 0 ? ( 
+              <div className="text-center py-12">
+                 <p className="text-muted-foreground">Нет новостей для отображения</p>
               </div>
             ) : (
               <>

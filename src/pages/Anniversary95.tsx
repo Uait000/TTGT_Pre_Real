@@ -5,8 +5,6 @@ import SidebarCards from '@/components/SidebarCards';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
-// --- Импорт изображений ---
-
 // Пост 1: История (папка history)
 import chel from '@/assets/pictures/history/chel.jpg';
 import ded from '@/assets/pictures/history/ded.jpg';
@@ -152,7 +150,6 @@ const Anniversary95 = () => {
                     )}
                 </div>
 
-                {/* --- Индикаторы-точки (теперь СНАРУЖИ) --- */}
                 {hasMultipleSlides && (
                     <div className="flex justify-center space-x-2 mb-6">
                         {images.map((_, index) => (
@@ -171,7 +168,6 @@ const Anniversary95 = () => {
                         ))}
                     </div>
                 )}
-                {/* --- Конец блока индикаторов --- */}
 
 
                 <div className="prose dark:prose-invert max-w-none text-foreground/90 leading-relaxed">
@@ -191,7 +187,6 @@ const Anniversary95 = () => {
 
                 <main className="flex-1 min-h-screen">
                     <div className="container mx-auto px-4 sm:px-6 py-8">
-                        {/* Обертка с "плавающим" эффектом для контента */}
                         <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-lg rounded-2xl shadow-2xl border border-border/10 p-6 sm:p-12">
                             <h1 className="text-4xl sm:text-5xl font-extrabold mb-10 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 pb-2">
                                 95 лет Тихорецкому техникуму<br/>железнодорожного транспорта

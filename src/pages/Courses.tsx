@@ -57,7 +57,6 @@ const Courses = () => {
                   ))}
                 </div>
 
-                {/* Последний элемент на всю ширину */}
                 <div className="w-full">
                   <a
                     href={courseItems[9].url}
@@ -86,7 +85,6 @@ const Courses = () => {
                   </a>
                 </div>
 
-                {/* Целевая подготовка студентов */}
                 <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
                   <a
                     href="#"

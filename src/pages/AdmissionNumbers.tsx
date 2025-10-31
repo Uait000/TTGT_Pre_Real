@@ -19,7 +19,6 @@ const AdmissionNumbers = () => {
               <h1 className="text-3xl font-bold text-primary mb-8 text-center">Контрольные цифры приема</h1>
               
               <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
-                {/* Document image */}
                 <div className="w-full bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg overflow-hidden shadow-lg mb-6">
                   <img
                     src= {tik}

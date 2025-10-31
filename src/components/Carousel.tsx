@@ -4,8 +4,6 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-
-  // Placeholder carousel items - you can replace with actual content
   const carouselItems = [
     { id: 1, text: '2015', description: 'Год основания современного кампуса' },
     { id: 2, text: '2016', description: 'Получение государственной аккредитации' },
@@ -19,7 +17,7 @@ const Carousel = () => {
     { id: 10, text: '2024', description: 'Открытие нового учебного корпуса' }
   ];
 
-  // Auto-scroll functionality
+  
   useEffect(() => {
     if (!isHovered) {
       const interval = setInterval(() => {
@@ -49,7 +47,6 @@ const Carousel = () => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Main carousel content */}
           <div className="flex items-center justify-center h-32 bg-gradient-to-r from-primary/10 to-primary/20 rounded-xl">
             <div className="text-center">
               <div className="text-4xl font-bold text-primary mb-2">
@@ -60,8 +57,6 @@ const Carousel = () => {
               </div>
             </div>
           </div>
-
-          {/* Navigation arrows */}
           <button
             onClick={prevSlide}
             className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white border border-border rounded-full p-2 hover:bg-gray-50 transition-colors shadow-md"
@@ -75,8 +70,6 @@ const Carousel = () => {
           >
             <ChevronRight className="w-5 h-5" />
           </button>
-
-          {/* Dots indicator */}
           <div className="flex justify-center space-x-2 mt-6">
             {carouselItems.map((_, index) => (
               <button

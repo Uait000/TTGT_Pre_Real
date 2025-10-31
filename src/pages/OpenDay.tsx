@@ -1,11 +1,10 @@
-import { useState } from 'react'; // Добавляем useState для работы табов
+import { useState } from 'react'; 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
-// Импортируем иконки для нового дизайна
 import { Video, Users, Info, MapPin, Phone, Calendar, CheckCircle } from 'lucide-react';
 
-// Выносим данные из JSX, чтобы код был чище
+
 const remoteDates = [
   { date: '31 октября 2024 года', time: '13:00' },
   { date: '12 декабря 2024 года', time: '13:00' },
@@ -20,21 +19,17 @@ const inPersonDates = [
 ];
 
 const OpenDay = () => {
-  // Cостояние для переключения табов: 'remote' или 'in-person'
   const [activeTab, setActiveTab] = useState('remote');
 
   return (
-    <div className="min-h-screen bg-gray-100"> {/* Обновленный фон */}
+    <div className="min-h-screen bg-gray-100"> 
       <Header />
       
       <div className="flex">
         <Sidebar />
-        
-        {/* --- НАЧАЛО: РЕДИЗАЙН ЦЕНТРАЛЬНОГО БЛОКА --- */}
+
         <main className="flex-1 min-h-screen">
           <div className="container mx-auto px-4 lg:px-6 py-12">
-            
-            {/* 1. Яркий заголовок */}
             <h1 className="text-4xl lg:text-5xl font-extrabold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
               День открытых дверей
             </h1>
@@ -43,7 +38,6 @@ const OpenDay = () => {
             </h2>
             
             <div className="max-w-4xl mx-auto">
-              {/* 2. Современный переключатель (табы) */}
               <div className="flex justify-center bg-gray-200 rounded-full p-1.5 mb-8 shadow-inner">
                 <button
                   onClick={() => setActiveTab('remote')}
@@ -69,9 +63,7 @@ const OpenDay = () => {
                 </button>
               </div>
 
-              {/* 3. Контент табов (вместо таблиц - стильные списки) */}
               <div className="bg-white rounded-2xl shadow-xl p-8 min-h-[350px]">
-                {/* --- Контент для "Дистанционно" --- */}
                 {activeTab === 'remote' && (
                   <div>
                     <h3 className="text-2xl font-bold text-gray-800 mb-2">В дистанционном формате</h3>
@@ -95,7 +87,6 @@ const OpenDay = () => {
                   </div>
                 )}
                 
-                {/* --- Контент для "Очно" --- */}
                 {activeTab === 'in-person' && (
                   <div>
                     <h3 className="text-2xl font-bold text-gray-800 mb-2">В очном формате</h3>
@@ -120,7 +111,6 @@ const OpenDay = () => {
                 )}
               </div>
 
-              {/* 4. Яркий блок с программой и контактами */}
               <div className="mt-10 bg-gradient-to-br from-primary to-secondary text-white rounded-2xl shadow-xl p-8 md:p-10">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="flex-shrink-0 bg-white/20 p-3 rounded-full">
@@ -134,7 +124,6 @@ const OpenDay = () => {
                 </p>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Левая часть: Программа */}
                   <div className="space-y-3 text-lg">
                     <p className="font-semibold text-xl mb-3">В программе:</p>
                     <ul className="space-y-3">
@@ -154,7 +143,6 @@ const OpenDay = () => {
                     <p className="pt-6 text-xl lg:text-2xl font-bold tracking-wide">Приходите и мы поможем Вам сделать правильный выбор!!!</p>
                   </div>
 
-                  {/* Правая часть: Адрес (теперь с более темным, но прозрачным градиентом) */}
                   <div className="bg-gradient-to-br from-black/20 to-black/30 backdrop-blur-sm rounded-xl p-6 space-y-5 border border-white/20">
                     <h3 className="text-xl font-semibold mb-3">Как нас найти</h3>
                     
@@ -180,7 +168,6 @@ const OpenDay = () => {
             </div>
           </div>
         </main>
-        {/* --- КОНЕЦ: РЕДИЗАЙН ЦЕНТРАЛЬНОГО БЛОКА --- */}
         
         <aside className="w-80 bg-white border-l border-border p-6 sticky top-16 h-screen overflow-y-auto">
           <SidebarCards />

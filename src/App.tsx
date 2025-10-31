@@ -85,8 +85,6 @@ const App = () => (
           <Route path="/workshops" element={<Workshops />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/online-survey" element={<OnlineSurvey />} />
-          
-          {/* Student pages */}
           <Route path="/internal-rules" element={<InternalRules />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/zamena" element={<Zamena />} />
@@ -97,15 +95,11 @@ const App = () => (
           <Route path="/payment-receipts" element={<PaymentReceipts />} />
           <Route path="/education-credit" element={<EducationCredit />} />
           <Route path="/state-exam" element={<StateExam />} />
-          
-          {/* Info block pages */}
           <Route path="/professionals" element={<Professionals />} />
           <Route path="/accessible-environment" element={<AccessibleEnvironment />} />
           <Route path="/citizen-appeals" element={<CitizenAppeals />} />
           <Route path="/corruption-report" element={<CorruptionReport />} />
           <Route path="/documents" element={<Documents />} />
-          
-          {/* Applicant pages */}
           <Route path="/applicants/admission-numbers" element={<AdmissionNumbers />} />
           <Route path="/applicants/selection-committee" element={<SelectionCommittee />} />
           <Route path="/applicants/open-day" element={<OpenDay />} />
@@ -119,12 +113,7 @@ const App = () => (
           <Route path="/victory-80" element={<Victory80 />} />
           <Route path="/start-in-science" element={<StartInScience />} />
 
-          {/* Admin Panel */}
           <Route path="/admin" element={<AdminPanel />} />
-
-          {/* Simple text pages */}
-
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

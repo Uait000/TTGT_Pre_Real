@@ -7,22 +7,19 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
 export default function ZamenaManager() {
-  // `currentFile` может быть:
-  // - string (URL), когда загружен с сервера
-  // - File (объект), когда выбран пользователем
-  // - null, если ничего нет
+
   const [currentFile, setCurrentFile] = useState<File | string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
-  // 1. Получаем текущий файл при загрузке компонента
+  
   const fetchCurrentFile = async () => {
     setIsLoading(true);
     try {
       const data = await zamenaApi.get();
       if (data && data.url) {
-        // Мы используем URL как "значение" для PDFUpload
+        
         setCurrentFile(data.url); 
       } else {
         setCurrentFile(null);
@@ -42,15 +39,15 @@ export default function ZamenaManager() {
     fetchCurrentFile();
   }, []);
 
-  // 2. Обработчик для PDFUpload.
-  // Срабатывает, когда пользователь выбирает новый файл или удаляет текущий.
+  
+  
   const handleFileChange = (file: File | null) => {
     setCurrentFile(file);
   };
 
-  // 3. Обработчик загрузки/замены файла
+  
   const handleUpload = async () => {
-    // Убедимся, что currentFile - это именно File, а не string (URL)
+    
     if (typeof currentFile !== 'object' || !currentFile) {
       toast({
         title: 'Файл не выбран',
@@ -67,8 +64,8 @@ export default function ZamenaManager() {
         title: 'Успешно!',
         description: 'Файл замен обновлен.',
       });
-      // После успешной загрузки, снова получаем данные с сервера
-      // чтобы `currentFile` стал string (URL)
+      
+      
       fetchCurrentFile();
     } catch (error) {
       toast({
@@ -81,7 +78,6 @@ export default function ZamenaManager() {
     }
   };
 
-  // Кнопка "Заменить" активна, только если currentFile - это File (новый файл)
   const isReplaceDisabled = typeof currentFile !== 'object' || !currentFile || isUploading;
 
   return (
@@ -101,7 +97,7 @@ export default function ZamenaManager() {
         ) : (
           <PDFUpload
             label="Файл замен (PDF)"
-            value={currentFile || undefined} // Передаем URL или новый File
+            value={currentFile || undefined} 
             onChange={handleFileChange}
           />
         )}

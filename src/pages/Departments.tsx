@@ -4,11 +4,8 @@ import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-// ✅ Добавлены иконки для лайтбокса
 import { Play, TrainFront, Bolt, HardHat, TrafficCone, Laptop, BookOpen, ChevronRight, X, ChevronLeft } from 'lucide-react';
 import InfoBlocks from '@/components/InfoBlocks';
-
-// Импорты изображений
 import ob from '@/assets/pictures/ob.png';
 import vag from '@/assets/pictures/vag.png';
 import pm from '@/assets/pictures/pm.png';
@@ -23,7 +20,6 @@ import gamachek from '@/assets/pictures/gamachek.png';
 const Departments = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<number | null>(null);
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
-  // ✅ Состояние для лайтбокса аватарки
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
   const departments = [
@@ -31,7 +27,7 @@ const Departments = () => {
       id: 1,
       name: 'Отделение технической эксплуатации подвижного состава ж/д',
       icon: TrainFront,
-      color: 'blue', // ✅ Возвращены уникальные цвета
+      color: 'blue', 
       specialties: [
         'Техническая эксплуатация подвижного состава железных дорог (электровозы, тепловозы)',
         'Техническая эксплуатация подвижного состава железных дорог (вагоны)'
@@ -116,9 +112,7 @@ const Departments = () => {
     setIsDescriptionOpen(true);
   };
   
-  // ✅ Новая функция для красивого рендеринга описания
   const renderDescription = (description: string) => {
-    // Определяем ключевые фразы для заголовков
     const headings = [
       'Специальности:',
       'Возглавляет отделение', 
@@ -149,30 +143,26 @@ const Departments = () => {
       'В условиях высокоразвитой системы',
     ];
   
-    // Разделяем текст на параграфы
     const paragraphs = description.split('\n\n');
   
     return paragraphs.map((paragraph, pIndex) => {
-      // Проверяем, начинается ли параграф с ключевой фразы
-      const isHeading = headings.some(h => paragraph.startsWith(h) && paragraph.length < 100); // Добавим проверку длины, чтобы не делать заголовком длинный текст
-      
-      // Проверяем, является ли параграф списком специальностей
+      const isHeading = headings.some(h => paragraph.startsWith(h) && paragraph.length < 100); 
       if (paragraph.startsWith('Специальности:\n-')) {
-        const items = paragraph.split('\n'); // Разделяем на заголовок и пункты
-        const title = items.shift(); // Забираем 'Специальности:'
+        const items = paragraph.split('\n'); 
+        const title = items.shift(); 
         return (
           <div key={pIndex} className="my-5">
             <h3 className="text-xl font-semibold text-primary mb-3">{title}</h3>
             <ul className="list-disc list-inside space-y-2 text-gray-700">
               {items.map((item, iIndex) => (
-                <li key={iIndex}>{item.substring(2).trim()}</li> // Убираем '- '
+                <li key={iIndex}>{item.substring(2).trim()}</li> 
               ))}
             </ul>
           </div>
         );
       }
       
-      // Если это заголовок
+
       if (isHeading) {
         return (
           <h3 key={pIndex} className="text-xl font-semibold text-gray-800 mt-6 mb-3">
@@ -181,7 +171,6 @@ const Departments = () => {
         );
       }
       
-      // Обычный параграф
       return (
         <p key={pIndex} className="text-gray-700 leading-relaxed text-justify text-base mb-4">
           {paragraph}
@@ -211,10 +200,10 @@ const Departments = () => {
                  Исследуйте наши передовые отделения и специальности, которые формируют будущее железнодорожного транспорта и смежных отраслей.
                </p>
               
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8"> {/* Возвращаем 2 колонки для большего места */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8"> 
                 {departments.map((dept) => {
                   const IconComponent = dept.icon;
-                  // ✅ УНИКАЛЬНЫЕ ЦВЕТА
+                  
                   const colors = {
                     blue: { gradient: 'from-blue-50 to-indigo-100', border: 'border-blue-200', text: 'text-blue-800', iconBg: 'bg-blue-100', iconText: 'text-blue-600', buttonBg: 'bg-blue-600 hover:bg-blue-700', buttonOutline: 'border-blue-500 text-blue-700 hover:bg-blue-50' },
                     yellow: { gradient: 'from-yellow-50 to-amber-100', border: 'border-yellow-200', text: 'text-amber-800', iconBg: 'bg-yellow-100', iconText: 'text-amber-600', buttonBg: 'bg-yellow-500 hover:bg-yellow-600', buttonOutline: 'border-yellow-500 text-yellow-700 hover:bg-yellow-50' },
@@ -243,11 +232,9 @@ const Departments = () => {
                                 <IconComponent className={`w-10 h-10 ${theme.iconText}`} />
                             )}
                           </div>
-                          {/* ✅ ИСПРАВЛЕНИЕ: Полное название отделения */}
                           <h2 className={`text-2xl font-bold ${theme.text} leading-tight`}>{dept.name}</h2>
                         </div>
 
-                        {/* ✅ ИСПРАВЛЕНИЕ: Прямоугольная аватарка */}
                         <div 
                           className="flex items-center space-x-4 mb-6 bg-white/60 p-4 rounded-lg border border-gray-100 shadow-sm cursor-pointer group/avatar"
                           onClick={(e) => { e.stopPropagation(); setLightboxImage(dept.headPhoto); }}
@@ -269,7 +256,7 @@ const Departments = () => {
                           <h3 className="font-semibold text-gray-700 mb-3 text-base">Специальности:</h3>
                           <ul className="space-y-2">
                             {dept.specialties.map((specialty, index) => (
-                              <li key={index} className="flex items-start text-sm text-gray-700"> {/* Уменьшен шрифт для длинных названий */}
+                              <li key={index} className="flex items-start text-sm text-gray-700"> 
                                 <ChevronRight className={`w-4 h-4 mr-1.5 mt-0.5 ${theme.iconText} flex-shrink-0`} /> {specialty}
                               </li>
                             ))}
@@ -279,7 +266,6 @@ const Departments = () => {
                         <div className="flex flex-col sm:flex-row justify-center gap-3 mt-auto pt-4 border-t border-gray-200/60">
                           <Button 
                             onClick={() => openDescriptionModal(dept.id)}
-                             // ✅ ИСПРАВЛЕНИЕ: Кнопка "Подробнее" теперь с темным текстом
                             variant="outline"
                             className={`${theme.buttonOutline} bg-white/80 px-5 py-2.5 text-sm rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 w-full sm:w-auto flex items-center justify-center`}
                           >
@@ -308,7 +294,6 @@ const Departments = () => {
         </aside>
       </div>
 
-      {/* Диалоговое окно для Описания */}
       <Dialog open={isDescriptionOpen} onOpenChange={setIsDescriptionOpen}>
         <DialogContent className="max-w-4xl lg:max-w-5xl max-h-[90vh] overflow-y-auto p-8 rounded-xl shadow-2xl bg-white">
           {activeDepartment && (
@@ -324,7 +309,6 @@ const Departments = () => {
                 </DialogTitle>
                 <p className="text-lg text-muted-foreground mt-2">{activeDepartment.head}</p>
               </DialogHeader>
-              {/* ✅ ИСПОЛЬЗУЕМ НОВЫЙ РЕНДЕРИНГ ТЕКСТА */}
               <div className="prose prose-lg max-w-none text-gray-800 leading-relaxed space-y-4">
                  {renderDescription(activeDepartment.description)}
               </div>
@@ -333,17 +317,16 @@ const Departments = () => {
         </DialogContent>
       </Dialog>
       
-      {/* ✅ Лайтбокс для Аватарок */}
       {lightboxImage && (
         <div 
           className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-4" 
-          onClick={() => setLightboxImage(null)} // Закрытие по клику на фон
+          onClick={() => setLightboxImage(null)} 
         >
           <img 
             src={lightboxImage} 
             alt="Фото заведующего" 
             className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
-            onClick={(e) => e.stopPropagation()} // Не закрывать по клику на саму картинку
+            onClick={(e) => e.stopPropagation()} 
           />
           <button 
             onClick={() => setLightboxImage(null)} 

@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'; // Добавлен useEffect для автопрокрутки
+import { useState, useEffect } from 'react'; 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import InfoBlocks from '@/components/InfoBlocks';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; // Используем Card
-import { ChevronLeft, ChevronRight, Utensils, Clock, Phone, Accessibility } from 'lucide-react'; // Добавлены иконки
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; 
+import { ChevronLeft, ChevronRight, Utensils, Clock, Phone, Accessibility } from 'lucide-react'; 
 import eat_1 from '@/assets/pictures/phoca_thumb_l_312.jpg';
 import eat_2 from '@/assets/pictures/phoca_thumb_l_313.jpg';
 import eat_3 from '@/assets/pictures/phoca_thumb_l_314.jpg';
@@ -34,15 +34,15 @@ const Cafeteria = () => {
     setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  // Автопрокрутка карусели каждые 4 секунды
+  
   useEffect(() => {
     const slideInterval = setInterval(nextSlide, 4000);
-    return () => clearInterval(slideInterval); // Очистка интервала при размонтировании компонента
+    return () => clearInterval(slideInterval); 
   }, []);
 
 
   return (
-    <div className="min-h-screen bg-gray-50"> {/* Слегка изменен фон */}
+    <div className="min-h-screen bg-gray-50"> 
       <Header />
       
       <div className="flex">
@@ -52,17 +52,14 @@ const Cafeteria = () => {
           <div className="container mx-auto px-6 py-8">
             <InfoBlocks />
             
-            <div className="bg-white rounded-2xl shadow-xl border border-border p-8 md:p-12"> {/* Улучшенная основная карточка */}
+            <div className="bg-white rounded-2xl shadow-xl border border-border p-8 md:p-12"> 
               <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
-                <Utensils className="w-10 h-10 mr-4 text-amber-500" /> {/* Иконка */}
+                <Utensils className="w-10 h-10 mr-4 text-amber-500" /> 
                 Столовая ТТЖТ
               </h1>
               <p className="text-center text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">Вкусно, полезно и доступно!</p>
-              
-              {/* ✅ Новый дизайн секций */}
               <div className="space-y-12">
 
-                {/* Секция "Добро пожаловать" */}
                 <section className="text-center">
                    <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
                     Правильное питание – основа здоровья, а вкусная еда – залог хорошего настроения. Столовая Тихорецкого техникума железнодорожного транспорта предлагает обеды на выбор посетителей – широкий ассортимент первых горячих блюд, холодных закусок, мясных и рыбных изделий. Аппетитная выпечка порадует каждого, кто наведается в нашу просторную столовую. Меню ежедневно пополняется разнообразными блюдами. Возможность размещения посетителей - <span className="font-semibold text-primary">150 посадочных мест</span>.
@@ -79,7 +76,7 @@ const Cafeteria = () => {
                            <img
                             src={image.src}
                             alt={image.alt}
-                            className="w-full h-[50vh] object-cover" // Высота задана относительно высоты экрана
+                            className="w-full h-[50vh] object-cover" 
                           />
                         </div>
                       ))}
@@ -164,7 +161,6 @@ const Cafeteria = () => {
                    </Card>
                 </section>
 
-                {/* Заключительная секция */}
                 <section className="text-center bg-gradient-to-r from-primary via-blue-600 to-secondary rounded-xl p-10 shadow-lg text-white">
                   <h2 className="text-3xl font-bold mb-4">Приятного аппетита!</h2>
                   <p className="text-lg font-medium max-w-3xl mx-auto">

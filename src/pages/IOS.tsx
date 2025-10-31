@@ -3,8 +3,6 @@ import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import InfoBlocks from '@/components/InfoBlocks';
 import { ExternalLink, FileText } from 'lucide-react';
-
-// ✅ ИСПРАВЛЕНИЕ 1: Опечатка в именах переменных (кириллическая 'о' заменена на латинскую 'o')
 import doc_1 from '@/assets/file/Spisok_EOR_08.02.01.pdf';
 import doc_2 from '@/assets/file/Spisok_EOR_08.02.10.pdf';
 import doc_3 from '@/assets/file/Spisok_EOR_09.02.01.pdf';
@@ -22,7 +20,7 @@ import pol_1 from '@/assets/file/pologenieoEOISN_TTGT_2023.pdf';
 import pol_2 from '@/assets/file/Pologenie_EIOS_izm_15.05.2024.pdf';
 
 const IOS = () => {
-  // ✅ ИСПРАВЛЕНИЕ 2: Данные реструктурированы для удобства и правильного связывания с файлами
+  
   const mainDocuments = [
     { title: 'Договор на оказание услуг по доступу к сети Интернет на 2025 г.', file: dogovor },
     { title: 'Положение об электронной информационно-образовательной среде ТТЖТ - филиала РГУПС', file: pol_1 },
@@ -83,11 +81,7 @@ const IOS = () => {
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
               <h1 className="text-3xl font-bold text-primary mb-2 text-center">Электронная информационно-образовательная среда</h1>
               <p className="text-center text-muted-foreground mb-12">Доступ к информационным системам и образовательным ресурсам</p>
-              
-              {/* ✅ ИЗМЕНЕНИЕ 3: Полностью новый дизайн страницы */}
               <div className="space-y-12">
-
-                {/* --- Секция основных документов --- */}
                 <section>
                   <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-l-4 border-primary pl-4">Основные документы</h2>
                   <div className="space-y-3">
@@ -99,8 +93,6 @@ const IOS = () => {
                     ))}
                   </div>
                 </section>
-
-                {/* --- Секция ресурсов по специальностям --- */}
                 <section>
                   <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-l-4 border-primary pl-4">Списки электронных образовательных ресурсов по специальностям</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -112,8 +104,6 @@ const IOS = () => {
                     ))}
                   </div>
                 </section>
-
-                {/* --- Секция внешних библиотек и внутренних систем --- */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                   <section>
                     <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-l-4 border-primary pl-4">Внешние электронные библиотеки и платформы</h2>
@@ -138,8 +128,6 @@ const IOS = () => {
                     </div>
                   </section>
                 </div>
-                
-                {/* --- Секция федеральных ресурсов --- */}
                 <section>
                   <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-l-4 border-primary pl-4">Федеральные образовательные ресурсы</h2>
                   <div className="space-y-3">

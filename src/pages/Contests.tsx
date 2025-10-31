@@ -7,21 +7,13 @@ import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-// ИЗМЕНЕНО: Убрана иконка Download
-import { Loader2, FileText } from 'lucide-react'; 
+import { Loader2, FileText, Download } from 'lucide-react';
 
-/**
- * Генерирует ПРАВИЛЬНЫЙ публичный URL для GET-запроса, используя ID.
- */
 const getPdfUrl = (file: BackendFile | undefined): string | null => {
-  if (!file || !file.name) return null; // <-- Правильно, file.name
-  const cleanBaseUrl = BASE_URL.endsWith('/api') ? BASE_URL.slice(0, -4) : BASE_URL;
-  return `${cleanBaseUrl}/files/${encodeURIComponent(file.name)}`;
+  if (!file || !file.id) return null; 
+  const cleanBaseUrl = BASE_URL.endsWith('/api') ? BASE_URL.slice(0, -4) : BASE_URL;
+  return `${cleanBaseUrl}/files/${file.id}`;
 };
-
-/**
- * Форматирует дату
- */
 const formatDate = (dateInSeconds: number) => {
   if (!dateInSeconds) return '';
   const date = new Date(dateInSeconds * 1000);
@@ -32,16 +24,14 @@ const formatDate = (dateInSeconds: number) => {
   });
 };
 
-// Функция загрузки данных для useQuery
 const fetchContests = async () => {
-  return await postsApi.getAll({ 
+  return await postsApi.getPublicAll({ 
     category: PostCategory.Contests,
     limit: 100,
   });
 };
 
 const Contests = () => {
-  // Используем useQuery (как в NewsSection)
   const { data: contests = [], isLoading } = useQuery<Contest[]>({
     queryKey: ['posts', PostCategory.Contests],
     queryFn: fetchContests,
@@ -69,6 +59,7 @@ const Contests = () => {
             ) : (
               <div className="max-w-4xl mx-auto space-y-6">
                 {contests.map((contest) => {
+                  // Логика для PDF перенесена сюда
                   const polozhenieUrl = getPdfUrl(contest.files?.[0]);
                   const reglamentUrl = getPdfUrl(contest.files?.[1]);
 
@@ -80,7 +71,6 @@ const Contests = () => {
                       <CardContent className="flex flex-col sm:flex-row gap-4">
                         {polozhenieUrl ? (
                           <Button asChild className="w-full sm:w-auto justify-start gap-2">
-                            {/* `target="_blank"` открывает PDF в новой вкладке */}
                             <a href={polozhenieUrl} target="_blank" rel="noopener noreferrer">
                               <FileText className="h-4 w-4 flex-shrink-0" />
                               <span>Положение о конкурсе</span>
@@ -93,8 +83,7 @@ const Contests = () => {
                         {reglamentUrl && (
                           <Button asChild variant="secondary" className="w-full sm:w-auto justify-start gap-2">
                             <a href={reglamentUrl} target="_blank" rel="noopener noreferrer">
-                              {/* --- ИЗМЕНЕНО: Иконка Download заменена на FileText --- */}
-                              <FileText className="h-4 w-4 flex-shrink-0" />
+                              <Download className="h-4 w-4 flex-shrink-0" />
                               <span>Регламент</span>
                             </a>
                           </Button>

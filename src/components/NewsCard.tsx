@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Eye, ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react';
-// ИСХОДНОЕ ИСПРАВЛЕНИЕ: Импортируем POST_TAGS и Post (а не IncompletePost)
+
 import { POST_TAGS, Post } from '@/api/posts'; 
 import { BASE_URL } from '@/api/config';
 
 interface NewsCardProps {
-    // Используем Post, который теперь включает author и views
+    
     post: Post; 
     onReadMore: (post: Post) => void;
 }
@@ -17,43 +17,25 @@ const NewsCard = ({ post, onReadMore }: NewsCardProps) => {
         return null;
     }
 
-    // ✅ ИСПРАВЛЕНИЕ: Логика сборки URL картинок
     const images: string[] = [];
     const cleanBaseUrl = BASE_URL.endsWith('/api') ? BASE_URL.slice(0, -4) : BASE_URL;
-
-    // Используем post.files (как в IncompletePost), где каждый элемент - BackendFile
     if (Array.isArray(post.files) && post.files.length > 0) { 
         post.files.forEach((file) => { 
-            // ИСПРАВЛЕНО: API для GET /files/ требует `filename` и `deattached`
-            if (file && file.name) { // Проверяем `file.name`
+            
+            if (file && file.name) { 
                 const params = new URLSearchParams();
                 params.append('filename', file.name);
-                // deattached=false, так как файл прикреплен к посту
-                params.append('deattached', "false"); 
-                
+                params.append('deattached', "false");    
                 const fullUrl = `${cleanBaseUrl}/files/?${params.toString()}`;
                 images.push(fullUrl);
             }
         });
     } 
-    // Старая логика для совместимости, если картинки приходят в других полях
-    // post.image_urls отсутствует в Post, но оставляем на всякий случай, если оно может прийти динамически (пока игнорируем, если подчеркнуто)
-    /*
-    else if ((post as any).image_urls && (post as any).image_urls.length > 0) {
-        (post as any).image_urls.forEach((url: string) => {
-            if (url) {
-                const fullUrl = url.startsWith('http') ? url : `${cleanBaseUrl}${url}`;
-                images.push(fullUrl);
-            }
-        });
-    }
-    */
-    // Примечание: post.image_urls отсутствует в Post. Если оно действительно нужно, его нужно добавить в интерфейс Post.
 
     const hasMultipleImages = images.length > 1;
     const hasImage = images.length > 0;
 
-    // post.body используется, что соответствует IncompletePost
+    
     const postText = post.body || ''; 
     const snippet = postText.replace(/<[^>]*>?/gm, '').substring(0, 150);
 
@@ -177,7 +159,7 @@ const NewsCard = ({ post, onReadMore }: NewsCardProps) => {
                     <div className="flex items-center justify-between border-t border-gray-100 pt-3">
                         <div className="flex items-center gap-1.5 text-sm text-gray-500">
                             <Eye className="w-4 h-4" />
-                            {/* post.views теперь доступно, если вы внесли изменение в posts.ts */}
+                            {/* post.views теперь доступно, если внесtys изменение в posts.ts */}
                             <span>{post.views || 0}</span> 
                         </div>
 

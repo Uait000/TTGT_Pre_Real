@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'; // ✅ ИСПРАВЛЕНИЕ: Добавлен импорт useState и useEffect
+import { useState, useEffect } from 'react'; 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink, Download, FileText, CalendarDays, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// --- НАЧАЛО ИМПОРТОВ PDF ---
 // 1 Курс
 import A11 from '@/assets/file/class/A11.pdf';
 import V11 from '@/assets/file/class/V11.pdf';
@@ -95,15 +94,11 @@ import Kurs3 from '@/assets/file/class/3kurs.pdf';
 import Kurs4 from '@/assets/file/class/4kurs.pdf';
 import GrafKons from '@/assets/file/class/Grafik_Proved_Konsult_Prepodavat_1sem_25_26.pdf';
 
-// ✅ ДОБАВЛЕНЫ НОВЫЕ ИМПОРТЫ ДЛЯ ЗАОЧНОГО
+//ЗАОЧНОЕ
 import Grafzo from '@/assets/file/class/graf_zo_2025.pdf';
 import D41z from '@/assets/file/class/D41z.pdf';
 import L41z from '@/assets/file/class/L41z.pdf';
 import P41z from '@/assets/file/class/P41z.pdf';
-// --- КОНЕЦ ИМПОРТОВ ---
-
-
-// Объект-словарь для связи названий групп с импортами
 const schedulePdfs: Record<string, string> = {
   'A11': A11, 'V11': V11, 'D11': D11, 'D12': D12, 'KS11': KS11, 'KS12': KS12, 'KS13': KS13, 'L11': L11, 'L12': L12, 'L13': L13, 'L14': L14, 'L15': L15, 'P11': P11, 'PM11': PM11, 'R11': R11, 'S11': S11, 'SP11': SP11, 'ES11': ES11,
   'A21': A21, 'V21': V21, 'D21': D21, 'D22': D22, 'D23': D23, 'KS21': KS21, 'KS22': KS22, 'KS23': KS23, 'L21': L21, 'L22': L22, 'L23': L23, 'L24': L24, 'L25': L25, 'P21': P21, 'PM21': PM21, 'R21': R21, 'S21': S21, 'SP21': SP21, 'E21': E21, 'ES21': ES21,
@@ -121,10 +116,9 @@ const Schedule = () => {
 
   const [activeTab, setActiveTab] = useState(scheduleData[0].course);
 
-  // Функция-помощник для преобразования имени
+
   const formatGroupName = (groupName: string) => {
-    let formattedName = groupName.replace(/-/g, ''); // "А-1-1" -> "А11"
-    // Транслитерация
+    let formattedName = groupName.replace(/-/g, ''); 
     if (formattedName.startsWith('КС')) formattedName = formattedName.replace('КС', 'KS');
     else if (formattedName.startsWith('ПМ')) formattedName = formattedName.replace('ПМ', 'PM');
     else if (formattedName.startsWith('СП')) formattedName = formattedName.replace('СП', 'SP');
@@ -141,7 +135,7 @@ const Schedule = () => {
   }
 
   const getSchedulePdfUrl = (groupName: string) => {
-    const formattedName = formatGroupName(groupName); // "А-1-1" -> "A11"
+    const formattedName = formatGroupName(groupName); 
     const file = schedulePdfs[formattedName];
     if (!file) {
       console.warn(`PDF not found for group: ${groupName} (formatted as ${formattedName}).`);
@@ -162,11 +156,9 @@ const Schedule = () => {
     file: GrafKons
   };
   
-  // ✅ ИСПРАВЛЕНИЕ: Подключен PDF
   const partTimeSchedules = [
     { title: 'Календарный учебный график заочного отделения на 2025 - 2026 учебный год', url: Grafzo },
   ];
-  // ✅ ИСПРАВЛЕНИЕ: Подключены PDF
   const partTimeSessions = [
     { title: 'Д-4-1(з)', url: D41z },
     { title: 'Л-4-1(з)', url: L41z },
@@ -205,18 +197,15 @@ const Schedule = () => {
                 <Button 
                   variant="secondary" 
                   className="bg-white text-primary hover:bg-gray-100 font-semibold shadow-md transition-transform transform hover:scale-105"
-                  onClick={() => alert('Ссылка на приложение!')} // Замените на вашу ссылку
+                  onClick={() => alert('Ссылка на приложение!')} 
                 >
                   <Download className="w-5 h-5 mr-2" />
                   Скачать приложение
                 </Button>
               </section>
 
-              {/* Дизайн для Очного отделения (Вкладки) */}
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Очное отделение</h2>
-                
-                {/* --- Вкладки --- */}
                 <div className="flex justify-center flex-wrap gap-2 mb-6">
                   {scheduleData.map((course) => (
                     <Button
@@ -234,7 +223,6 @@ const Schedule = () => {
                   ))}
                 </div>
 
-                {/* --- Контент вкладок --- */}
                 <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 p-6 min-h-[200px]">
                   {scheduleData.map((course) => (
                     <div 

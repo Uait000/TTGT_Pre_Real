@@ -3,9 +3,6 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import { ChevronDown, ChevronUp, FileText, ExternalLink } from 'lucide-react';
-
-// --- ИМПОРТ ДОКУМЕНТОВ ---
-// Я импортировал все файлы из твоего скриншота
 import PamyatkaAbiturCelevoe from '@/assets/file/com/Pamyatka_abitur_celevoe_2025.pdf';
 import PamyatkaCelevoe from '@/assets/file/com/Pamyatka_celevoe_2025.pdf';
 import PrikazOchnaya from '@/assets/file/com/prikaz_671os_ot_21_04_2025_OO.pdf';
@@ -20,12 +17,9 @@ import Spravka086 from '@/assets/file/com/spravka_086_y.pdf';
 import UsloviaPriemaPlatno from '@/assets/file/com/usloviia_priema_platno_2025.pdf';
 import ZayavlObshh from '@/assets/file/com/Zayavl_Obshh_2021.pdf';
 import ZayavlenieAbitur from '@/assets/file/com/Zayavlenie_Abirur_2025.pdf';
-// --- ДОБАВЛЕНЫ НОВЫЕ ИМПОРТЫ ---
 import dogovor1 from '@/assets/file/com/dogovor_platnie_obraz_usluga_2.pdf';
 import dogovor2 from '@/assets/file/com/dogovor_platnie_obraz_usluga_3.pdf';
-// -------------------------
 
-// Вспомогательный компонент для красивых ссылок на PDF
 const PdfLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <a
     href={href}
@@ -38,7 +32,6 @@ const PdfLink = ({ href, children }: { href: string; children: React.ReactNode }
   </a>
 );
 
-// Вспомогательный компонент для внешних ссылок
 const WebLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
     <a
       href={href}
@@ -54,9 +47,6 @@ const WebLink = ({ href, children }: { href: string; children: React.ReactNode }
 
 const SelectionCommittee = () => {
   const [openSection, setOpenSection] = useState<number | null>(null);
-
-  // Теперь content - это ReactNode (JSX), а не просто строка,
-  // чтобы мы могли вставлять ссылки и списки
   const sections: { id: number; title: string; content: React.ReactNode }[] = [
     
     {
@@ -505,7 +495,6 @@ const SelectionCommittee = () => {
             </div>
         )
     },
-    // --- БЛОК 29 ОБНОВЛЕН ---
     {
         id: 29,
         title: 'ОБРАЗЦЫ ДОГОВОРОВ ОБ ОКАЗАНИИ ПЛАТНЫХ ОБРАЗОВАТЕЛЬНЫХ УСЛУГ',
@@ -523,39 +512,32 @@ const SelectionCommittee = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50"> {/* Изменен фон */}
+    <div className="min-h-screen bg-gray-50"> 
       <Header />
       
       <div className="flex">
         <Sidebar />
-        
-        {/* --- НАЧАЛО: РЕДИЗАЙН ЦЕНТРАЛЬНОГО БЛОКА --- */}
         <main className="flex-1 min-h-screen">
-          <div className="container mx-auto px-4 lg:px-6 py-12"> {/* Увеличены отступы */}
+          <div className="container mx-auto px-4 lg:px-6 py-12"> 
             
             {/* Яркий градиентный заголовок */}
             <h1 className="text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-12 text-center">
               Отборочная комиссия
             </h1>
-            
-            {/* Ограничиваем ширину для лучшей читаемости и центрируем */}
             <div className="max-w-4xl mx-auto">
-              <div className="space-y-6"> {/* Увеличено расстояние между блоками */}
+              <div className="space-y-6"> 
                 {sections.map((section) => (
                   <div 
                     key={section.id} 
-                    // Новый стиль для карточки аккордеона: скругление, тень
                     className="bg-white rounded-xl shadow-lg shadow-primary/10 overflow-hidden transition-all duration-300 ease-in-out"
                   >
                     <button
                       onClick={() => toggleSection(section.id)}
                       className="w-full p-6 text-left flex items-center justify-between group"
                     >
-                      {/* Увеличенный шрифт заголовка */}
                       <h2 className="text-xl font-bold text-gray-800 group-hover:text-primary transition-colors duration-200">
                         {section.title}
                       </h2>
-                      {/* Стильная иконка в круге */}
                       <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 group-hover:bg-primary/10 flex items-center justify-center transition-all duration-200">
                         {openSection === section.id ? (
                           <ChevronUp className="w-5 h-5 text-primary" />
@@ -565,12 +547,10 @@ const SelectionCommittee = () => {
                       </div>
                     </button>
                     
-                    {/* Анимация открытия/закрытия будет управляться Tailwind CSS, если он настроен на `height` или `max-height` */}
                     {openSection === section.id && (
                       <div className="px-6 pb-6 border-t border-gray-200">
-                        {/* Базовые стили для текста внутри блока */}
                         <div className="pt-6 text-base text-gray-700 leading-relaxed space-y-4">
-                          {section.content} {/* Рендерим JSX напрямую */}
+                          {section.content} 
                         </div>
                       </div>
                     )}
@@ -581,7 +561,6 @@ const SelectionCommittee = () => {
             
           </div>
         </main>
-        {/* --- КОНЕЦ: РЕДИЗАЙН ЦЕНТРАЛЬНОГО БЛОКА --- */}
         
         <aside className="w-80 bg-white border-l border-border p-6 sticky top-16 h-screen overflow-y-auto">
           <SidebarCards />

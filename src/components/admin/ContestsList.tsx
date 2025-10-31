@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { postsApi, Post, PostCategory } from '@/api/posts'; // ИСПРАВЛЕНИЕ: Импортируем Post и PostCategory
-import { POST_TAGS } from '@/api/posts'; // ИСПРАВЛЕНИЕ: POST_TAGS из posts.ts
-import { BASE_URL } from '@/api/config'; // ИСПРАВЛЕНИЕ: BASE_URL из config.ts
+import { postsApi, Post, PostCategory } from '@/api/posts'; 
+import { POST_TAGS } from '@/api/posts'; 
+import { BASE_URL } from '@/api/config'; 
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -27,17 +27,17 @@ import ContestForm from './ContestForm';
 import { Badge } from '@/components/ui/badge';
 
 export default function ContestsList() {
-  const [posts, setPosts] = useState<Post[]>([]); // ИСПРАВЛЕНИЕ: NewsPost заменен на Post
+  const [posts, setPosts] = useState<Post[]>([]); 
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [formOpen, setFormOpen] = useState(false);
-  const [editPost, setEditPost] = useState<Post | null>(null); // ИСПРАВЛЕНИЕ: NewsPost заменен на Post
+  const [editPost, setEditPost] = useState<Post | null>(null); 
   const { toast } = useToast();
 
   const loadPosts = async () => {
     try {
       setLoading(true);
-      // ИСПРАВЛЕНИЕ: Используем postsApi.getAll с параметром category (Пункт 8)
+      
       const data = await postsApi.getAll({ 
         category: PostCategory.Contests, 
         limit: 100, 
@@ -45,7 +45,7 @@ export default function ContestsList() {
       });
 
       if (Array.isArray(data)) {
-        // Убираем старую логику fetch и нормализацию, так как postsApi должен возвращать Post[]
+        
         setPosts(data); 
       } else {
         setPosts([]);
@@ -87,7 +87,7 @@ export default function ContestsList() {
     }
   };
 
-  const handleEdit = (post: Post) => { // ИСПРАВЛЕНИЕ: NewsPost заменен на Post
+  const handleEdit = (post: Post) => { 
     setEditPost(post);
     setFormOpen(true);
   };
@@ -111,7 +111,7 @@ export default function ContestsList() {
     });
   };
   
-  // Убираем /api из BASE_URL для формирования корректных ссылок на файлы
+  
   const cleanBaseUrl = BASE_URL.replace('/api', '');
 
   return (
@@ -159,19 +159,17 @@ export default function ContestsList() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col gap-1">
-                        {/* ИСПРАВЛЕНИЕ: Используем post.files (BackendFile[]), берем id для ссылки */}
                         {post.files && post.files.length > 0 ? (
                           post.files.map((file, index) => (
                             <a
-                              key={file.id} // Используем id файла как ключ
-                              // ИСПРАВЛЕНИЕ: Ссылка на файл теперь использует file.id
+                              key={file.id} 
+                              
                               href={`${cleanBaseUrl}/files/${file.id}`} 
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex items-center gap-1 text-primary hover:underline text-sm"
                             >
                               <FileText className="h-4 w-4" />
-                              {/* ИСПРАВЛЕНИЕ: Если нет имени файла, используем метки */}
                               {file.name || (index === 0 ? 'Положение' : 'Регламент')}
                             </a>
                           ))
@@ -182,7 +180,6 @@ export default function ContestsList() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        {/* При передаче поста в форму, убедитесь, что клонируете объект, чтобы избежать мутаций */}
                         <Button variant="ghost" size="sm" onClick={() => handleEdit(JSON.parse(JSON.stringify(post)))} className="gap-1">
                           <Pencil className="h-4 w-4" /> Редактировать
                         </Button>

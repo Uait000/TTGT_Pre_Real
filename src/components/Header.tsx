@@ -48,7 +48,6 @@ const Header = () => {
       href: '#',
       submenu: [
         { label: 'Личный кабинет', href: 'https://abitura.ttgt.org/abitur/profile/#/' },
-        // --- ИСПРАВЛЕНИЕ: Прямая ссылка на файл в папке public ---
         { label: 'Инструкция к ЛК', href: instr },
         { label: 'Контрольные цифры приема', href: '/applicants/admission-numbers' },
         { label: 'Центр притяжения ', href: centry },
@@ -87,9 +86,6 @@ const Header = () => {
   const navItemBaseClasses = "nav-item flex flex-col items-center justify-center text-center px-4 text-sm font-medium transition-colors hover:text-primary h-full";
 
   const renderSubMenuItem = (subItem: { label: string; href: string }, closeMenu?: () => void) => {
-    // --- ИСПРАВЛЕНИЕ: Улучшенная логика для определения типа ссылки ---
-    // Ссылки на файлы (pdf и др.) и внешние сайты (http) будут тегом <a>
-    // Внутренние маршруты (начинаются с /) будут тегом <Link>
     const isExternalOrFile = typeof subItem.href === 'string' && (
       subItem.href.startsWith('http') || 
       subItem.href.match(/\.[0-9a-z]+$/i)
@@ -177,7 +173,6 @@ const Header = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-6 h-full ml-10">
             {menuItems.map((item) => (
               <div key={item.label} className="relative group h-full flex items-center">
@@ -224,8 +219,6 @@ const Header = () => {
               </div>
             ))}
           </nav>
-
-          {/* Mobile menu button */}
           <button
             onClick={toggleMobileMenu}
             className="lg:hidden absolute right-4 inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"

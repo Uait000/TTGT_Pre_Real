@@ -4,10 +4,10 @@ import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import InfoBlocks from '@/components/InfoBlocks';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button'; // ✅ ИСПРАВЛЕНО: Добавлен импорт Button
-import { CalendarCheck, FileText, Download, ClipboardCheck } from 'lucide-react'; // ✅ ИСПРАВЛЕНО: Добавлен импорт ClipboardCheck
+import { Button } from '@/components/ui/button'; 
+import { CalendarCheck, FileText, Download, ClipboardCheck } from 'lucide-react'; 
 
-// ИМПОРТЫ PDF-ФАЙЛОВ
+
 import Kurs1 from '@/assets/file/receiptexam/1_kurs.pdf';
 import A31 from '@/assets/file/receiptexam/A31.pdf';
 import D21 from '@/assets/file/receiptexam/D21.pdf';
@@ -29,7 +29,7 @@ import S21 from '@/assets/file/class/S21.pdf';
 import SP21 from '@/assets/file/class/SP21.pdf';
 import SP31 from '@/assets/file/class/SP31.pdf';
 
-// Объект-словарь для связи названий групп с импортами
+
 const examPdfs: Record<string, string> = {
   '1 курс': Kurs1,
   'Д-2-1': D21,
@@ -56,7 +56,7 @@ const examPdfs: Record<string, string> = {
   'ЭС-3-1': ES31,
 };
 
-// ✅ ИСПРАВЛЕНО: Добавлен объект со статичными классами для корректной работы Tailwind CSS
+
 const colorClasses = {
   blue: {
     bg: 'bg-blue-600', hoverBg: 'hover:bg-blue-700', border: 'border-blue-200', text: 'text-blue-800',
@@ -88,7 +88,7 @@ const ExamSchedule = () => {
       date: 'c 15 июня по 28 июня 2025 года', 
       groups: [],
       file: Kurs1,
-      color: 'blue' as keyof typeof colorClasses // ✅ ИСПРАВЛЕНО: Типизация для ключей colorClasses
+      color: 'blue' as keyof typeof colorClasses 
     },
     { 
       id: '2 курс', 
@@ -98,7 +98,7 @@ const ExamSchedule = () => {
         { date: 'с 15 июня по 28 июня 2025 года', list: ['Д-2-1', 'Д-2-2', 'Д-2-3', 'КС-2-1', 'КС-2-2', 'П-2-1'] },
         { date: 'с 22 июня по 28 июня 2025 года', list: ['А-2-1', 'ПМ-2-1, ПМ-2-2', 'Р-2-1', 'С-2-1', 'СП-2-1', 'ЭС-2-1'] }
       ],
-      color: 'green' as keyof typeof colorClasses // ✅ ИСПРАВЛЕНО: Типизация для ключей colorClasses
+      color: 'green' as keyof typeof colorClasses 
     },
     { 
       id: '3 курс', 
@@ -107,7 +107,7 @@ const ExamSchedule = () => {
       groups: [
         { date: 'с 29 июня по 05 июля 2025 года', list: ['В-2-1, Л-2-1, Л-2-2, Л-2-3, Л-2-4, Л-2-5, Л-2-6', 'А-3-1', 'Д-3-1', 'Д-3-2', 'КС-3-1, КС-3-2', 'П-3-1', 'ПМ-3-1', 'Р-3-1', 'СП-3-1', 'ЭС-3-1'] }
       ],
-      color: 'orange' as keyof typeof colorClasses // ✅ ИСПРАВЛЕНО: Типизация для ключей colorClasses
+      color: 'orange' as keyof typeof colorClasses 
     }
   ];
 

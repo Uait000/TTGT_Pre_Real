@@ -52,7 +52,6 @@ const SferumMySchool = () => {
               <h1 className="text-3xl font-bold text-primary mb-8 text-center">ИКОП "Сферум" и ФГИС "Моя школа"</h1>
               
               <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
-                {/* Hero image */}
                 <div className="w-full aspect-[16/6] bg-gradient-to-br from-green-100 to-green-200 rounded-lg overflow-hidden shadow-lg mb-8">
                   <img
                     src="https://senkino.dobryanka-edu.ru/upload/versions/20851/82358/prorrl.png"

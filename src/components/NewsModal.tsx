@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
-// ИСПРАВЛЕНИЕ: Добавляем PostCategory
 import { Post, POST_TAGS, PostCategory } from '@/api/posts';
 import { BASE_URL } from '@/api/config';
 
@@ -13,12 +12,10 @@ const NewsModal = ({ post, onClose, isLoading }: { post: Post; onClose: () => vo
     const cleanBaseUrl = BASE_URL.endsWith('/api') ? BASE_URL.slice(0, -4) : BASE_URL;
 
     if (Array.isArray(post.files) && post.files.length > 0) {
-      post.files.forEach((file) => {
-        // ИСПРАВЛЕНО: API для GET /files/ требует `filename` и `deattached`
-        if (file && file.name) { // Проверяем `file.name`
+      post.files.forEach((file) => {   
+        if (file && file.name) { 
           const params = new URLSearchParams();
           params.append('filename', file.name);
-          // deattached=false, так как файл прикреплен к посту
           params.append('deattached', "false"); 
           
           const fullUrl = `${cleanBaseUrl}/files/?${params.toString()}`;
@@ -72,7 +69,7 @@ const NewsModal = ({ post, onClose, isLoading }: { post: Post; onClose: () => vo
           className="bg-white rounded-xl shadow-2xl max-w-4xl max-h-[90vh] w-full flex flex-col overflow-hidden" 
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Шапка модального окна */}
+
           <div className="sticky top-0 bg-white z-20 p-6 pb-4 border-b border-gray-200">
             <div className="flex items-start justify-between gap-4 pr-12">
               <h2 className="text-3xl font-bold text-gray-900 flex-1">{post.title}</h2>
@@ -83,7 +80,6 @@ const NewsModal = ({ post, onClose, isLoading }: { post: Post; onClose: () => vo
             </button>
           </div>
 
-          {/* Контент модального окна */}
           <div className="overflow-y-auto">
             <div className="p-6 pt-4">
               {isLoading ? <p className="text-center py-8">Загрузка...</p> : (
@@ -124,8 +120,7 @@ const NewsModal = ({ post, onClose, isLoading }: { post: Post; onClose: () => vo
                       )}
                     </div>
                   )}
-                  
-                  {/* --- ИЗМЕНЕНО: Условный рендеринг body --- */}
+            
                   {post.category === PostCategory.Professionals ? (
                     <div
                       className="prose prose-lg max-w-none text-gray-700"
@@ -136,7 +131,6 @@ const NewsModal = ({ post, onClose, isLoading }: { post: Post; onClose: () => vo
                       {post.body || ''}
                     </div>
                   )}
-                  {/* --- Конец изменения --- */}
 
                   <div className="border-t border-gray-200 pt-4 mt-6 flex items-center justify-between text-sm text-gray-600">
                     <span className="font-semibold">Опубликовано: {formatDate(post.publish_date)}</span>

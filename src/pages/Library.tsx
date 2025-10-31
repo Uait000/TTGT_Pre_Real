@@ -46,14 +46,12 @@ const Library = () => {
         
         <main className="flex-1 min-h-screen">
           <div className="container mx-auto px-6 py-8">
-            {/* Info Blocks */}
             <InfoBlocks />
             
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
               <h1 className="text-3xl font-bold text-primary mb-8 text-center">Библиотека</h1>
               
               <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
-                {/* Карусель изображений */}
                 <div className="relative max-w-4xl mx-auto mb-8">
                   <div className="aspect-[16/10] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl overflow-hidden shadow-lg">
                     <img
@@ -63,7 +61,6 @@ const Library = () => {
                     />
                   </div>
 
-                  {/* Стрелки навигации */}
                   <button
                     onClick={prevSlide}
                     className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white border border-border rounded-full p-3 hover:shadow-lg transition-all duration-200"
@@ -78,7 +75,6 @@ const Library = () => {
                     <ChevronRight className="w-6 h-6 text-primary" />
                   </button>
 
-                  {/* Индикаторы */}
                   <div className="flex justify-center space-x-2 mt-4">
                     {images.map((_, index) => (
                       <button
@@ -94,7 +90,6 @@ const Library = () => {
                   </div>
                 </div>
 
-                {/* Основной текст */}
                 <div className="bg-white rounded-lg p-8 space-y-6">
                   <div className="text-center mb-6">
                     <h2 className="text-2xl font-bold text-primary mb-4">Библиотека Тихорецкого техникума железнодорожного транспорта</h2>

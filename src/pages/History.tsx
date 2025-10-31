@@ -3,12 +3,12 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import InfoBlocks from '@/components/InfoBlocks';
-import { BookOpen, Calendar, Award } from 'lucide-react'; // Новые иконки
+import { BookOpen, Calendar, Award } from 'lucide-react'; 
 import image1930 from '@/assets/pictures/ttgt_30.jpg'; 
 import imageWar from '@/assets/pictures/ttgt_95.jpg';
 import imageModern from '@/assets/pictures/Zavyalov.png';
 
-// Компонент Модального окна (Лайтбокс) - Без изменений
+
 const ImageModal = ({ src, alt, onClose }: { src: string | null; alt: string; onClose: () => void; }) => {
   if (!src) return null;
 
@@ -37,7 +37,6 @@ const ImageModal = ({ src, alt, onClose }: { src: string | null; alt: string; on
   );
 };
 
-// ✅ Новый компонент для карточки на временной шкале
 const TimelineItem = ({ year, title, children, imageUrl, imageAlt, openModal, imageOnLeft = false }) => {
   const content = (
     <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
@@ -63,7 +62,6 @@ const TimelineItem = ({ year, title, children, imageUrl, imageAlt, openModal, im
 
   return (
     <div className="relative grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
-      {/* Точка на шкале */}
       <div className="hidden md:flex justify-center md:col-span-1">
         <div className="absolute top-8 h-full border-l-2 border-primary/30 z-0"></div>
         <div className="relative z-10 w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center shadow-lg ring-4 ring-white">
@@ -71,12 +69,10 @@ const TimelineItem = ({ year, title, children, imageUrl, imageAlt, openModal, im
         </div>
       </div>
       
-      {/* Контент */}
       <div className={`md:col-span-4 ${imageOnLeft ? 'md:order-last' : ''}`}>
         {content}
       </div>
 
-      {/* Изображение (если есть) */}
       {imageUrl && (
         <div className={`md:col-span-4 ${imageOnLeft ? 'md:order-first' : ''} ${!imageOnLeft ? 'md:col-start-2' : ''}`}>
           {image}
@@ -103,7 +99,7 @@ const History = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50"> {/* Яркий фон */}
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50"> 
       <Header />
       
       <ImageModal src={modalImageSrc} alt={modalImageAlt} onClose={closeModal} />
@@ -116,7 +112,7 @@ const History = () => {
             
             <InfoBlocks />
             
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12"> {/* Новый контейнер */}
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12"> 
               <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
                  <BookOpen className="w-10 h-10 mr-4 text-accent" />
                 История техникума
@@ -124,11 +120,8 @@ const History = () => {
                <p className="text-center text-lg text-muted-foreground mb-16 max-w-3xl mx-auto">
                  От 1930 года до наших дней: 95 лет на службе образования и транспорта.
                </p>
-              
-              {/* ✅ РЕДИЗАЙН: Вся история представлена в виде временной шкалы */}
               <div className="relative space-y-16">
                 
-                {/* 1930: Основание */}
                 <TimelineItem 
                   year="1930" 
                   title="Основание техникума" 
@@ -145,12 +138,11 @@ const History = () => {
                   </p>
                 </TimelineItem>
                 
-                {/* 1934-1947: Военные годы */}
                 <TimelineItem 
                   year="1934" 
                   title="Военные годы и Восстановление"
                   openModal={openModal}
-                  imageOnLeft={false} // Текст будет слева
+                  imageOnLeft={false} 
                 >
                    <p>
                     В декабре 1934 году учебное заведение возглавил опытный производственник Сакварелидзе М.А. Техникум успешно развивался, но грянула Великая Отечественная война. С сентября 1941 года Тихорецк подвергался постоянным вражеским налетам. В начале войны почти пятая часть тихоречан ушла на фронт.
@@ -166,7 +158,6 @@ const History = () => {
                   </p>
                 </TimelineItem>
 
-                 {/* 1970-2000-е: Рост */}
                 <TimelineItem 
                   year="70-е" 
                   title="Рост и Развитие" 
@@ -183,14 +174,13 @@ const History = () => {
                   </p>
                 </TimelineItem>
 
-                 {/* 2025: Новая эра */}
                 <TimelineItem 
                   year="2025" 
                   title="Новая эра: Инновации и Лидерство" 
                   imageUrl={imageModern} 
                   imageAlt="Завьялов Андрей Александрович" 
                   openModal={openModal}
-                  imageOnLeft={false} // Текст слева
+                  imageOnLeft={false} 
                 >
                    <p>
                     С июня 2025 года ТТЖТ-филиал РГУПС возглавил <strong>Андрей Александрович Завьялов</strong>, кандидат философских наук. Инновационная деятельность педагогического коллектива под руководством Завьяллова А.А. направлена на повышение качества преподавательского состава, создание современной материально-технической базы, внедрение современных информационных технологий и социального партнёрства.
@@ -203,16 +193,13 @@ const History = () => {
                   </p>
                 </TimelineItem>
 
-                {/* --- Секция Достижения --- */}
                 <section className="relative pt-8">
-                  {/* Иконка */}
                   <div className="hidden md:flex justify-center md:col-span-1">
                     <div className="absolute top-8 h-full border-l-2 border-primary/30 z-0" style={{top: '5rem'}}></div>
                     <div className="relative z-10 w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg ring-4 ring-white">
                       <Award className="w-8 h-8 text-white" />
                     </div>
                   </div>
-                  {/* Карточка */}
                    <div className="md:ml-[calc(50%+1.5rem)] bg-gradient-to-br from-green-50 to-emerald-100 border border-green-200 rounded-2xl p-8 shadow-lg">
                       <h2 className="text-3xl font-bold text-green-800 mb-4 text-center md:text-left">Современность и достижения</h2>
                        <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-4 text-justify">

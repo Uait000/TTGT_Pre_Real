@@ -1,17 +1,14 @@
 import { BASE_URL, ZAMENA_ENDPOINT } from './config';
 import { getAuthHeaders } from './auth';
 
-// (Тип ответа от API. Укажите правильный, если знаете)
+
 interface ZamenaResponse {
   url: string;
   filename: string;
-  // ... другие поля
+  
 }
 
 export const zamenaApi = {
-  /**
-   * Получает информацию о текущем файле замен
-   */
   async get(): Promise<ZamenaResponse | null> {
     try {
       const response = await fetch(`${BASE_URL}${ZAMENA_ENDPOINT}`, {
@@ -21,7 +18,7 @@ export const zamenaApi = {
 
       if (!response.ok) {
         if (response.status === 404) {
-          return null; // Файл еще не загружен
+          return null; 
         }
         throw new Error(`Ошибка получения файла: ${response.statusText}`);
       }
@@ -32,18 +29,14 @@ export const zamenaApi = {
       throw error;
     }
   },
-
-  /**
-   * Загружает (заменяет) файл замен
-   */
   async upload(file: File): Promise<ZamenaResponse> {
     const formData = new FormData();
     formData.append('file', file);
 
     try {
       const response = await fetch(`${BASE_URL}${ZAMENA_ENDPOINT}`, {
-        method: 'POST', // Или 'PUT', в зависимости от вашего API
-        headers: getAuthHeaders(true), // true для file upload
+        method: 'POST', 
+        headers: getAuthHeaders(true), 
         body: formData,
       });
 

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { vacanciesApi, type CreateVacancyPayload } from '@/api/vacancies';
-import type { Vacancy } from '@/api/config';
+import { vacanciesApi, type CreateVacancyPayload, type Vacancy } from '@/api/vacancies';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,7 +25,7 @@ export default function VacancyForm({ open, onClose, onSuccess, editVacancy }: V
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const [formData, setFormData] = useState<CreateVacancyPayload>({
+  const [formData, setFormData] = useState({
     title: '',
     department: '',
     salary: '',
@@ -66,13 +65,20 @@ export default function VacancyForm({ open, onClose, onSuccess, editVacancy }: V
     setLoading(true);
     try {
       if (editVacancy) {
+
         await vacanciesApi.update(editVacancy.id, formData);
         toast({
           title: 'Успешно',
           description: 'Вакансия обновлена',
         });
       } else {
-        await vacanciesApi.create(formData);
+    
+        const payload: CreateVacancyPayload = {
+          ...formData,
+          is_active: true,
+          created_at: 0 
+        };
+        await vacanciesApi.create(payload); 
         toast({
           title: 'Успешно',
           description: 'Вакансия создана',
