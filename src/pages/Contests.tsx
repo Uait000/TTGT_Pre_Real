@@ -7,20 +7,16 @@ import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, FileText, Download } from 'lucide-react';
+// ИЗМЕНЕНО: Убрана иконка Download
+import { Loader2, FileText } from 'lucide-react'; 
 
 /**
- * --- ИСПРАВЛЕНИЕ ОШИБКИ 405 (Попытка 2) ---
- * Генерирует URL, используя ID как параметр ПУТИ.
+ * Генерирует ПРАВИЛЬНЫЙ публичный URL для GET-запроса, используя ID.
  */
 const getPdfUrl = (file: BackendFile | undefined): string | null => {
-  if (!file || !file.id) return null; // Используем file.id
-  
-  // Убираем /api, если он есть, чтобы получить корень
-  const cleanBaseUrl = BASE_URL.endsWith('/api') ? BASE_URL.slice(0, -4) : BASE_URL;
-  
-  // ИЗМЕНЕНО: Пробуем формат /files/{file_id}
-  return `${cleanBaseUrl}/files/${file.id}`;
+  if (!file || !file.name) return null; // <-- Правильно, file.name
+  const cleanBaseUrl = BASE_URL.endsWith('/api') ? BASE_URL.slice(0, -4) : BASE_URL;
+  return `${cleanBaseUrl}/files/${encodeURIComponent(file.name)}`;
 };
 
 /**
@@ -71,11 +67,8 @@ const Contests = () => {
                 <p className="text-muted-foreground">Нет активных конкурсов</p>
               </div>
             ) : (
-              // --- ИЗМЕНЕНИЕ ДИЗАЙНА: ---
-              // Убран grid, используется вертикальный список (space-y-6)
               <div className="max-w-4xl mx-auto space-y-6">
                 {contests.map((contest) => {
-                  // Логика для PDF перенесена сюда
                   const polozhenieUrl = getPdfUrl(contest.files?.[0]);
                   const reglamentUrl = getPdfUrl(contest.files?.[1]);
 
@@ -100,7 +93,8 @@ const Contests = () => {
                         {reglamentUrl && (
                           <Button asChild variant="secondary" className="w-full sm:w-auto justify-start gap-2">
                             <a href={reglamentUrl} target="_blank" rel="noopener noreferrer">
-                              <Download className="h-4 w-4 flex-shrink-0" />
+                              {/* --- ИЗМЕНЕНО: Иконка Download заменена на FileText --- */}
+                              <FileText className="h-4 w-4 flex-shrink-0" />
                               <span>Регламент</span>
                             </a>
                           </Button>
@@ -114,7 +108,6 @@ const Contests = () => {
                   );
                 })}
               </div>
-              // --- КОНЕЦ ИЗМЕНЕНИЯ ДИЗАЙНА ---
             )}
           </div>
         </main>
