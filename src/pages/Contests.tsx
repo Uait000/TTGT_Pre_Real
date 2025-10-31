@@ -59,7 +59,6 @@ const Contests = () => {
             ) : (
               <div className="max-w-4xl mx-auto space-y-6">
                 {contests.map((contest) => {
-                  // Логика для PDF перенесена сюда
                   const polozhenieUrl = getPdfUrl(contest.files?.[0]);
                   const reglamentUrl = getPdfUrl(contest.files?.[1]);
 
