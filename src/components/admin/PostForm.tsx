@@ -62,6 +62,7 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
   const [isTeacherPopoverOpen, setIsTeacherPopoverOpen] = useState(false);
   
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [toBeDeleted, setToBeDeleted] = useState<string[]>([]);
   const [titleError, setTitleError] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -150,6 +151,7 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
     try {
       const finalPayload: CreatePostPayload = {
         ...formData,
+          files: formData.files.filter(file => !toBeDeleted.includes(file)),
         publish_date: Math.floor(selectedDate.getTime() / 1000), 
         status: formData.isDraft ? PostStatus.Draft : PostStatus.Published,
       };
@@ -308,8 +310,11 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
           </div>
 
           <MultipleFileUpload 
-            value={formData.files} 
-            onChange={(files) => setImageFiles(files)} 
+            value={formData.files}
+            onChange={setImageFiles}
+            onDelete={(id) => {
+                setToBeDeleted([...toBeDeleted, id]);
+            }}
             label="Изображения" 
             maxFiles={20} 
           />

@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.file-add-button:hover > * {
+    color: white;
+}
+
 @layer base {
   :root {
 

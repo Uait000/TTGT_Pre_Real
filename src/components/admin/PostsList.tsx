@@ -110,7 +110,7 @@ export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger }
                   <TableCell>{post.views}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="sm" onClick={() => onEdit(JSON.parse(JSON.stringify(post)))} className="gap-1">
+                      <Button variant="ghost" size="sm" onClick={() => onEdit(post)} className="gap-1">
                         <Pencil className="h-4 w-4" /> Редактировать
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => onDelete(post)} className="gap-1 text-red-600 hover:text-red-700 hover:bg-red-50">

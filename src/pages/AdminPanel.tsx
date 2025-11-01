@@ -1,3 +1,6 @@
+// Да спасёт Бог те несчастные души,
+// что пытаются исправить этот код
+
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
@@ -12,7 +15,7 @@ import ZamenaManager from '@/components/admin/ZamenaManager';
 import ContestsList from '@/components/admin/ContestsList';
 import ProfessionalsList from '@/components/admin/ProfessionalsList';
 import { authApi } from '@/api/auth';
-import { postsApi } from '@/api/posts';
+import {Post, postsApi} from '@/api/posts';
 import { vacanciesApi } from '@/api/vacancies';
 import type { NewsPost, Vacancy } from '@/api/config';
 import { useToast } from '@/hooks/use-toast';
@@ -22,7 +25,7 @@ const AdminPanel = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(authApi.isAuthenticated());
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [editingPost, setEditingPost] = useState<NewsPost | null>(null);
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
   const [deletingPost, setDeletingPost] = useState<NewsPost | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -50,7 +53,7 @@ const AdminPanel = () => {
     setIsFormOpen(true);
   };
 
-  const handleEdit = (post: NewsPost) => {
+  const handleEdit = (post: Post) => {
     setEditingPost(post);
     setIsFormOpen(true);
   };

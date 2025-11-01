@@ -1,12 +1,14 @@
-import { useState, useRef } from 'react';
+import {useState, useRef, useEffect} from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import {BASE_URL} from "@/api/config.ts";
 
 interface MultipleFileUploadProps {
   value?: (File | string)[];
   onChange: (files: File[]) => void;
+  onDelete: (file: string) => void;
   label?: string;
   accept?: string;
   maxSize?: number;
@@ -16,6 +18,7 @@ interface MultipleFileUploadProps {
 export default function MultipleFileUpload({
   value = [],
   onChange,
+  onDelete,
   label = 'Изображения',
   accept = 'image/*',
   maxSize = 5 * 1024 * 1024,
@@ -57,19 +60,19 @@ export default function MultipleFileUpload({
       const reader = new FileReader();
       reader.onloadend = () => {
         newPreviews.push(reader.result as string);
-        if (newPreviews.length === validFiles.length) {
-          setPreviews([...previews, ...newPreviews]);
-        }
       };
       reader.readAsDataURL(file);
     }
-
+    setPreviews([...previews, ...newPreviews]);
     const updatedFiles = [...files, ...validFiles];
     setFiles(updatedFiles);
     onChange(updatedFiles);
   };
 
   const handleRemove = (index: number) => {
+      if (!previews[index].startsWith("data:")) {
+          onDelete(previews[index])
+      }
     const newPreviews = previews.filter((_, i) => i !== index);
     const newFiles = files.filter((_, i) => i !== index);
 
@@ -86,15 +89,23 @@ export default function MultipleFileUpload({
     fileInputRef.current?.click();
   };
 
+    useEffect(()=>{
+        setPreviews(value.filter(v => typeof v === 'string') as string[]);
+    }, [value])
+
   return (
     <div className="space-y-2">
-      <Label>{label} ({files.length}/{maxFiles})</Label>
+      <Label>{label} ({previews.length}/{maxFiles})</Label>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {previews.map((preview, index) => (
           <div key={index} className="relative group">
             <img
-              src={preview}
+              src={
+                preview.startsWith("data:")
+                    ? preview
+                    : `${BASE_URL}/files/${preview}`
+            }
               alt={`Preview ${index + 1}`}
               className="w-full h-32 object-cover rounded-md border-2 border-border"
             />
@@ -112,7 +123,7 @@ export default function MultipleFileUpload({
 
         {files.length < maxFiles && (
           <div
-            className="border-2 border-dashed border-border rounded-md h-32 flex flex-col items-center justify-center cursor-pointer hover:bg-accent/50 transition-colors"
+            className="file-add-button border-2 border-dashed border-border rounded-md h-32 flex flex-col items-center justify-center cursor-pointer hover:bg-accent/50 transition-colors"
             onClick={handleClick}
           >
             <ImageIcon className="h-8 w-8 text-muted-foreground mb-2" />

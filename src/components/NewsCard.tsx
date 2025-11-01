@@ -20,14 +20,11 @@ const NewsCard = ({ post, onReadMore }: NewsCardProps) => {
     const images: string[] = [];
     const cleanBaseUrl = BASE_URL.endsWith('/api') ? BASE_URL.slice(0, -4) : BASE_URL;
     if (Array.isArray(post.files) && post.files.length > 0) { 
-        post.files.forEach((file) => { 
-            
-            if (file && file.name) { 
-                const params = new URLSearchParams();
-                params.append('filename', file.name);
-                params.append('deattached', "false");    
-                const fullUrl = `${cleanBaseUrl}/files/?${params.toString()}`;
-                images.push(fullUrl);
+        post.files.forEach((file) => { 
+            
+            if (file && file.id) {
+                const fullUrl = `${cleanBaseUrl}/files/${file.id}`;
+                images.push(fullUrl);
             }
         });
     } 
