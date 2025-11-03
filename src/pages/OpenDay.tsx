@@ -1,9 +1,5 @@
-// src/pages/OpenDay.tsx
-
 import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { Video, Users, Info, MapPin, Phone, Calendar, CheckCircle } from 'lucide-react';
 
 const remoteDates = [
@@ -23,11 +19,7 @@ const OpenDay = () => {
     const [activeTab, setActiveTab] = useState('remote');
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
             
             <h1 className="text-4xl lg:text-5xl font-extrabold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
                 День открытых дверей

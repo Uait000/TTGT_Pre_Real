@@ -1,18 +1,10 @@
-// src/pages/Specialties.tsx
-
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout';
 import { GraduationCap, Clock } from 'lucide-react';
 
 const FormattedDuration = ({ text }: { text: string }) => {
-    // Убираем "Очная форма обучения:" и лишние пробелы/точки
     const cleanText = text.replace('Очная форма обучения:', '').trim();
-    
-    // Пытаемся разделить по "на базе"
     const parts = cleanText.split(' на базе ');
-    
-    // Если разделение удалось, форматируем с жирным шрифтом
+
     if (parts.length === 2) {
         return (
             <p className="text-gray-700 text-sm leading-relaxed">
@@ -23,7 +15,6 @@ const FormattedDuration = ({ text }: { text: string }) => {
         );
     }
     
-    // Если формат нестандартный, возвращаем как есть
     return (
         <p className="text-gray-700 text-sm leading-relaxed">
             {cleanText}
@@ -85,20 +76,13 @@ const Specialties = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <h1 className="text-4xl lg:text-5xl font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
                 Специальности обучения
             </h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 
                 {specialties.map((specialty, index) => {
-                    
-                    // Разделяем полный текст duration на отдельные части для форматирования
                     const durationParts = specialty.duration.split(';').map(p => p.trim());
                     
                     return (

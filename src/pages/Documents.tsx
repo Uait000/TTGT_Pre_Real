@@ -1,13 +1,9 @@
-// src/pages/Documents.tsx
-
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards
+import MainLayout from '@/components/MainLayout'; 
 
 import { FileText } from 'lucide-react';
 
 const Documents = () => {
     const documentSections = [
-        // Массив данных documentSections остается без изменений
         {
             title: 'Организационные документы и приказы',
             documents: [
@@ -392,17 +388,13 @@ const Documents = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
+
             
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-8 text-center">Документы</h1>
                 
                 <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
-                    {/* Hero image */}
                     <div className="w-full aspect-[16/6] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg overflow-hidden shadow-lg mb-8">
                         <img
                             src="https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg"

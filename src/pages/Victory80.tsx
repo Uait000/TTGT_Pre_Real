@@ -1,14 +1,9 @@
-// src/pages/Victory80.tsx
-
 import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; // ИМПОРТИРУЕМ MainLayout
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
+import MainLayout from '@/components/MainLayout';
 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { ChevronDown, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-
-// --- ИМПОРТ ИЗОБРАЖЕНИЙ ---
 // Архив (block-3)
 import archive1 from '@/assets/pictures/80old/archive1.jpg';
 import archive2 from '@/assets/pictures/80old/archive2.jpg';
@@ -73,7 +68,6 @@ import story_comes_alive2 from '@/assets/pictures/80old/story_comes_alive2.jpg';
 import story_comes_alive3 from '@/assets/pictures/80old/story_comes_alive3.jpg';
 import story_comes_alive4 from '@/assets/pictures/80old/story_comes_alive4.jpg';
 import story_comes_alive5 from '@/assets/pictures/80old/story_comes_alive5.jpg';
-// --- КОНЕЦ ИМПОРТА ИЗОБРАЖЕНИЙ ---
 
 const Victory80 = () => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -175,10 +169,7 @@ const Victory80 = () => {
     };
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. */}
-            
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-8 text-center">80 лет Великой Победы</h1>
 

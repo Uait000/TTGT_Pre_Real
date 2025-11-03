@@ -1,12 +1,6 @@
-// src/pages/SelectionCommittee.tsx
-
 import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout';
 import { ChevronDown, ChevronUp, FileText, ExternalLink } from 'lucide-react';
-
-// Импорты PDF-файлов остаются
 import PamyatkaAbiturCelevoe from '@/assets/file/com/Pamyatka_abitur_celevoe_2025.pdf';
 import PamyatkaCelevoe from '@/assets/file/com/Pamyatka_celevoe_2025.pdf';
 import PrikazOchnaya from '@/assets/file/com/prikaz_671os_ot_21_04_2025_OO.pdf';
@@ -52,10 +46,6 @@ const WebLink = ({ href, children }: { href: string; children: React.ReactNode }
 
 const SelectionCommittee = () => {
     const [openSection, setOpenSection] = useState<number | null>(null);
-    
-    // Здесь я использую чистые JSX элементы, чтобы не переопределять все ваши массивы
-    // и сохранить структуру, но это только для отображения. В вашем коде должно быть
-    // использовано ваше полное определение массивов.
     const sections: { id: number; title: string; content: React.ReactNode }[] = [
         
         {
@@ -520,13 +510,8 @@ const SelectionCommittee = () => {
     };
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
+
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
-            {/* Яркий градиентный заголовок */}
             <h1 className="text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-12 text-center">
                 Отборочная комиссия
             </h1>

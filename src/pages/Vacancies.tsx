@@ -1,9 +1,5 @@
-// src/pages/Vacancies.tsx
-
 import { useState, useEffect } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { vacanciesApi } from '@/api/vacancies';
 import type { Vacancy } from '@/api/config';
 
@@ -27,12 +23,7 @@ const Vacancies = () => {
     }, []);
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-8 text-center">Вакансии</h1>
                 

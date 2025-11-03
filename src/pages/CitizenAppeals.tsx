@@ -1,9 +1,5 @@
-// src/pages/CitizenAppeals.tsx
-
 import { useState, useRef } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { 
     FileText, 
     Upload, 
@@ -146,7 +142,6 @@ const CitizenAppeals = () => {
         });
 
         try {
-            // Внимание: В реальном приложении этот fetch должен работать с вашим API
             const response = await fetch('/api/send-appeal', {
                 method: 'POST',
                 body: data,
@@ -157,7 +152,6 @@ const CitizenAppeals = () => {
                 throw new Error(errorData.message || `Ошибка сервера: ${response.statusText}`);
             }
             setFormStatus('success');
-            // resetForm(); // Не вызываем resetForm здесь, чтобы показать статус успеха, сбрасываем по клику.
 
         } catch (error: any) {
             setFormStatus('error');
@@ -167,12 +161,7 @@ const CitizenAppeals = () => {
 
 
     return (
-        // 1. Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="mb-8 text-center">
                 <h1 className="text-4xl font-bold text-primary mb-2">Обращения граждан</h1>
                 <p className="text-lg text-muted-foreground">

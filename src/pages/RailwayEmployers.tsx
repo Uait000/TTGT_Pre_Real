@@ -472,12 +472,7 @@ const RailwayEmployers = () => {
   ];
 
 return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-8 text-center">Взаимодействие с профильными работодателями железнодорожного транспорта</h1>
                 
@@ -517,7 +512,6 @@ return (
                                     <p><strong>Гарантируем:</strong> компенсацию понесенных расходов при переезде (билетов, провоз домашних вещей контейнером), выплату подъемных в размере тарифной ставки за месяц на работника, 1/4 часть на членов семьи.</p>
                                     <p><strong>Предоставляем:</strong> Специализированный жилищный фонд или компенсацию найма жилья. Возможность компенсации авиаперелета 1 раз в год для проведения отпуска на курортах юга России и обратно, дополнительно для работников, работающих в районах Крайнего Севера 1 раз в 2 года в любой город РФ (до 49 тыс. руб на взрослого в одну сторону, до 18 тыс. руб на ребенка в одну сторону). Участие в корпоративных проектах и индивидуальный подход к карьерному росту.</p>
                                 </div>
-                                {/* Используем реальную ссылку, если она есть в массиве allEmployers, или заглушку */}
                                 <a
                                     href={rl67} 
                                     target="_blank"
@@ -557,12 +551,9 @@ return (
                                         </div>
                                         
                                         <div className="flex flex-wrap gap-3 ml-9">
-                                            {/* Рендеринг ссылок из массива links */}
                                             {employer.links && employer.links.map((link, linkIndex) => (
                                                 <DocLink key={linkIndex} href={link.href} text={link.text} />
                                             ))}
-                                            
-                                            {/* Рендеринг ссылок из массива items (для isList=true) */}
                                             {'isList' in employer && employer.items && employer.items.map((item, itemIndex) => (
                                                 <DocLink key={itemIndex} href={item.href} text={item.text} />
                                             ))}

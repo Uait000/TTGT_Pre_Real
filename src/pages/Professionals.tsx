@@ -1,16 +1,15 @@
-// src/pages/Professionals.tsx
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards
+import MainLayout from '@/components/MainLayout'; 
+
 
 import { Loader2 } from 'lucide-react';
 import { postsApi, Post, PostCategory } from '@/api/posts'; 
 import type { Post as NewsPost } from '@/api/posts';
 import NewsCard from '@/components/NewsCard'; 
 import NewsModal from '@/components/NewsModal'; 
-import InfoBlocks from '@/components/InfoBlocks'; // InfoBlocks нужно добавить вручную, т.к. он был в оригинале
+
 
 const fetchProfessionalsPosts = async () => {
     return await postsApi.getPublicAll({ 
@@ -72,11 +71,7 @@ const Professionals = () => {
     };
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
             
             <h1 className="text-4xl font-bold text-foreground mb-8">Наши профессионалы</h1>
             {isLoadingPosts ? (

@@ -1,14 +1,9 @@
-// src/pages/History.tsx
-
 import { useState, useMemo } from 'react';
-// 1. Используем MainLayout, который включает Header, Sidebar, SidebarCards, InfoBlocks и Footer
 import MainLayout from '@/components/MainLayout'; 
 import { BookOpen, Calendar, Award } from 'lucide-react'; 
 import image1930 from '@/assets/pictures/ttgt_30.jpg'; 
 import imageWar from '@/assets/pictures/ttgt_95.jpg';
 import imageModern from '@/assets/pictures/Zavyalov.png';
-
-// Компонент ImageModal остается, так как он уникален для этой страницы
 const ImageModal = ({ src, alt, onClose }: { src: string | null; alt: string; onClose: () => void; }) => {
     if (!src) return null;
     
@@ -37,7 +32,6 @@ const ImageModal = ({ src, alt, onClose }: { src: string | null; alt: string; on
     );
 };
 
-// Компонент TimelineItem остается
 const TimelineItem = ({ year, title, children, imageUrl, imageAlt, openModal, imageOnLeft = false }: { year: string, title: string, children: React.ReactNode, imageUrl?: string, imageAlt?: string, openModal: (src: string, alt: string) => void, imageOnLeft?: boolean }) => {
     const content = (
         <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
@@ -89,7 +83,6 @@ const History = () => {
     const [modalImageAlt, setModalImageAlt] = useState<string>('');
 
     const openModal = (src: string, alt: string) => {
-        // Убедитесь, что src является строкой перед установкой
         const imageUrl = typeof src === 'string' ? src : (src as any).src || src;
         setModalImageSrc(imageUrl);
         setModalImageAlt(alt);
@@ -101,9 +94,7 @@ const History = () => {
     };
 
     return (
-        // 3. ОБЕРТЫВАЕМ УНИКАЛЬНОЕ СОДЕРЖИМОЕ В <MainLayout>
         <MainLayout>
-            {/* ImageModal остается вне MainLayout для корректного z-index */}
             <ImageModal src={modalImageSrc} alt={modalImageAlt} onClose={closeModal} />
 
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12"> 
@@ -119,7 +110,7 @@ const History = () => {
                     <TimelineItem 
                         year="1930" 
                         title="Основание техникума" 
-                        imageUrl={image1930 as unknown as string} // Приведение типа
+                        imageUrl={image1930 as unknown as string} 
                         imageAlt="Историческое фото 1930" 
                         openModal={openModal} 
                         imageOnLeft={true}
@@ -155,7 +146,7 @@ const History = () => {
                     <TimelineItem 
                         year="70-е" 
                         title="Рост и Развитие" 
-                        imageUrl={imageWar as unknown as string} // Приведение типа
+                        imageUrl={imageWar as unknown as string} 
                         imageAlt="Современный вид" 
                         openModal={openModal}
                         imageOnLeft={true}
@@ -171,7 +162,7 @@ const History = () => {
                     <TimelineItem 
                         year="2025" 
                         title="Новая эра: Инновации и Лидерство" 
-                        imageUrl={imageModern as unknown as string} // Приведение типа
+                        imageUrl={imageModern as unknown as string} 
                         imageAlt="Завьялов Андрей Александрович" 
                         openModal={openModal}
                         imageOnLeft={false} 

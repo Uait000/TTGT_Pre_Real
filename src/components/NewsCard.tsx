@@ -156,7 +156,6 @@ const NewsCard = ({ post, onReadMore }: NewsCardProps) => {
                     <div className="flex items-center justify-between border-t border-gray-100 pt-3">
                         <div className="flex items-center gap-1.5 text-sm text-gray-500">
                             <Eye className="w-4 h-4" />
-                            {/* post.views теперь доступно, если внесtys изменение в posts.ts */}
                             <span>{post.views || 0}</span> 
                         </div>
 

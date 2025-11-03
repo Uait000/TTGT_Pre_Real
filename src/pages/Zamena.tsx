@@ -1,5 +1,3 @@
-// src/pages/Zamena.tsx (ФИНАЛЬНЫЙ ГОТОВЫЙ КОД)
-
 import { useEffect, useRef, useState } from 'react';
 import MainLayout from '@/components/MainLayout';
 import { zamenaApi } from '@/api/zamena'; 
@@ -30,7 +28,6 @@ const Zamena = () => {
     const fetchInitialUrl = async () => {
         setLoading(true);
         try {
-            // data.url теперь будет ZAMENA_API_URL, если запрос успешен
             const data = await zamenaApi.get(); 
             updateIframeSource(data.url); 
         } catch (error) {
@@ -44,9 +41,7 @@ const Zamena = () => {
 
     useEffect(() => {
         
-        fetchInitialUrl(); // Загрузка актуального URL при первом рендере
-        
-        // 2. Настройка WebSocket
+        fetchInitialUrl(); 
         const connectWebSocket = () => {
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             const wsUrl = `${protocol}//${window.location.host}/websocket/`;

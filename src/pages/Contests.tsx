@@ -1,9 +1,5 @@
-// src/pages/Contests.tsx
-
 import { useQuery } from '@tanstack/react-query';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards
-
+import MainLayout from '@/components/MainLayout'; 
 import { postsApi, Post, PostCategory, BackendFile } from '@/api/posts'; 
 import { BASE_URL } from '@/api/config';
 import type { Post as Contest } from '@/api/posts'; 
@@ -40,11 +36,7 @@ const Contests = () => {
     });
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
             
             <h1 className="text-4xl font-bold text-foreground mb-8">Конкурсы</h1>
 

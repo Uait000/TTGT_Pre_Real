@@ -1,5 +1,3 @@
-// src/pages/Anniversary95.tsx
-
 import { useState } from 'react';
 import MainLayout from '@/components/MainLayout'; 
 
@@ -44,13 +42,12 @@ const Anniversary95 = () => {
     const [currentSlidePost3, setCurrentSlidePost3] = useState(0);
     const [currentSlidePost4, setCurrentSlidePost4] = useState(0);
 
-    // --- Массивы изображений (без изменений) ---
+
     const post1Images = [chel, ded, deda, gorod, people];
     const post2Images = [plotnikov1, plotnikov2, plotnikov3, plotnikov4];
     const post3Images = [butov1, butov2, butov3, butov4, butov5, butov6, butov7, butov8];
     const post4Images = [women1, women2, women3, women4, women5];
 
-    // --- Функции навигации по слайдам (без изменений) ---
     const nextSlide = (postNumber: number) => {
         if (postNumber === 1) {
             setCurrentSlidePost1((prev) => (prev + 1) % post1Images.length);
@@ -75,7 +72,6 @@ const Anniversary95 = () => {
         }
     };
 
-    // --- Функция рендеринга поста (без изменений) ---
     const renderPostContent = (postNumber: number, title: string, content: JSX.Element, author: string, date: string, images: string[], currentSlide: number) => {
         const hasMultipleSlides = images.length > 1;
 

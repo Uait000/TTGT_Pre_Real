@@ -1,9 +1,5 @@
-// src/pages/PaymentReceipts.tsx
 
-import React from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { FileText, School, Car, Home, HeartHandshake, Waves, Download, Banknote } from 'lucide-react';
 import Rekvizity from '@/assets/file/rekviz_bank_scheta.pdf';
 import Obuchenie from '@/assets/file/2_Kvit_na_oplatu_za_ob.pdf';
@@ -24,12 +20,7 @@ const PaymentReceipts = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-3xl shadow-lg border border-gray-200/80 overflow-hidden">
                 <div className="p-10 md:p-12 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-b border-gray-200">
                     <div className="text-center">

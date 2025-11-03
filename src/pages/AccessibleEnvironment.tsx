@@ -84,11 +84,8 @@ const AccessibleEnvironment = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
             <div className="bg-white rounded-xl shadow-lg border border-border/50 overflow-hidden">
-                
-                {/* Заголовок с изображением */}
                 <div className="w-full h-64 sm:h-80 md:h-96 relative">
                     <img
                         src={dost} 
@@ -102,8 +99,6 @@ const AccessibleEnvironment = () => {
                         </h1>
                     </div>
                 </div>
-
-                {/* Контентная часть */}
                 <div className="p-6 md:p-10 space-y-10">
                     {sections.map((section, sectionIndex) => (
                         <div key={sectionIndex} className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-6 md:p-8 shadow-inner">

@@ -1,14 +1,8 @@
-// src/pages/SwimmingPool.tsx
-
 import { useState, useEffect } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ChevronLeft, ChevronRight, Waves, FileText, Users, Phone, Film, ExternalLink } from 'lucide-react'; 
-
-// Импорты изображений и документов остаются
 import Prik1 from '@/assets/file/Prikaz_Stoim_05072024.pdf';
 import Prik2 from '@/assets/file/Prikaz_Stoim_01012025.pdf';
 import Prav from '@/assets/file/Pravila_polz_bass_30122021.pdf';
@@ -56,12 +50,7 @@ const SwimmingPool = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-
             <div className="bg-white rounded-2xl shadow-xl border border-border p-8 md:p-12">
                 <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
                     <Waves className="w-10 h-10 mr-4 text-blue-500" />
@@ -111,7 +100,6 @@ const SwimmingPool = () => {
                     </section>
 
                     <section className="space-y-8">
-                        <h2 className="text-3xl font-semibold text-gray-800 text-center mb-8">Прейскурант цен</h2>
 
                         {/* Таблица 1 */}
                         <Card className="border-green-300 shadow-sm overflow-hidden"> 

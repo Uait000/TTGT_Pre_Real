@@ -1,7 +1,4 @@
-// src/pages/CorruptionReport.tsx
-
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards
+import MainLayout from '@/components/MainLayout';
 
 import { 
     FileText, 
@@ -50,12 +47,7 @@ const CorruptionReport = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="w-full h-64 md:h-80 relative rounded-xl overflow-hidden mb-12 shadow-lg">
                 <img
                     src={corp1}

@@ -1,14 +1,10 @@
-// src/pages/ExamSchedule.tsx
-
 import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
+import MainLayout from '@/components/MainLayout'; 
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button'; 
 import { CalendarCheck, FileText, Download, ClipboardCheck } from 'lucide-react'; 
 
-// Импорты PDF-файлов остаются
 import Kurs1 from '@/assets/file/receiptexam/1_kurs.pdf';
 import A31 from '@/assets/file/receiptexam/A31.pdf';
 import D21 from '@/assets/file/receiptexam/D21.pdf';
@@ -122,7 +118,6 @@ const ExamSchedule = () => {
     };
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4 text-center tracking-tight flex items-center justify-center">

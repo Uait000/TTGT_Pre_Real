@@ -17,7 +17,7 @@ import image2023 from '@/assets/pictures/data/2023.jpg';
 import image2024 from '@/assets/pictures/data/2024.jpg';
 import imagetop10 from '@/assets/pictures/data/top10_2019.jpg';
 import imagetop500 from '@/assets/pictures/data/top500_2019.jpg';
-// Объект для удобного доступа к изображениям
+
 const CAROUSEL_IMAGES: Record<string, string> = {
     '2006': image2006,
     '2007': image20007,

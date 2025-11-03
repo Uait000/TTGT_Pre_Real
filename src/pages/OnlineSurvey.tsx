@@ -1,8 +1,4 @@
-// src/pages/OnlineSurvey.tsx
-
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards
-
+import MainLayout from '@/components/MainLayout';
 import { ExternalLink } from 'lucide-react';
 
 const OnlineSurvey = () => {
@@ -10,32 +6,28 @@ const OnlineSurvey = () => {
         {
             id: 1,
             title: 'Анкета по оценке значимого отношения к экстремизму в детско-подростковой и молодёжной среде',
-            url: '#'
+            url: 'https://forms.yandex.ru/u/67e62c0684227c4fd4332654/'
         },
         {
             id: 2,
             title: 'Анкета для опроса обучающихся об удовлетворенности качеством условий осуществления образовательной деятельности филиала РГУПС по образовательным программам среднего профессионального образования',
-            url: '#'
+            url: 'https://forms.yandex.ru/u/67a9e062f47e737afdfdc05f/'
         },
         {
             id: 3,
             title: 'Анкета для опроса педагогических работников (преподавателей, мастеров производственного обучения) для выявления удовлетворенности качеством оказания образовательных услуг, условиями ведения образовательной деятельности в филиале ФГБОУ ВО РГУПС',
-            url: '#'
+            url: 'https://forms.yandex.ru/u/67a9e188e010db7ba81208f5/'
         },
         {
             id: 4,
             title: 'Анкета для опроса работодателей об удовлетворенности качеством условий осуществления образовательной деятельности филиала РГУПС по образовательным программам среднего профессионального образования',
-            url: '#'
+            url: 'https://forms.yandex.ru/u/67a9e22c02848f7c2f234803/'
         }
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
+
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-8 text-center">Онлайн-опрос</h1>
                 

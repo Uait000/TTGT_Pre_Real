@@ -1,15 +1,9 @@
-// src/pages/Workshops.tsx
-
 import { useState, useEffect } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
+import MainLayout from '@/components/MainLayout'; 
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; 
-import { Button } from '@/components/ui/button'; 
 import { ChevronLeft, ChevronRight, Wrench, GalleryThumbnails, ListChecks, Accessibility, FileText } from 'lucide-react'; 
 
-
-// Импорты изображений остаются
 import workshop1 from '@/assets/pictures/phoca_thumb_l_442.jpg';
 import workshop2 from '@/assets/pictures/phoca_thumb_l_443.jpg';
 import workshop3 from '@/assets/pictures/phoca_thumb_l_444.jpg';
@@ -69,12 +63,7 @@ const Workshops = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-2xl shadow-xl border border-border p-8 md:p-12"> 
                 <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
                     <Wrench className="w-10 h-10 mr-4 text-orange-500" /> 

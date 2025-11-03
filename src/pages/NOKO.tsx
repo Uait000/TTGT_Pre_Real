@@ -1,19 +1,10 @@
-// src/pages/NOKO.tsx
-
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { ExternalLink, FileText, CheckSquare, Film } from 'lucide-react'; 
 import VNOKO from '@/assets/file/Pol_VNOKO_31.08.2021.pdf';
 
 const NOKO = () => {
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-2 text-center">Независимая оценка качества образования</h1>
                 <p className="text-center text-muted-foreground mb-10">(НОКО)</p>

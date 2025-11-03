@@ -1,13 +1,7 @@
-// src/pages/BellSchedule.tsx
-
 import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { X, Bell, ZoomIn } from 'lucide-react';
-
-// Импорты изображений расписания остаются
 import rasp1 from '@/assets/pictures/rasp1kurs.jpg';
 import rasp2 from '@/assets/pictures/rasp234kurs.jpg';
 
@@ -15,12 +9,7 @@ const BellSchedule = () => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
-        <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
+        <MainLayout>  
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
                     <Bell className="w-10 h-10 mr-4 text-accent" />
@@ -72,7 +61,7 @@ const BellSchedule = () => {
                 </div>
             </div>
 
-            {/* Модальное окно (Лайтбокс) остается частью страницы */}
+            {/* Модальное окно (Лайтбокс)*/}
             <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
                 <DialogContent className="max-w-7xl max-h-[90vh] p-2 bg-transparent border-none shadow-none">
                     <div className="relative">

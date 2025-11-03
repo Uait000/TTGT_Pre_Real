@@ -1,8 +1,4 @@
-// src/pages/InternalRules.tsx
-
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { XCircle, CheckCircle, AlertTriangle } from 'lucide-react'; 
 
 const InternalRules = () => {
@@ -21,12 +17,7 @@ const InternalRules = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
                     <AlertTriangle className="w-10 h-10 mr-4 text-accent" />
@@ -48,7 +39,7 @@ const InternalRules = () => {
                                     key={rule.id} 
                                     className="flex items-start space-x-4 p-4 bg-white/70 rounded-lg border border-red-100 shadow-sm"
                                 >
-                                    {/* Здесь я заменил span на XCircle, чтобы соответствовать заголовку секции */}
+
                                     <XCircle className="w-6 h-6 text-red-600 mt-1 flex-shrink-0" /> 
                                     <p className="text-gray-700 leading-relaxed">{rule.text}</p>
                                 </div>

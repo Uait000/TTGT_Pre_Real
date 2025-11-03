@@ -1,13 +1,7 @@
-// src/pages/Cafeteria.tsx
-
 import { useState, useEffect } from 'react'; 
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; 
 import { ChevronLeft, ChevronRight, Utensils, Clock, Phone, Accessibility } from 'lucide-react'; 
-
-// Импорты изображений остаются
 import eat_1 from '@/assets/pictures/phoca_thumb_l_312.jpg';
 import eat_2 from '@/assets/pictures/phoca_thumb_l_313.jpg';
 import eat_3 from '@/assets/pictures/phoca_thumb_l_314.jpg';
@@ -45,12 +39,7 @@ const Cafeteria = () => {
 
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-2xl shadow-xl border border-border p-8 md:p-12"> 
                 <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
                     <Utensils className="w-10 h-10 mr-4 text-amber-500" /> 

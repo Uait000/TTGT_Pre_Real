@@ -1,9 +1,5 @@
-// src/pages/EducationalWork.tsx
-
 import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import dc_1 from '@/assets/file/Zapovedi_rodit.pdf';
 import dc_2 from '@/assets/file/Zakon_na_zashshite_det.pdf';
@@ -42,12 +38,7 @@ const EducationalWork = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-8 text-center">Воспитательная работа</h1>
                 

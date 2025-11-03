@@ -1,8 +1,4 @@
-// src/pages/Administration.tsx
-
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import adm_1 from '@/assets/pictures/Zavyalov.png';
 import adm_2 from '@/assets/pictures/adm_2.png';
 import adm_3 from '@/assets/pictures/adm_3.png';
@@ -79,7 +75,6 @@ const Administration = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-8 text-center">Администрация</h1>

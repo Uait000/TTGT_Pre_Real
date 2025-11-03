@@ -1,8 +1,4 @@
-// src/pages/Accreditation.tsx
-
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { Card } from '@/components/ui/card';
 import acr_1 from '@/assets/pictures/acr_1.jpg';
 import acr_2 from '@/assets/pictures/acr_2.jpg';
@@ -11,12 +7,7 @@ import qr1 from '@/assets/pictures/qr_akkr_2024.jpg';
 
 const Accreditation = () => {
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет все в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>
-            */}
-            
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-8 text-center">Аккредитация</h1>
                 

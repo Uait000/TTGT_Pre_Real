@@ -1,8 +1,4 @@
-// src/pages/RussiaBelarusConference.tsx
-
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { FileText } from 'lucide-react';
 import rushabel from '@/assets/pictures/ria_8451769hr_c79.webp'
 import R1 from '@/assets/file/russia/V_Vser_stud_konf_Rossia_Belarus_2025_Programma.pdf';
@@ -105,17 +101,12 @@ const RussiaBelarusConference = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
+
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-8 text-center">Россия и Беларусь - вехи общей истории</h1>
                 
                 <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
-                    {/* Hero image */}
                     <div className="w-full aspect-[16/6] bg-gradient-to-br from-red-100 to-red-200 rounded-lg overflow-hidden shadow-lg mb-8">
                         <img
                             src={rushabel}

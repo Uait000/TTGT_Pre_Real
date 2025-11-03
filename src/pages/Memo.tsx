@@ -1,8 +1,4 @@
-// src/pages/Memo.tsx
-
 import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
 import { ExternalLink, FileText, Snowflake, ClipboardCheck } from 'lucide-react'; 
 import pamtka from '@/assets/file/pamtka.pdf';
 import pamytka from '@/assets/file/Pamyatka_EGE_2024.pdf';
@@ -10,12 +6,7 @@ import mesta from '@/assets/file/Mesta_Reg_EGE_2024.pdf';
 
 const Memo = () => {
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-12 text-center tracking-tight flex items-center justify-center">
                     <ClipboardCheck className="w-10 h-10 mr-4 text-accent" />

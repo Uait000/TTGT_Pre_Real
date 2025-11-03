@@ -1,6 +1,3 @@
-// Да спасёт Бог те несчастные души,
-// что пытаются исправить этот код
-
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
@@ -46,7 +43,6 @@ const AdminPanel = () => {
     setIsLoggedIn(false);
   };
 
-  // --- ЛОГИКА ДЛЯ ПОСТОВ ---
 
   const handleCreate = () => {
     setEditingPost(null);
@@ -94,8 +90,6 @@ const AdminPanel = () => {
     }
   };
 
-
-  // --- ЛОГИКА ДЛЯ ВАКАНСИЙ ---
 
   const handleVacancyCreate = () => {
     setEditingVacancy(null);

@@ -1,12 +1,6 @@
-// src/pages/StateExam.tsx
-
 import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout';
 import { ExternalLink, CalendarDays, FileText, BookOpen, ArrowRight } from 'lucide-react';
-
-// Импорты PDF-файлов остаются
 import gia08_02_01 from '@/assets/file/gia/GIA_08_02_01.pdf';
 import gia09_02_01 from '@/assets/file/gia/GIA_09_02_01.pdf';
 import gia11_02_06 from '@/assets/file/gia/GIA_11_02_06.pdf';
@@ -74,12 +68,7 @@ const StateExam = () => {
     );
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="max-w-5xl mx-auto">
                 <div className="text-center mb-10">
                     <h1 className="text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">

@@ -1,8 +1,4 @@
-// src/pages/IOS.tsx
-
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { ExternalLink, FileText } from 'lucide-react';
 import doc_1 from '@/assets/file/Spisok_EOR_08.02.01.pdf';
 import doc_2 from '@/assets/file/Spisok_EOR_08.02.10.pdf';
@@ -71,12 +67,7 @@ const IOS = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-2 text-center">Электронная информационно-образовательная среда</h1>
                 <p className="text-center text-muted-foreground mb-12">Доступ к информационным системам и образовательным ресурсам</p>

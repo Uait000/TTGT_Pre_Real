@@ -61,7 +61,7 @@ const Sidebar = () => {
         { label: 'Воспитательная работа', href: '/educational-work', icon: <Users className="w-4 h-4" /> },
         { label: 'Библиотека', href: '/library', icon: <BookOpen className="w-4 h-4" /> },
         { label: 'Электронная ИОС', href: '/ios', icon: <Monitor className="w-4 h-4" /> },
-        { label: 'Замены', href: '/zamena', icon: <Replace className="w-4 h-4" /> },
+        { label: 'Онлайн-опрос', href: '/online-survey', icon: <Replace className="w-4 h-4" /> },
       ]
     },
     {

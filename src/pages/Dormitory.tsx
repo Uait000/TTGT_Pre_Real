@@ -1,9 +1,5 @@
-// src/pages/Dormitory.tsx
-
 import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Dormitory = () => {
@@ -29,17 +25,12 @@ const Dormitory = () => {
     };
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
+
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-8 text-center">Общежитие</h1>
                 
                 <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
-                    {/* Карусель изображений */}
                     <div className="relative max-w-4xl mx-auto mb-8">
                         <div className="aspect-[16/10] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl overflow-hidden shadow-lg">
                             <img

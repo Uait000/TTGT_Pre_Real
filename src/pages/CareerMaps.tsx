@@ -1,11 +1,5 @@
-// src/pages/CareerMaps.tsx
-
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout';
 import { Download } from 'lucide-react';
-
-
 import pdf_08_02_01 from '@/assets/file/careercard/08.02.01.pdf';
 import pdf_08_02_10 from '@/assets/file/careercard/08.02.10.pdf';
 import pdf_09_02_01 from '@/assets/file/careercard/09.02.01.pdf';
@@ -87,12 +81,7 @@ const CareerMaps = () => {
     
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
-        <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
+        <MainLayout> 
             <h1 className="text-4xl lg:text-5xl font-extrabold text-center mb-6 text-gray-900">
                 Карьерные карты
             </h1>

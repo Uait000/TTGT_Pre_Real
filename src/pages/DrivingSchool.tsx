@@ -1,9 +1,5 @@
-// src/pages/DrivingSchool.tsx
-
 import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, MapPin, Phone, User, FileText, Target, Car, GraduationCap, Building, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import avto1 from '@/assets/pictures/School.jpg';
@@ -38,12 +34,7 @@ const DrivingSchool = () => {
     };
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
-            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
-               Нам нужно только содержимое, которое раньше было внутри <main>.
-            */}
-            
             <div className="bg-white rounded-2xl shadow-xl border border-border p-8 md:p-12">
                 <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6 text-center tracking-tight">Автошкола ТТЖТ</h1>
                 <p className="text-center text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">Качественная подготовка водителей категории «В» с 2010 года.</p>

@@ -1,14 +1,8 @@
-// src/pages/Departments.tsx
-
 import { useState, useMemo } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Play, TrainFront, Bolt, HardHat, TrafficCone, Laptop, BookOpen, ChevronRight, X, ChevronLeft } from 'lucide-react';
-
-// Импорты изображений и данных остаются
 import ob from '@/assets/pictures/ob.png';
 import vag from '@/assets/pictures/vag.png';
 import pm from '@/assets/pictures/pm.png';
@@ -26,7 +20,6 @@ const Departments = () => {
     const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
     const departments = [
-        // ... Ваш полный массив departments (без изменений) ...
         {
             id: 1,
             name: 'Отделение технической эксплуатации подвижного состава ж/д',
@@ -117,20 +110,17 @@ const Departments = () => {
         setIsDescriptionOpen(true);
     };
     
-    // Вспомогательная функция для рендеринга текста описания
+
     const renderDescription = (description: string) => {
         const headings = [
             'Специальности:',
             'Возглавляет отделение', 
-            // ... (все заголовки, как в вашем коде)
         ];
         
         const paragraphs = description.split('\n\n');
         
         return paragraphs.map((paragraph, pIndex) => {
             const isHeading = headings.some(h => paragraph.startsWith(h) && paragraph.length < 100); 
-            
-            // Обработка списка специальностей
             if (paragraph.startsWith('Специальности:\n-')) {
                 const items = paragraph.split('\n'); 
                 const title = items.shift(); 
@@ -146,7 +136,6 @@ const Departments = () => {
                 );
             }
             
-            // Обработка заголовков
             if (isHeading) {
                 return (
                     <h3 key={pIndex} className="text-xl font-semibold text-gray-800 mt-6 mb-3">
@@ -155,7 +144,6 @@ const Departments = () => {
                 );
             }
             
-            // Обычные параграфы
             return (
                 <p key={pIndex} className="text-gray-700 leading-relaxed text-justify text-base mb-4">
                     {paragraph}
@@ -164,7 +152,6 @@ const Departments = () => {
         });
     };
 
-    // --- Цветовые схемы, чтобы Tailwind не удалял классы ---
     const colors = {
         blue: { gradient: 'from-blue-50 to-indigo-100', border: 'border-blue-200', text: 'text-blue-800', iconBg: 'bg-blue-100', iconText: 'text-blue-600', buttonBg: 'bg-blue-600 hover:bg-blue-700', buttonOutline: 'border-blue-500 text-blue-700 hover:bg-blue-50', hoverBgColor: 'hover:bg-blue-700' },
         yellow: { gradient: 'from-yellow-50 to-amber-100', border: 'border-yellow-200', text: 'text-amber-800', iconBg: 'bg-yellow-100', iconText: 'text-amber-600', buttonBg: 'bg-yellow-500 hover:bg-yellow-600', buttonOutline: 'border-yellow-500 text-yellow-700 hover:bg-yellow-50', hoverBgColor: 'hover:bg-yellow-600' },
@@ -175,7 +162,6 @@ const Departments = () => {
 
 
     return (
-        // 1. Оборачиваем уникальный контент в MainLayout
         <MainLayout>
             {/* 2. ВЕСЬ КОНТЕНТ (который был внутри <main>) ПЕРЕНОСИМ СЮДА */}
             
@@ -266,8 +252,6 @@ const Departments = () => {
                     })}
                 </div>
             </div>
-            
-            {/* 3. Модальные окна (Dialog и Lightbox) остаются частью страницы */}
             
             {/* Модальное окно с описанием отделения */}
             <Dialog open={isDescriptionOpen} onOpenChange={setIsDescriptionOpen}>

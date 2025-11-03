@@ -1,9 +1,5 @@
-// src/pages/Schedule.tsx
-
 import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
-// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
-
+import MainLayout from '@/components/MainLayout'; 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink, Download, FileText, CalendarDays, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -168,7 +164,6 @@ const Schedule = () => {
     ];
 
     return (
-        // Оборачиваем уникальный контент в MainLayout
         <MainLayout>
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
@@ -179,7 +174,6 @@ const Schedule = () => {
                     Актуальное расписание занятий для очного и заочного отделений.
                 </p>
 
-                {/* Яркая секция для скачивания приложения */}
                 <section className="mb-12 bg-gradient-to-r from-primary to-blue-700 rounded-xl shadow-lg p-8 flex flex-col md:flex-row items-center justify-between text-white">
                     <div className="flex items-center mb-4 md:mb-0">
                         <Smartphone className="w-12 h-12 mr-5 flex-shrink-0" />
