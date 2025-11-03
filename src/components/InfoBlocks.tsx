@@ -57,7 +57,13 @@ const InfoBlocks = () => {
 
   return (
     <section className="py-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-6">
+      {/*
+        ИЗМЕНЕНИЕ ЗДЕСЬ:
+        - grid-cols-2: (По умолчанию) 2 колонки на самых маленьких экранах (мобильные)
+        - md:grid-cols-4: 4 колонки на планшетах (md: 768px и шире)
+        - xl:grid-cols-7: 7 колонок на больших ПК (xl: 1280px и шире)
+      */}
+      <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-6">
         {infoBlocks.map((block) => (
           block.external ? (
             <a
