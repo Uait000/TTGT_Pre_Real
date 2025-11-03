@@ -1,54 +1,50 @@
-import { BASE_URL, ZAMENA_ENDPOINT } from './config';
-import { getAuthHeaders } from './auth';
+import { getAuthHeaders } from "@/api/auth"; 
+import { BASE_URL, ADMIN_API_PREFIX } from "@/api/config";
 
-
-interface ZamenaResponse {
-  url: string;
-  filename: string;
-  
-}
+const PUBLIC_ZAMENA_URL = `${BASE_URL}/files/fixed/zamena`;
+const ADMIN_UPLOAD_URL = `${BASE_URL}${ADMIN_API_PREFIX}/fixedfiles/zamena`;
 
 export const zamenaApi = {
-  async get(): Promise<ZamenaResponse | null> {
-    try {
-      const response = await fetch(`${BASE_URL}${ZAMENA_ENDPOINT}`, {
-        method: 'GET',
-        headers: getAuthHeaders(),
-      });
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          return null; 
+    get: async (): Promise<{ url: string | null }> => {
+        try {
+            const response = await fetch(PUBLIC_ZAMENA_URL, {
+                method: 'GET', 
+                cache: 'no-store', 
+            });
+
+            if (response.ok) {
+                return { url: PUBLIC_ZAMENA_URL };
+            } else {
+                return { url: null };
+            }
+        } catch (error) {
+            console.error("Ошибка при проверке статуса файла замен:", error);
+            return { url: null };
         }
-        throw new Error(`Ошибка получения файла: ${response.statusText}`);
-      }
+    },
 
-      return response.json();
-    } catch (error) {
-      console.error('Ошибка при получении файла замен:', error);
-      throw error;
+    upload: async (file: File): Promise<void> => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch(ADMIN_UPLOAD_URL, {
+            method: 'PATCH',
+            headers: getAuthHeaders(true), 
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error("Ошибка загрузки файла замен:", response.status, errorData);
+            
+            const detail = errorData.detail?.[0]?.msg 
+                           || errorData.detail 
+                           || 'Неизвестная ошибка сервера';
+                           
+            throw new Error(`Ошибка ${response.status}: ${detail}`);
+        }
+        
+        return;
     }
-  },
-  async upload(file: File): Promise<ZamenaResponse> {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await fetch(`${BASE_URL}${ZAMENA_ENDPOINT}`, {
-        method: 'POST', 
-        headers: getAuthHeaders(true), 
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || `Не удалось загрузить файл: ${response.statusText}`);
-      }
-
-      return response.json();
-    } catch (error) {
-      console.error('Ошибка при загрузке файла замен:', error);
-      throw error;
-    }
-  },
 };

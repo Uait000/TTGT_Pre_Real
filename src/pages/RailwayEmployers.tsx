@@ -1,7 +1,5 @@
-import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
-import SidebarCards from '@/components/SidebarCards';
 import { FileText } from 'lucide-react';
+import MainLayout from '@/components/MainLayout';
 import prov from '@/assets/pictures/prov.jpg';
 import vac from '@/assets/pictures/vak_svar_gazstroy_2025.jpg';
 import rl1 from '@/assets/file/railway/Milorem_servis_Tih_20_10_2025.pdf';
@@ -473,116 +471,111 @@ const RailwayEmployers = () => {
     },
   ];
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <div className="flex">
-        <Sidebar />
-        
-        <main className="flex-1 min-h-screen">
-          <div className="container mx-auto px-6 py-8">
+return (
+        // Оборачиваем уникальный контент в MainLayout
+        <MainLayout>
+            {/* MainLayout уже добавит: ContactStrip, InfoBlocks и обернет контент в container mx-auto. 
+               Нам нужно только содержимое, которое раньше было внутри <main>.
+            */}
+            
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
-              <h1 className="text-3xl font-bold text-primary mb-8 text-center">Взаимодействие с профильными работодателями железнодорожного транспорта</h1>
-              
-              <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <div className="aspect-[16/10] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg overflow-hidden shadow-lg">
-                    <img
-                      src= {prov}
-                      alt="Партнерство с работодателями 1"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="aspect-[16/10] bg-gradient-to-br from-secondary/10 to-accent/10 rounded-lg overflow-hidden shadow-lg">
-                    <img
-                      src={vac}
-                      alt="Партнерство с работодателями 2"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-6">
-                  
-                  {/* Специальные предложения */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h3 className="text-xl font-semibold text-primary mb-6">Специальные предложения</h3>
-                    
-                    <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 border-l-4 border-yellow-500 p-6 rounded-lg mb-6">
-                      <h4 className="font-bold text-yellow-700 mb-3">Дальневосточная дирекция тяги</h4>
-                      <p className="text-foreground text-sm leading-relaxed mb-4">
-                        Предлагаем трудоустройство в одно из структурных подразделений Дальневосточной дирекции тяги - эксплуатационное локомотивное депо: Облучье, Хабаровск-2, Ружино (г.Лесозаводск), Уссурийск, Смоляниново, Комсомольск-на-Амуре, Советская Гавань, Тында, Новый Ургал, Партизанск, Южно-Сахалинск.
-                      </p>
-                      <div className="space-y-2 text-sm text-foreground">
-                        <p><strong>Заработная плата:</strong> помощник машиниста локомотива от 100 тыс.рублей, машинист локомотива от 150 тыс.рублей.</p>
-                        <p><strong>Северная надбавка:</strong> к заработной плате (от 30 до 50%) с первого дня работы.</p>
-                        <p><strong>Гарантируем:</strong> компенсацию понесенных расходов при переезде (билетов, провоз домашних вещей контейнером), выплату подъемных в размере тарифной ставки за месяц на работника, 1/4 часть на членов семьи.</p>
-                        <p><strong>Предоставляем:</strong> Специализированный жилищный фонд или компенсацию найма жилья. Возможность компенсации авиаперелета 1 раз в год для проведения отпуска на курортах юга России и обратно, дополнительно для работников, работающих в районах Крайнего Севера 1 раз в 2 года в любой город РФ (до 49 тыс. руб на взрослого в одну сторону, до 18 тыс. руб на ребенка в одну сторону). Участие в корпоративных проектах и индивидуальный подход к карьерному росту.</p>
-                      </div>
-                      <a
-                        href="#" 
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center space-x-2 bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-medium transition-colors mt-4"
-                      >
-                        <span>Подробнее</span>
-                        <FileText className="w-4 h-4" />
-                      </a>
-                    </div>
-
-                    <div className="bg-gradient-to-r from-purple-50 to-purple-100 border-l-4 border-purple-500 p-6 rounded-lg">
-                      <h4 className="font-bold text-purple-700 mb-3">Линейный отдел полиции на станции Тихорецкая</h4>
-                      <p className="text-foreground text-sm leading-relaxed mb-4">
-                        Осуществляет набор на службу в органы внутренних дел, на должности младшего начальствующего состава, граждан Российской Федерации, от 18 до 35 лет, имеющие образование не ниже среднего.
-                      </p>
-                      <p className="text-foreground text-sm mb-4">
-                        <strong>Денежное довольствие:</strong> сотрудников младшего начальствующего состава около 25 000 рублей.
-                      </p>
-                      <div className="space-y-1 text-sm text-foreground">
-                        <p><strong>Обращаться по адресу:</strong> г. Тихорецк, ул. Октябрьская 1. г. Кропоткин, ул. Железнодорожная 48 а.</p>
-                        <p><strong>Контактные телефоны:</strong> 8-86138-9-20-14, 8-999-437-39-81, 8-961-584-50-79</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h3 className="text-xl font-semibold text-primary mb-6">Все предложения о трудоустройстве</h3>
-                    <div className="space-y-4">
-                      {allEmployers.map((employer, index) => (
-                        <div key={index} className="border-b border-border/30 pb-4 last:border-b-0 last:pb-0">
-                          <div className="flex items-start space-x-4 mb-3">
-                            <FileText className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
-                            <p className="text-foreground leading-relaxed text-sm">{employer.title}</p>
-                          </div>
-                          
-                          {/* Рендеринг кнопок */}
-                          <div className="flex flex-wrap gap-3 ml-9">
-                            {employer.links && employer.links.map((link, linkIndex) => (
-                              <DocLink key={linkIndex} href={link.href} text={link.text} />
-                            ))}
-                            
-                            {/* Рендеринг для особого случая с 'items' */}
-                            {employer.isList && employer.items && employer.items.map((item, itemIndex) => (
-                               <DocLink key={itemIndex} href={item.href} text={item.text} />
-                            ))}
-                          </div>
+                <h1 className="text-3xl font-bold text-primary mb-8 text-center">Взаимодействие с профильными работодателями железнодорожного транспорта</h1>
+                
+                <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
+                    {/* Изображения */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div className="aspect-[16/10] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg overflow-hidden shadow-lg">
+                            <img
+                                src={prov}
+                                alt="Партнерство с работодателями 1"
+                                className="w-full h-full object-cover"
+                            />
                         </div>
-                      ))}
+                        <div className="aspect-[16/10] bg-gradient-to-br from-secondary/10 to-accent/10 rounded-lg overflow-hidden shadow-lg">
+                            <img
+                                src={vac}
+                                alt="Партнерство с работодателями 2"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
                     </div>
-                  </div>
+                    
+                    <div className="space-y-6">
+                        {/* Специальные предложения */}
+                        <div className="bg-white rounded-lg p-6 shadow-sm">
+                            <h3 className="text-xl font-semibold text-primary mb-6">Специальные предложения</h3>
+                            
+                            {/* Блок Дальневосточной дирекции тяги */}
+                            <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 border-l-4 border-yellow-500 p-6 rounded-lg mb-6">
+                                <h4 className="font-bold text-yellow-700 mb-3">Дальневосточная дирекция тяги</h4>
+                                <p className="text-foreground text-sm leading-relaxed mb-4">
+                                    Предлагаем трудоустройство в одно из структурных подразделений Дальневосточной дирекции тяги - эксплуатационное локомотивное депо: Облучье, Хабаровск-2, Ружино (г.Лесозаводск), Уссурийск, Смоляниново, Комсомольск-на-Амуре, Советская Гавань, Тында, Новый Ургал, Партизанск, Южно-Сахалинск.
+                                </p>
+                                <div className="space-y-2 text-sm text-foreground">
+                                    <p><strong>Заработная плата:</strong> помощник машиниста локомотива от 100 тыс.рублей, машинист локомотива от 150 тыс.рублей.</p>
+                                    <p><strong>Северная надбавка:</strong> к заработной плате (от 30 до 50%) с первого дня работы.</p>
+                                    <p><strong>Гарантируем:</strong> компенсацию понесенных расходов при переезде (билетов, провоз домашних вещей контейнером), выплату подъемных в размере тарифной ставки за месяц на работника, 1/4 часть на членов семьи.</p>
+                                    <p><strong>Предоставляем:</strong> Специализированный жилищный фонд или компенсацию найма жилья. Возможность компенсации авиаперелета 1 раз в год для проведения отпуска на курортах юга России и обратно, дополнительно для работников, работающих в районах Крайнего Севера 1 раз в 2 года в любой город РФ (до 49 тыс. руб на взрослого в одну сторону, до 18 тыс. руб на ребенка в одну сторону). Участие в корпоративных проектах и индивидуальный подход к карьерному росту.</p>
+                                </div>
+                                {/* Используем реальную ссылку, если она есть в массиве allEmployers, или заглушку */}
+                                <a
+                                    href={rl67} 
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center space-x-2 bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-medium transition-colors mt-4"
+                                >
+                                    <span>Подробнее</span>
+                                    <FileText className="w-4 h-4" />
+                                </a>
+                            </div>
 
+                            {/* Блок Линейный отдел полиции */}
+                            <div className="bg-gradient-to-r from-purple-50 to-purple-100 border-l-4 border-purple-500 p-6 rounded-lg">
+                                <h4 className="font-bold text-purple-700 mb-3">Линейный отдел полиции на станции Тихорецкая</h4>
+                                <p className="text-foreground text-sm leading-relaxed mb-4">
+                                    Осуществляет набор на службу в органы внутренних дел, на должности младшего начальствующего состава, граждан Российской Федерации, от 18 до 35 лет, имеющие образование не ниже среднего.
+                                </p>
+                                <p className="text-foreground text-sm mb-4">
+                                    <strong>Денежное довольствие:</strong> сотрудников младшего начальствующего состава около 25 000 рублей.
+                                </p>
+                                <div className="space-y-1 text-sm text-foreground">
+                                    <p><strong>Обращаться по адресу:</strong> г. Тихорецк, ул. Октябрьская 1. г. Кропоткин, ул. Железнодорожная 48 а.</p>
+                                    <p><strong>Контактные телефоны:</strong> 8-86138-9-20-14, 8-999-437-39-81, 8-961-584-50-79</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Все предложения о трудоустройстве */}
+                        <div className="bg-white rounded-lg p-6 shadow-sm">
+                            <h3 className="text-xl font-semibold text-primary mb-6">Все предложения о трудоустройстве</h3>
+                            <div className="space-y-4">
+                                {allEmployers.map((employer, index) => (
+                                    <div key={index} className="border-b border-border/30 pb-4 last:border-b-0 last:pb-0">
+                                        <div className="flex items-start space-x-4 mb-3">
+                                            <FileText className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
+                                            <p className="text-foreground leading-relaxed text-sm">{employer.title}</p>
+                                        </div>
+                                        
+                                        <div className="flex flex-wrap gap-3 ml-9">
+                                            {/* Рендеринг ссылок из массива links */}
+                                            {employer.links && employer.links.map((link, linkIndex) => (
+                                                <DocLink key={linkIndex} href={link.href} text={link.text} />
+                                            ))}
+                                            
+                                            {/* Рендеринг ссылок из массива items (для isList=true) */}
+                                            {'isList' in employer && employer.items && employer.items.map((item, itemIndex) => (
+                                                <DocLink key={itemIndex} href={item.href} text={item.text} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </main>
-        
-        <aside className="w-80 bg-white border-l border-border p-6 sticky top-16 h-screen overflow-y-auto">
-          <SidebarCards />
-        </aside>
-      </div>
-    </div>
-  );
+        </MainLayout>
+    );
 };
 
 export default RailwayEmployers;

@@ -1,14 +1,14 @@
-import {useState, useRef, useEffect} from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import {BASE_URL} from "@/api/config.ts";
+import { BASE_URL } from "@/api/config.ts";
 
 interface MultipleFileUploadProps {
   value?: (File | string)[];
   onChange: (files: File[]) => void;
-  onDelete: (file: string) => void;
+  onDelete: (file: string) => void; 
   label?: string;
   accept?: string;
   maxSize?: number;
@@ -18,39 +18,50 @@ interface MultipleFileUploadProps {
 export default function MultipleFileUpload({
   value = [],
   onChange,
-  onDelete,
+  onDelete, 
   label = 'Изображения',
   accept = 'image/*',
-  maxSize = 5 * 1024 * 1024,
+  maxSize = 5 * 1024 * 1024, // 5MB
   maxFiles = 20,
 }: MultipleFileUploadProps) {
-  const [previews, setPreviews] = useState<string[]>(
-    value.filter(v => typeof v === 'string') as string[]
-  );
+  
+  const [previews, setPreviews] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
+  useEffect(() => {
+    const existingFileIds = value.filter(v => typeof v === 'string') as string[];
+    const newFilePreviews = previews.filter(p => p.startsWith("data:"));
+    setPreviews([...existingFileIds, ...newFilePreviews]);
+    
+    const newFilesFromProps = value.filter(v => v instanceof File) as File[];
+    setFiles(newFilesFromProps);
+
+  }, [value]);
+
+  
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
-
-    if (files.length + selectedFiles.length > maxFiles) {
+    
+    const currentTotal = previews.length + selectedFiles.length;
+    if (currentTotal > maxFiles) {
       toast({
         title: 'Ошибка',
-        description: `Максимум ${maxFiles} изображений`,
+        description: `Максимум ${maxFiles} изображений.`,
         variant: 'destructive',
       });
       return;
     }
 
     const validFiles: File[] = [];
-    const newPreviews: string[] = [];
 
     for (const file of selectedFiles) {
       if (file.size > maxSize) {
         toast({
           title: 'Ошибка',
-          description: `Файл ${file.name} слишком большой`,
+          description: `Файл ${file.name} слишком большой (макс. ${maxSize / 1024 / 1024}MB)`,
           variant: 'destructive',
         });
         continue;
@@ -58,40 +69,57 @@ export default function MultipleFileUpload({
 
       validFiles.push(file);
       const reader = new FileReader();
+
       reader.onloadend = () => {
-        newPreviews.push(reader.result as string);
+        setPreviews(prev => [
+            ...prev,
+            reader.result as string
+        ]);
       };
       reader.readAsDataURL(file);
     }
-    setPreviews([...previews, ...newPreviews]);
+    
     const updatedFiles = [...files, ...validFiles];
     setFiles(updatedFiles);
-    onChange(updatedFiles);
-  };
-
-  const handleRemove = (index: number) => {
-      if (!previews[index].startsWith("data:")) {
-          onDelete(previews[index])
-      }
-    const newPreviews = previews.filter((_, i) => i !== index);
-    const newFiles = files.filter((_, i) => i !== index);
-
-    setPreviews(newPreviews);
-    setFiles(newFiles);
-    onChange(newFiles);
-
+    onChange(updatedFiles); 
+    
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
+  const handleRemove = (indexToRemove: number) => {
+    const previewToRemove = previews[indexToRemove];
+
+    if (!previewToRemove.startsWith("data:")) {
+      onDelete(previewToRemove);
+    }
+
+    let fileIndexToRemove = -1;
+    if (previewToRemove.startsWith("data:")) {
+      let dataUrlCount = 0;
+      for (let i = 0; i < indexToRemove; i++) {
+        if (previews[i].startsWith("data:")) {
+          dataUrlCount++;
+        }
+      }
+      fileIndexToRemove = dataUrlCount;
+    }
+
+    const newPreviews = previews.filter((_, i) => i !== indexToRemove);
+    setPreviews(newPreviews);
+    let newFiles = [...files];
+    if (fileIndexToRemove > -1 && files[fileIndexToRemove]) {
+      newFiles = files.filter((_, i) => i !== fileIndexToRemove);
+    }
+    setFiles(newFiles);
+    onChange(newFiles); 
+  };
+
+
   const handleClick = () => {
     fileInputRef.current?.click();
   };
-
-    useEffect(()=>{
-        setPreviews(value.filter(v => typeof v === 'string') as string[]);
-    }, [value])
 
   return (
     <div className="space-y-2">
@@ -103,9 +131,9 @@ export default function MultipleFileUpload({
             <img
               src={
                 preview.startsWith("data:")
-                    ? preview
-                    : `${BASE_URL}/files/${preview}`
-            }
+                  ? preview
+                  : `${BASE_URL}/files/${preview}` 
+              }
               alt={`Preview ${index + 1}`}
               className="w-full h-32 object-cover rounded-md border-2 border-border"
             />
@@ -121,7 +149,7 @@ export default function MultipleFileUpload({
           </div>
         ))}
 
-        {files.length < maxFiles && (
+        {previews.length < maxFiles && (
           <div
             className="file-add-button border-2 border-dashed border-border rounded-md h-32 flex flex-col items-center justify-center cursor-pointer hover:bg-accent/50 transition-colors"
             onClick={handleClick}

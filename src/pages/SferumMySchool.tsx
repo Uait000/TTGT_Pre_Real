@@ -4,6 +4,7 @@ import SidebarCards from '@/components/SidebarCards';
 import { FileText, ExternalLink } from 'lucide-react';
 import S1 from '@/assets/file/sferum/Metod_rek_2023.pdf';
 import S2 from '@/assets/file/sferum/Pol_Sferum_31.08.2023.pdf';
+import InfoBlocks from '@/components/InfoBlocks';
 const SferumMySchool = () => {
   const sferumDocuments = [
     {
@@ -48,6 +49,7 @@ const SferumMySchool = () => {
         
         <main className="flex-1 min-h-screen">
           <div className="container mx-auto px-6 py-8">
+            <InfoBlocks />
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
               <h1 className="text-3xl font-bold text-primary mb-8 text-center">ИКОП "Сферум" и ФГИС "Моя школа"</h1>
               

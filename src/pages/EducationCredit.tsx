@@ -12,7 +12,7 @@ import ContactsImage from '@/assets/pictures/6_ObrKredit_Kontakty.jfif';
 import SberCreditPdf from '@/assets/file/obcred/Sber_Obr_Kredit.pdf';
 import RnkBCreditPdf from '@/assets/file/obcred/RNKB.pdf';
 import RekomCreditPdf from '@/assets/file/obcred/Rekom_Obr_kredit.pdf';
-
+import InfoBlocks from '@/components/InfoBlocks';
 
 const parseContent = (text: string) => {
     
@@ -126,6 +126,7 @@ const EducationCredit = () => {
             <div className="flex">
                 <Sidebar />
                 <main className="flex-1 min-h-screen">
+                    <InfoBlocks />
                     <div className="relative bg-gradient-to-br from-indigo-500 to-purple-600 text-black overflow-hidden">
                         <div className="absolute inset-0 bg-black opacity-20"></div>
                         <img src={HeroImage} alt="Студенты на лекции" className="absolute inset-0 w-full h-full object-cover" />

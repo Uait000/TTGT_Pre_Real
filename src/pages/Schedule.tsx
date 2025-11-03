@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'; 
-import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
-import SidebarCards from '@/components/SidebarCards';
-import InfoBlocks from '@/components/InfoBlocks';
+// src/pages/Schedule.tsx
+
+import { useState } from 'react';
+import MainLayout from '@/components/MainLayout'; // Импортируем компонент макета
+// Удалены: import Header, Sidebar, SidebarCards, InfoBlocks
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink, Download, FileText, CalendarDays, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -99,264 +100,249 @@ import Grafzo from '@/assets/file/class/graf_zo_2025.pdf';
 import D41z from '@/assets/file/class/D41z.pdf';
 import L41z from '@/assets/file/class/L41z.pdf';
 import P41z from '@/assets/file/class/P41z.pdf';
+
 const schedulePdfs: Record<string, string> = {
-  'A11': A11, 'V11': V11, 'D11': D11, 'D12': D12, 'KS11': KS11, 'KS12': KS12, 'KS13': KS13, 'L11': L11, 'L12': L12, 'L13': L13, 'L14': L14, 'L15': L15, 'P11': P11, 'PM11': PM11, 'R11': R11, 'S11': S11, 'SP11': SP11, 'ES11': ES11,
-  'A21': A21, 'V21': V21, 'D21': D21, 'D22': D22, 'D23': D23, 'KS21': KS21, 'KS22': KS22, 'KS23': KS23, 'L21': L21, 'L22': L22, 'L23': L23, 'L24': L24, 'L25': L25, 'P21': P21, 'PM21': PM21, 'R21': R21, 'S21': S21, 'SP21': SP21, 'E21': E21, 'ES21': ES21,
-  'A31': A31, 'V31': V31, 'D31': D31, 'D32': D32, 'D33': D33, 'KS31': KS31, 'KS32': KS32, 'L31': L31, 'L32': L32, 'L33': L33, 'L34': L34, 'L35': L35, 'L36': L36, 'P31': P31, 'PM31': PM31, 'PM32': PM32, 'R31': R31, 'S31': S31, 'SP31': SP31, 'ES31': ES31,
-  'A41': A41, 'V41': V41, 'KS41': KS41, 'KS42': KS42, 'L41': L41, 'L42': L42, 'L43': L43, 'L44': L44, 'L45': L45, 'PM41': PM41, 'R41': R41, 'S41': S41, 'SP41': SP41, 'ES41': ES41,
+    'A11': A11, 'V11': V11, 'D11': D11, 'D12': D12, 'KS11': KS11, 'KS12': KS12, 'KS13': KS13, 'L11': L11, 'L12': L12, 'L13': L13, 'L14': L14, 'L15': L15, 'P11': P11, 'PM11': PM11, 'R11': R11, 'S11': S11, 'SP11': SP11, 'ES11': ES11,
+    'A21': A21, 'V21': V21, 'D21': D21, 'D22': D22, 'D23': D23, 'KS21': KS21, 'KS22': KS22, 'KS23': KS23, 'L21': L21, 'L22': L22, 'L23': L23, 'L24': L24, 'L25': L25, 'P21': P21, 'PM21': PM21, 'R21': R21, 'S21': S21, 'SP21': SP21, 'E21': E21, 'ES21': ES21,
+    'A31': A31, 'V31': V31, 'D31': D31, 'D32': D32, 'D33': D33, 'KS31': KS31, 'KS32': KS32, 'L31': L31, 'L32': L32, 'L33': L33, 'L34': L34, 'L35': L35, 'L36': L36, 'P31': P31, 'PM31': PM31, 'PM32': PM32, 'R31': R31, 'S31': S31, 'SP31': SP31, 'ES31': ES31,
+    'A41': A41, 'V41': V41, 'KS41': KS41, 'KS42': KS42, 'L41': L41, 'L42': L42, 'L43': L43, 'L44': L44, 'L45': L45, 'PM41': PM41, 'R41': R41, 'S41': S41, 'SP41': SP41, 'ES41': ES41,
 };
 
 const Schedule = () => {
-  const scheduleData = [
-    { course: '1 курс', groups: ['А-1-1', 'В-1-1', 'Д-1-1', 'Д-1-2', 'КС-1-1', 'КС-1-2', 'КС-1-3', 'Л-1-1', 'Л-1-2', 'Л-1-3', 'Л-1-4', 'Л-1-5', 'П-1-1', 'ПМ-1-1', 'Р-1-1', 'С-1-1', 'СП-1-1', 'ЭС-1-1'] },
-    { course: '2 курс', groups: ['А-2-1', 'В-2-1', 'Д-2-1', 'Д-2-2', 'Д-2-3', 'КС-2-1', 'КС-2-2', 'КС-2-3', 'Л-2-1', 'Л-2-2', 'Л-2-3', 'Л-2-4', 'Л-2-5', 'П-2-1', 'ПМ-2-1', 'Р-2-1', 'С-2-1', 'СП-2-1', 'Э-2-1', 'ЭС-2-1'] },
-    { course: '3 курс', groups: ['А-3-1', 'В-3-1', 'Д-3-1', 'Д-3-2', 'Д-3-3', 'КС-3-1', 'КС-3-2', 'Л-3-1', 'Л-3-2', 'Л-3-3', 'Л-3-4', 'Л-3-5', 'Л-3-6', 'П-3-1', 'ПМ-3-1', 'ПМ-3-2', 'Р-3-1', 'С-3-1', 'СП-3-1', 'ЭС-3-1'] },
-    { course: '4 курс', groups: ['А-4-1', 'В-4-1', 'КС-4-1', 'КС-4-2', 'Л-4-1', 'Л-4-2', 'Л-4-3', 'Л-4-4', 'Л-4-5', 'ПМ-4-1', 'Р-4-1', 'С-4-1', 'СП-4-1', 'ЭС-4-1'] }
-  ];
+    const scheduleData = [
+        { course: '1 курс', groups: ['А-1-1', 'В-1-1', 'Д-1-1', 'Д-1-2', 'КС-1-1', 'КС-1-2', 'КС-1-3', 'Л-1-1', 'Л-1-2', 'Л-1-3', 'Л-1-4', 'Л-1-5', 'П-1-1', 'ПМ-1-1', 'Р-1-1', 'С-1-1', 'СП-1-1', 'ЭС-1-1'] },
+        { course: '2 курс', groups: ['А-2-1', 'В-2-1', 'Д-2-1', 'Д-2-2', 'Д-2-3', 'КС-2-1', 'КС-2-2', 'КС-2-3', 'Л-2-1', 'Л-2-2', 'Л-2-3', 'Л-2-4', 'Л-2-5', 'П-2-1', 'ПМ-2-1', 'Р-2-1', 'С-2-1', 'СП-2-1', 'Э-2-1', 'ЭС-2-1'] },
+        { course: '3 курс', groups: ['А-3-1', 'В-3-1', 'Д-3-1', 'Д-3-2', 'Д-3-3', 'КС-3-1', 'КС-3-2', 'Л-3-1', 'Л-3-2', 'Л-3-3', 'Л-3-4', 'Л-3-5', 'Л-3-6', 'П-3-1', 'ПМ-3-1', 'ПМ-3-2', 'Р-3-1', 'С-3-1', 'СП-3-1', 'ЭС-3-1'] },
+        { course: '4 курс', groups: ['А-4-1', 'В-4-1', 'КС-4-1', 'КС-4-2', 'Л-4-1', 'Л-4-2', 'Л-4-3', 'Л-4-4', 'Л-4-5', 'ПМ-4-1', 'Р-4-1', 'С-4-1', 'СП-4-1', 'ЭС-4-1'] }
+    ];
 
-  const [activeTab, setActiveTab] = useState(scheduleData[0].course);
+    const [activeTab, setActiveTab] = useState(scheduleData[0].course);
 
 
-  const formatGroupName = (groupName: string) => {
-    let formattedName = groupName.replace(/-/g, ''); 
-    if (formattedName.startsWith('КС')) formattedName = formattedName.replace('КС', 'KS');
-    else if (formattedName.startsWith('ПМ')) formattedName = formattedName.replace('ПМ', 'PM');
-    else if (formattedName.startsWith('СП')) formattedName = formattedName.replace('СП', 'SP');
-    else if (formattedName.startsWith('ЭС')) formattedName = formattedName.replace('ЭС', 'ES');
-    else if (formattedName.startsWith('А')) formattedName = formattedName.replace('А', 'A');
-    else if (formattedName.startsWith('В')) formattedName = formattedName.replace('В', 'V');
-    else if (formattedName.startsWith('Д')) formattedName = formattedName.replace('Д', 'D');
-    else if (formattedName.startsWith('Л')) formattedName = formattedName.replace('Л', 'L');
-    else if (formattedName.startsWith('П')) formattedName = formattedName.replace('П', 'P');
-    else if (formattedName.startsWith('Р')) formattedName = formattedName.replace('Р', 'R');
-    else if (formattedName.startsWith('С')) formattedName = formattedName.replace('С', 'S');
-    else if (formattedName.startsWith('Э')) formattedName = formattedName.replace('Э', 'E');
-    return formattedName;
-  }
-
-  const getSchedulePdfUrl = (groupName: string) => {
-    const formattedName = formatGroupName(groupName); 
-    const file = schedulePdfs[formattedName];
-    if (!file) {
-      console.warn(`PDF not found for group: ${groupName} (formatted as ${formattedName}).`);
-      return '#'; 
+    const formatGroupName = (groupName: string) => {
+        let formattedName = groupName.replace(/-/g, ''); 
+        if (formattedName.startsWith('КС')) formattedName = formattedName.replace('КС', 'KS');
+        else if (formattedName.startsWith('ПМ')) formattedName = formattedName.replace('ПМ', 'PM');
+        else if (formattedName.startsWith('СП')) formattedName = formattedName.replace('СП', 'SP');
+        else if (formattedName.startsWith('ЭС')) formattedName = formattedName.replace('ЭС', 'ES');
+        else if (formattedName.startsWith('А')) formattedName = formattedName.replace('А', 'A');
+        else if (formattedName.startsWith('В')) formattedName = formattedName.replace('В', 'V');
+        else if (formattedName.startsWith('Д')) formattedName = formattedName.replace('Д', 'D');
+        else if (formattedName.startsWith('Л')) formattedName = formattedName.replace('Л', 'L');
+        else if (formattedName.startsWith('П')) formattedName = formattedName.replace('П', 'P');
+        else if (formattedName.startsWith('Р')) formattedName = formattedName.replace('Р', 'R');
+        else if (formattedName.startsWith('С')) formattedName = formattedName.replace('С', 'S');
+        else if (formattedName.startsWith('Э')) formattedName = formattedName.replace('Э', 'E');
+        return formattedName;
     }
-    return file;
-  };
-  
-  const mainScheduleDocs = [
-    { title: 'Расписание учебных занятий 1 курс', file: Kurs1 },
-    { title: 'Расписание учебных занятий 2 курс', file: Kurs2 },
-    { title: 'Расписание учебных занятий 3 курс', file: Kurs3 },
-    { title: 'Расписание учебных занятий 4 курс', file: Kurs4 },
-  ];
 
-  const consultationDoc = {
-    title: 'График проведения консультаций преподавателями в 1 семестре 2025 - 2026 учебного года',
-    file: GrafKons
-  };
-  
-  const partTimeSchedules = [
-    { title: 'Календарный учебный график заочного отделения на 2025 - 2026 учебный год', url: Grafzo },
-  ];
-  const partTimeSessions = [
-    { title: 'Д-4-1(з)', url: D41z },
-    { title: 'Л-4-1(з)', url: L41z },
-    { title: 'П-4-1(з)', url: P41z },
-  ];
+    const getSchedulePdfUrl = (groupName: string) => {
+        const formattedName = formatGroupName(groupName); 
+        const file = schedulePdfs[formattedName];
+        if (!file) {
+            console.warn(`PDF not found for group: ${groupName} (formatted as ${formattedName}).`);
+            return '#'; 
+        }
+        return file;
+    };
+    
+    const mainScheduleDocs = [
+        { title: 'Расписание учебных занятий 1 курс', file: Kurs1 },
+        { title: 'Расписание учебных занятий 2 курс', file: Kurs2 },
+        { title: 'Расписание учебных занятий 3 курс', file: Kurs3 },
+        { title: 'Расписание учебных занятий 4 курс', file: Kurs4 },
+    ];
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      
-      <div className="flex">
-        <Sidebar />
-        
-        <main className="flex-1 min-h-screen">
-          <div className="container mx-auto px-6 py-8">
-            <InfoBlocks />
-            
+    const consultationDoc = {
+        title: 'График проведения консультаций преподавателями в 1 семестре 2025 - 2026 учебного года',
+        file: GrafKons
+    };
+    
+    const partTimeSchedules = [
+        { title: 'Календарный учебный график заочного отделения на 2025 - 2026 учебный год', url: Grafzo },
+    ];
+    const partTimeSessions = [
+        { title: 'Д-4-1(з)', url: D41z },
+        { title: 'Л-4-1(з)', url: L41z },
+        { title: 'П-4-1(з)', url: P41z },
+    ];
+
+    return (
+        // Оборачиваем уникальный контент в MainLayout
+        <MainLayout>
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12">
-              <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
-                <CalendarDays className="w-10 h-10 mr-4 text-accent" />
-                Расписание занятий
-              </h1>
-              <p className="text-center text-lg text-muted-foreground mb-10 max-w-3xl mx-auto">
-                Актуальное расписание занятий для очного и заочного отделений.
-              </p>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
+                    <CalendarDays className="w-10 h-10 mr-4 text-accent" />
+                    Расписание занятий
+                </h1>
+                <p className="text-center text-lg text-muted-foreground mb-10 max-w-3xl mx-auto">
+                    Актуальное расписание занятий для очного и заочного отделений.
+                </p>
 
-              {/* Яркая секция для скачивания приложения */}
-              <section className="mb-12 bg-gradient-to-r from-primary to-blue-700 rounded-xl shadow-lg p-8 flex flex-col md:flex-row items-center justify-between text-white">
-                <div className="flex items-center mb-4 md:mb-0">
-                  <Smartphone className="w-12 h-12 mr-5 flex-shrink-0" />
-                  <div>
-                    <h2 className="text-2xl font-bold">Расписание всегда под рукой!</h2>
-                    <p className="text-blue-100">Скачайте наше приложение, чтобы отслеживать замены и расписание в реальном времени.</p>
-                  </div>
-                </div>
-                <Button 
-                  variant="secondary" 
-                  className="bg-white text-primary hover:bg-gray-100 font-semibold shadow-md transition-transform transform hover:scale-105"
-                  onClick={() => alert('Ссылка на приложение!')} 
-                >
-                  <Download className="w-5 h-5 mr-2" />
-                  Скачать приложение
-                </Button>
-              </section>
-
-              <section className="mb-12">
-                <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Очное отделение</h2>
-                <div className="flex justify-center flex-wrap gap-2 mb-6">
-                  {scheduleData.map((course) => (
-                    <Button
-                      key={course.course}
-                      variant={activeTab === course.course ? 'default' : 'outline'}
-                      className={`text-lg font-semibold py-3 px-6 rounded-full transition-all duration-300 ${
-                        activeTab === course.course 
-                        ? 'bg-primary text-white shadow-lg scale-105' 
-                        : 'text-gray-600 bg-white hover:bg-gray-100'
-                      }`}
-                      onClick={() => setActiveTab(course.course)}
+                {/* Яркая секция для скачивания приложения */}
+                <section className="mb-12 bg-gradient-to-r from-primary to-blue-700 rounded-xl shadow-lg p-8 flex flex-col md:flex-row items-center justify-between text-white">
+                    <div className="flex items-center mb-4 md:mb-0">
+                        <Smartphone className="w-12 h-12 mr-5 flex-shrink-0" />
+                        <div>
+                            <h2 className="text-2xl font-bold">Расписание всегда под рукой!</h2>
+                            <p className="text-blue-100">Скачайте наше приложение, чтобы отслеживать замены и расписание в реальном времени.</p>
+                        </div>
+                    </div>
+                    <Button 
+                        variant="secondary" 
+                        className="bg-white text-primary hover:bg-gray-100 font-semibold shadow-md transition-transform transform hover:scale-105"
+                        onClick={() => alert('Ссылка на приложение!')} 
                     >
-                      {course.course}
+                        <Download className="w-5 h-5 mr-2" />
+                        Скачать приложение
                     </Button>
-                  ))}
-                </div>
+                </section>
 
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 p-6 min-h-[200px]">
-                  {scheduleData.map((course) => (
-                    <div 
-                      key={course.course}
-                      className={`flex flex-wrap gap-3 justify-center ${activeTab === course.course ? 'flex' : 'hidden'}`}
-                    >
-                      {course.groups.map((group) => {
-                        const pdfUrl = getSchedulePdfUrl(group);
-                        const isLinkDisabled = pdfUrl === '#';
-                        
-                        return (
-                          <a
-                            key={group}
-                            href={pdfUrl}
+                <section className="mb-12">
+                    <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Очное отделение</h2>
+                    <div className="flex justify-center flex-wrap gap-2 mb-6">
+                        {scheduleData.map((course) => (
+                            <Button
+                                key={course.course}
+                                variant={activeTab === course.course ? 'default' : 'outline'}
+                                className={`text-lg font-semibold py-3 px-6 rounded-full transition-all duration-300 ${
+                                    activeTab === course.course 
+                                    ? 'bg-primary text-white shadow-lg scale-105' 
+                                    : 'text-gray-600 bg-white hover:bg-gray-100'
+                                }`}
+                                onClick={() => setActiveTab(course.course)}
+                            >
+                                {course.course}
+                            </Button>
+                        ))}
+                    </div>
+
+                    <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 p-6 min-h-[200px]">
+                        {scheduleData.map((course) => (
+                            <div 
+                                key={course.course}
+                                className={`flex flex-wrap gap-3 justify-center ${activeTab === course.course ? 'flex' : 'hidden'}`}
+                            >
+                                {course.groups.map((group) => {
+                                    const pdfUrl = getSchedulePdfUrl(group);
+                                    const isLinkDisabled = pdfUrl === '#';
+                                    
+                                    return (
+                                        <a
+                                            key={group}
+                                            href={pdfUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={`
+                                                inline-block bg-white text-primary border-2 border-gray-300 font-semibold px-5 py-2.5 rounded-lg text-base
+                                                transition-all duration-300 shadow-sm 
+                                                hover:bg-primary hover:text-white hover:border-primary hover:scale-105 hover:shadow-md
+                                                ${isLinkDisabled ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-500 line-through' : ''}
+                                            `}
+                                            title={isLinkDisabled ? 'Расписание для этой группы скоро появится' : `Скачать расписание ${group}`}
+                                            onClick={(e) => isLinkDisabled && e.preventDefault()} 
+                                        >
+                                            {group}
+                                        </a>
+                                    );
+                                })}
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* Раздел "Важные документы" */}
+                <section className="mb-12">
+                    <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Общие документы и графики</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Общее расписание */}
+                        {mainScheduleDocs.map((doc) => (
+                            <a
+                                key={doc.title}
+                                href={doc.file}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-between p-5 bg-blue-50 rounded-lg border-2 border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition-all duration-300 group"
+                            >
+                                <div className="flex items-center">
+                                    <FileText className="w-6 h-6 mr-3 text-blue-600" />
+                                    <span className="text-blue-800 font-semibold">{doc.title}</span>
+                                </div>
+                                <Download className="w-5 h-5 text-blue-500 group-hover:text-blue-700 transition-colors" />
+                            </a>
+                        ))}
+                        {/* График консультаций */}
+                        <a
+                            href={consultationDoc.file}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`
-                              inline-block bg-white text-primary border-2 border-gray-300 font-semibold px-5 py-2.5 rounded-lg text-base
-                              transition-all duration-300 shadow-sm 
-                              hover:bg-primary hover:text-white hover:border-primary hover:scale-105 hover:shadow-md
-                              ${isLinkDisabled ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-500 line-through' : ''}
-                            `}
-                            title={isLinkDisabled ? 'Расписание для этой группы скоро появится' : `Скачать расписание ${group}`}
-                            onClick={(e) => isLinkDisabled && e.preventDefault()} 
-                          >
-                            {group}
-                          </a>
-                        );
-                      })}
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Раздел "Важные документы" */}
-              <section className="mb-12">
-                 <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Общие документы и графики</h2>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Общее расписание */}
-                    {mainScheduleDocs.map((doc) => (
-                      <a
-                        key={doc.title}
-                        href={doc.file}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-between p-5 bg-blue-50 rounded-lg border-2 border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition-all duration-300 group"
-                      >
-                        <div className="flex items-center">
-                          <FileText className="w-6 h-6 mr-3 text-blue-600" />
-                          <span className="text-blue-800 font-semibold">{doc.title}</span>
-                        </div>
-                        <Download className="w-5 h-5 text-blue-500 group-hover:text-blue-700 transition-colors" />
-                      </a>
-                    ))}
-                     {/* График консультаций */}
-                     <a
-                        href={consultationDoc.file}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="md:col-span-2 flex items-center justify-between p-5 bg-green-50 rounded-lg border-2 border-green-200 hover:bg-green-100 hover:border-green-300 transition-all duration-300 group"
-                      >
-                        <div className="flex items-center">
-                          <FileText className="w-6 h-6 mr-3 text-green-600" />
-                          <span className="text-green-800 font-semibold">{consultationDoc.title}</span>
-                        </div>
-                        <Download className="w-5 h-5 text-green-500 group-hover:text-green-700 transition-colors" />
-                      </a>
-                 </div>
-              </section>
-
-              {/* Дизайн для Заочного отделения */}
-              <section>
-                <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Заочное отделение</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  
-                  <Card className="border-gray-200 shadow-md">
-                    <CardHeader className="bg-gray-50 p-5 border-b border-gray-200">
-                      <CardTitle className="text-xl font-semibold text-gray-800">Учебные графики</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-5 space-y-3">
-                      {partTimeSchedules.map((doc, index) => (
-                         <a
-                          key={index}
-                          href={doc.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-primary/50 transition-all duration-300 group"
+                            className="md:col-span-2 flex items-center justify-between p-5 bg-green-50 rounded-lg border-2 border-green-200 hover:bg-green-100 hover:border-green-300 transition-all duration-300 group"
                         >
-                          <div className="flex items-center">
-                            <FileText className="w-5 h-5 mr-3 text-gray-400 group-hover:text-primary transition-colors" />
-                            <span className="text-foreground font-medium group-hover:text-primary transition-colors">{doc.title}</span>
-                          </div>
-                          <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
+                            <div className="flex items-center">
+                                <FileText className="w-6 h-6 mr-3 text-green-600" />
+                                <span className="text-green-800 font-semibold">{consultationDoc.title}</span>
+                            </div>
+                            <Download className="w-5 h-5 text-green-500 group-hover:text-green-700 transition-colors" />
                         </a>
-                      ))}
-                    </CardContent>
-                  </Card>
+                    </div>
+                </section>
 
-                  <Card className="border-gray-200 shadow-md">
-                    <CardHeader className="bg-gray-50 p-5 border-b border-gray-200">
-                      <CardTitle className="text-xl font-semibold text-gray-800">Расписание сессий</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-5">
-                       <p className="text-gray-600 mb-4 font-medium">c 15 сентября 2025 г. по 27 сентября 2025 г.:</p>
-                       <div className="flex flex-wrap gap-2">
-                          {partTimeSessions.map((session) => (
-                            <a
-                              key={session.title}
-                              href={session.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-block bg-white text-primary border border-gray-300 font-medium px-4 py-2 rounded-full text-sm 
-                                         transition-all duration-200 shadow-sm 
-                                         hover:bg-primary hover:text-white hover:border-primary hover:scale-105 hover:shadow-md"
-                            >
-                              {session.title}
-                            </a>
-                          ))}
-                        </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </section>
+                {/* Дизайн для Заочного отделения */}
+                <section>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Заочное отделение</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        
+                        <Card className="border-gray-200 shadow-md">
+                            <CardHeader className="bg-gray-50 p-5 border-b border-gray-200">
+                                <CardTitle className="text-xl font-semibold text-gray-800">Учебные графики</CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-5 space-y-3">
+                                {partTimeSchedules.map((doc, index) => (
+                                    <a
+                                        key={index}
+                                        href={doc.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-primary/50 transition-all duration-300 group"
+                                    >
+                                        <div className="flex items-center">
+                                            <FileText className="w-5 h-5 mr-3 text-gray-400 group-hover:text-primary transition-colors" />
+                                            <span className="text-foreground font-medium group-hover:text-primary transition-colors">{doc.title}</span>
+                                        </div>
+                                        <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
+                                    </a>
+                                ))}
+                            </CardContent>
+                        </Card>
 
+                        <Card className="border-gray-200 shadow-md">
+                            <CardHeader className="bg-gray-50 p-5 border-b border-gray-200">
+                                <CardTitle className="text-xl font-semibold text-gray-800">Расписание сессий</CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-5">
+                                <p className="text-gray-600 mb-4 font-medium">c 15 сентября 2025 г. по 27 сентября 2025 г.:</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {partTimeSessions.map((session) => (
+                                        <a
+                                            key={session.title}
+                                            href={session.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-block bg-white text-primary border border-gray-300 font-medium px-4 py-2 rounded-full text-sm 
+                                                        transition-all duration-200 shadow-sm 
+                                                        hover:bg-primary hover:text-white hover:border-primary hover:scale-105 hover:shadow-md"
+                                        >
+                                            {session.title}
+                                        </a>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </section>
             </div>
-          </div>
-        </main>
-        
-        <aside className="w-80 bg-white border-l border-border p-6 sticky top-16 h-screen overflow-y-auto">
-          <SidebarCards />
-        </aside>
-      </div>
-    </div>
-  );
+        </MainLayout>
+    );
 };
 
 export default Schedule;
