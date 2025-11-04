@@ -2,7 +2,7 @@ import MainLayout from '@/components/MainLayout';
 import { FileText } from 'lucide-react';
 import { Link } from 'react-router-dom'; 
 
-// --- ВСЕ ИМПОРТЫ ФАЙЛОВ ---
+import doc from '@/assets/pictures/doc.jpg';
 import d1 from '@/assets/file/doc/deloproizv_vkr_29.05.2020.pdf';
 import d2 from '@/assets/file/doc/fz_436.pdf';
 import d3 from '@/assets/file/doc/fz_439.pdf';
@@ -476,7 +476,7 @@ const Documents = () => {
                 <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
                     <div className="w-full aspect-[16/6] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg overflow-hidden shadow-lg mb-8">
                         <img
-                            src="https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg"
+                            src={doc}
                             alt="Документы техникума"
                             className="w-full h-full object-cover"
                         />
