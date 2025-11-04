@@ -38,7 +38,7 @@ const courseItems = [
   { id: 5, name: 'Об отделении дополнительного профессионального образования', image: 'https://images.pexels.com/photos/1181679/pexels-photo-1181679.jpeg', modalId: 'about' },
   { id: 6, name: 'Контакты', image: 'https://images.pexels.com/photos/1181680/pexels-photo-1181680.jpeg', modalId: 'contacts' },
   { id: 7, name: 'Программы профессионального обучения', image: 'https://images.pexels.com/photos/1181681/pexels-photo-1181681.jpeg', modalId: 'programs' },
-  { id: 8, name: 'Стоимость услуг', image: 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg', modalId: 'programs' }, // Тот же modalId, что и у "Программ"
+  { id: 8, name: 'Стоимость услуг', image: 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg', modalId: 'programs' }, 
   { id: 9, name: 'Заявление', image: 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg', modalId: 'application' },
   { id: 10, name: 'Договор на обучение', image: 'https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg', modalId: 'contract' }
 ];
