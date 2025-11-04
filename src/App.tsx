@@ -54,31 +54,17 @@ import Victory80 from "./pages/Victory80";
 import StartInScience from "./pages/StartInScience";
 import AdminPanel from "./pages/AdminPanel";
 import Zamena from "./pages/Zamena";
-
-// --- НОВЫЕ ИМПОРТЫ ---
-// useAccessibility больше не нужен здесь, но AccessibilityProvider все еще нужен
 import { AccessibilityProvider } from './context/AccessibilityContext'; 
 import { AccessibilityPanel } from './components/AccessibilityPanel';
-
-
 const queryClient = new QueryClient();
 
-// --- НОВЫЙ КОМПОНЕНТ ДЛЯ РЕНДЕРА ПАНЕЛИ ---
-// Он нужен, чтобы получить доступ к Контексту
-const AppContent: React.FC = () => {
-  // const { isPanelOpen } = useAccessibility(); // <-- УДАЛЕНО
 
+const AppContent: React.FC = () => {
   return (
     <>
-      {/* Рендерим панель *безусловно*. 
-        Компонент сам решит, показываться ему или нет.
-        Это убирает ошибку TypeScript.
-      */}
       <AccessibilityPanel/> 
-
       <BrowserRouter>
         <Routes>
-          {/* ... ВСЕ ВАШИ РОУТЫ ... */}
           <Route path="/" element={<Index />} />
           <Route path="/history" element={<History />} />
           <Route path="/administration" element={<Administration />} />
@@ -140,7 +126,6 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      {/* ОБОРАЧИВАЕМ ВСЕ В ПРОВАЙДЕР ДОСТУПНОСТИ */}
       <AccessibilityProvider>
         <AppContent />
       </AccessibilityProvider>
