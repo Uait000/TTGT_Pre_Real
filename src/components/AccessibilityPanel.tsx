@@ -1,9 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom'; 
 import { useAccessibility } from '../context/AccessibilityContext';
-import './AccessibilityPanel.css'; // Подключаем стили
-
-// Убираем ": React.FC", чтобы исправить ошибку TypeScript
+import './AccessibilityPanel.css'; 
 export const AccessibilityPanel = () => {
 
   const {
@@ -14,48 +12,38 @@ export const AccessibilityPanel = () => {
     setContrast,
     toggleImages,
     togglePanel, 
-    isPanelOpen // <-- Получаем состояние
+    isPanelOpen 
   } = useAccessibility();
 
-  // Если панель не открыта, компонент ничего не рендерит (null)
   if (!isPanelOpen) {
     return null;
   }
 
-  // Создаем DOM-элемент для портала ОДИН РАЗ
   const el = useMemo(() => document.createElement('div'), []);
 
   useEffect(() => {
-    // Находим portal-root ВНУТРИ useEffect
     const portalRoot = document.getElementById('portal-root'); 
     
     if (!portalRoot) {
         console.error("CRITICAL: #portal-root element not found in index.html.");
-        return; // Если не нашли, ничего не делаем
+        return; 
     }
-    
-    // Добавляем наш элемент в 'portal-root' при монтировании
+
     portalRoot.appendChild(el);
 
-    // Убираем наш элемент при размонтировании
     return () => {
       if (portalRoot.contains(el)) {
         portalRoot.removeChild(el);
       }
     };
-  }, [el]); // Зависимость [el] гарантирует, что эффект сработает только один раз
-
-
-  // Функция для сброса всех настроек
+  }, [el]); 
   const resetSettings = () => {
     setFontSize('normal');
     setContrast('normal');
     if (imagesHidden) {
-      toggleImages(); // Выключаем, если было включено
+      toggleImages(); 
     }
   };
-
-  // Оборачиваем всю панель в createPortal
   return createPortal(
     (
       <div className="accessibility-panel">
@@ -85,7 +73,7 @@ export const AccessibilityPanel = () => {
         </div>
       </div>
     ),
-    el // Рендерим в наш созданный 'div'
+    el 
   );
 };
 

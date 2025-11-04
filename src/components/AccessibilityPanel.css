@@ -1,14 +1,9 @@
-/* Стили для "отвязанной" панели.
-  Использует position: fixed, чтобы не "прыгать" и не "блымать".
-*/
 .accessibility-panel {
-  /* --- Позиционирование --- */
-  position: fixed; /* <-- Ключевое! */
+  position: fixed; 
   top: 10px;
   right: 10px;
-  z-index: 9999; /* Поверх ВСЕХ элементов */
+  z-index: 9999; 
 
-  /* --- Внешний вид --- */
   background: #ffffff;
   border: 1px solid #ccc;
   padding: 16px;
@@ -57,7 +52,6 @@
   font-weight: bold;
 }
 
-/* Стили для кнопок "Выключить изображения", "Сбросить", "Закрыть" */
 .access-panel-group button[aria-label="Выключить изображения"],
 .access-panel-group button[aria-label="Включить изображения"] {
   flex-grow: 1;
@@ -86,20 +80,12 @@
   font-weight: bold;
 }
 
-
-/* ==========================================================
-   --- ФИКС ЦВЕТОВ ПАНЕЛИ В РЕЖИМАХ КОНТРАСТА ---
-   ==========================================================
-*/
-
-/* 1. Когда включен инвертированный режим (белым по черному) */
 html.contrast-inverted .accessibility-panel {
-  background: #222 !important; /* Делаем фон панели темным */
-  color: #fff !important; /* Делаем текст на ней белым */
+  background: #222 !important; 
+  color: #fff !important; 
   border-color: #fff !important;
 }
 
-/* Стили кнопок (A, A, A) в инвертированном режиме */
 html.contrast-inverted .accessibility-panel button {
   background: #444 !important;
   color: #fff !important;
@@ -110,7 +96,7 @@ html.contrast-inverted .accessibility-panel button:hover {
   border-color: #aaa !important;
 }
 html.contrast-inverted .accessibility-panel button.active {
-  background: #00aaff !important; /* Ярко-синий для акцента */
+  background: #00aaff !important; 
   color: #000 !important;
   border-color: #00aaff !important;
 }
@@ -125,7 +111,6 @@ html.contrast-inverted .access-panel-actions button.close-panel-btn {
 }
 
 
-/* 2. Когда включен высокий контраст (черным по белому) */
 html.contrast-high-contrast .accessibility-panel {
   background: #fff !important;
   color: #000 !important;
@@ -154,20 +139,12 @@ html.contrast-high-contrast .access-panel-actions button.close-panel-btn {
   color: #000 !important;
 }
 
-
-/* ==========================================================
-   --- НОВЫЙ КОД: ФИКС ДЛЯ РОДНОЙ "ТЁМНОЙ ТЕМЫ" (.dark) ---
-   ==========================================================
-*/
-
-/* Когда включена тёмная тема (.dark) ... */
 html.dark .accessibility-panel {
-  background: #333; /* ... делаем фон панели темным ... */
-  color: #fff;      /* ... а текст белым ... */
+  background: #333; 
+  color: #fff;    
   border-color: #555;
 }
 
-/* ... и обновляем стили кнопок ... */
 html.dark .accessibility-panel button {
   background: #555;
   color: #fff;
@@ -177,7 +154,6 @@ html.dark .accessibility-panel button:hover {
   background: #666;
   border-color: #888;
 }
-/* Оставляем .active таким же синим для акцента */
 html.dark .accessibility-panel button.active {
   background: #007bff;
   color: white;
