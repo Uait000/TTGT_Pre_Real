@@ -1,65 +1,61 @@
-
-
 import { useEffect, useState } from 'react';
-import { wsService, WebSocketEvent, IncompletePost } from '@/services/websocketService';
-
+import { wsService } from '@/services/websocketService';
+// ИСПОЛЬЗУЕМ НОВЫЙ ФАЙЛ ТИПОВ
+import { WebSocketEvent, IncompletePost } from '@/types/websocket'; 
 import { PostCategory, PostStatus } from '@/api/posts'; 
 
-/**
- * Хук для управления списком постов в реальном времени.
- * Слушает WebSocket и добавляет/удаляет посты, соответствующие категории страницы.
- * * @param initialPosts Начальный список постов, загруженный при монтировании компонента.
- * @param requiredCategory Категория (News или Professionals), по которой фильтруются события.
- * @returns Текущий список постов.
- */
 export const useRealTimePostList = (
-    initialPosts: IncompletePost[], 
+    initialPosts: IncompletePost[],
     requiredCategory: PostCategory
 ) => {
     
-    const [posts, setPosts] = useState<IncompletePost[]>(initialPosts);   
+    const [posts, setPosts] = useState<IncompletePost[]>(initialPosts);
+    
     useEffect(() => {
         setPosts(initialPosts);
     }, [initialPosts]);
 
     useEffect(() => {
-        
-        if (window.location.pathname.startsWith('/admin')) {
-            return; 
-        }
-        wsService.connect('/websocket/');
-
+        // Хук ТОЛЬКО СЛУШАЕТ СОБЫТИЯ
         const handleEvent = (event: WebSocketEvent) => {
             setPosts(prevPosts => {
                 
+                // 1. Добавление нового поста
                 if (event.newPost) {
                     const newPost = event.newPost;
-
-                    
                     if (
-                        newPost.category === requiredCategory && 
+                        newPost.category === requiredCategory &&
                         newPost.status === PostStatus.Published &&
                         !prevPosts.some(p => p.id === newPost.id)
-                    ) { 
-                         
+                    ) {
                         return [newPost, ...prevPosts];
                     }
                 }
                 
+                // 2. Удаление поста
                 if (event.removePost) {
                     const removedId = event.removePost;
-                    
                     return prevPosts.filter(p => p.id !== removedId);
                 }
 
+                // 3. Обновление просмотров (для "глазика")
+                if (event.postViewUpdated) {
+                    const { id, views } = event.postViewUpdated;
+                    if (prevPosts.some(p => p.id === id)) {
+                        return prevPosts.map(post =>
+                            post.id === id ? { ...post, views: views } : post
+                        );
+                    }
+                }
                 
                 return prevPosts;
             });
         };
+        
         const unsubscribe = wsService.subscribe(handleEvent);
+        
         return () => {
             unsubscribe();
-            wsService.close();
         };
     }, [requiredCategory]); 
 

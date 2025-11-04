@@ -1,12 +1,12 @@
 import React from 'react';
 
-const Footer: React.FC = () => {
-    
-    const usersOnSite = 1; 
+interface FooterProps {
+  onlineUsers?: number; 
+}
 
+const Footer: React.FC<FooterProps> = ({ onlineUsers }) => {
+    
     return (
-        
-        
         <footer className="bg-white border-t border-gray-200 pt-8 pb-4 mt-0"> 
             <div className="container mx-auto px-6"> 
                 
@@ -23,7 +23,9 @@ const Footer: React.FC = () => {
                         
                         <p className="font-semibold text-gray-600">
                             Кол-во пользователей на сайте: 
-                            <span className="text-blue-600 font-bold ml-1">{usersOnSite}</span>
+                            <span className="text-blue-600 font-bold ml-1 w-10 inline-block text-center">
+                                {onlineUsers !== undefined ? onlineUsers : '...'}
+                            </span>
                         </p>
                         
                         <p className="text-xs text-gray-500 pt-2">

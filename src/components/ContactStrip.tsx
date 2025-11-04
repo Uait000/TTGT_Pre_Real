@@ -1,11 +1,10 @@
 import React from 'react';
 import { MapPin, Phone, Mail } from 'lucide-react';
-import { useAccessibility } from '../context/AccessibilityContext'; // <-- ИМПОРТ КОНТЕКСТА
+import { useAccessibility } from '../context/AccessibilityContext'; 
 
 const VK_LINK = "https://vk.com/ttjt_official";
 
 const ContactStrip: React.FC = () => {
-  // --- Получаем функцию togglePanel из Контекста ---
   const { togglePanel } = useAccessibility(); 
 
   return (
@@ -45,13 +44,13 @@ const ContactStrip: React.FC = () => {
               VK
             </a>
 
-            {/* НОВАЯ КНОПКА "ГЛАЗИК" */}
+            {/*"ГЛАЗИК"*/}
             <button
-              onClick={togglePanel} // <-- ВЫЗЫВАЕМ ФУНКЦИЮ ИЗ КОНТЕКСТА
+              onClick={togglePanel} 
               title="Версия для слабовидящих"
               className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center 
                          text-2xl flex-shrink-0"
-              style={{ lineHeight: '1' }} // Центрируем emoji
+              style={{ lineHeight: '1' }} 
               aria-label="Версия для слабовидящих"
             >
               👁️

@@ -1,44 +1,41 @@
-// src/services/websocketService.ts
+// Импортируем типы из нового файла
+import { WebSocketEvent } from '@/types/websocket';
 
-export interface UpdateStatsEvent {
-    online: number;
-}
-
-export interface IncompletePost {
-    id: number;
-    title: string;
-    body: string;
-    publish_date: number;
-    type: number;
-    files: any[]; // Используйте реальный тип BackendFile[]
-    category: number;
-    status: number;
-}
-
-export interface WebSocketEvent {
-    updateStats?: UpdateStatsEvent;
-    newPost?: IncompletePost;
-    removePost?: number; // ID поста
-}
-
-const WS_PATH = '/websocket/'; 
+// Константа для пути WebSocket
+const WS_PATH = '/websocket/';
 
 class WebSocketService {
     private socket: WebSocket | null = null;
     private listeners: ((event: WebSocketEvent) => void)[] = [];
     private reconnectTimeout: number | null = null;
 
-    public connect(url: string) {
+    /**
+     * Подключается к WebSocket-серверу через proxy.
+     * @param path - Должно быть '/websocket/'
+     */
+    public connect(path: string) { 
+        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+             console.log('WebSocket: Already connected.');
+             return;
+        }
+        
         if (this.socket) {
             this.socket.close();
         }
 
-        // Заменяем HTTP на WS/WSS для подключения
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host;
-        const fullUrl = `${protocol}//${host}${url}`;
+        // Собираем полный URL для proxy: ws://localhost:8080/websocket/
+        const fullUrl = `${protocol}//${host}${path}`; 
+        console.log(`WebSocket: Attempting connection to proxy: ${fullUrl}`);
 
-        this.socket = new WebSocket(fullUrl);
+        try {
+            this.socket = new WebSocket(fullUrl);
+        } catch (error) {
+            console.error("WebSocket: Failed to create connection:", error);
+            this.reconnect(path); 
+            return;
+        }
 
         this.socket.onopen = () => {
             console.log('WebSocket: Connection established.');
@@ -49,6 +46,7 @@ class WebSocketService {
         };
 
         this.socket.onmessage = (event) => {
+            console.log('WebSocket: Message received:', event.data); 
             try {
                 const data: WebSocketEvent = JSON.parse(event.data);
                 this.listeners.forEach(listener => listener(data));
@@ -57,9 +55,9 @@ class WebSocketService {
             }
         };
 
-        this.socket.onclose = () => {
-            console.log('WebSocket: Connection closed. Attempting reconnect in 5s...');
-            this.reconnect();
+        this.socket.onclose = (event) => {
+            console.log(`WebSocket: Connection closed (Code: ${event.code}). Attempting reconnect in 5s...`);
+            this.reconnect(path);
         };
 
         this.socket.onerror = (error) => {
@@ -68,10 +66,11 @@ class WebSocketService {
         };
     }
 
-    private reconnect() {
+    private reconnect(path: string) {
         if (this.reconnectTimeout) return;
         this.reconnectTimeout = window.setTimeout(() => {
-            this.connect(WS_PATH);
+            console.log("WebSocket: Reconnecting...");
+            this.connect(path);
             this.reconnectTimeout = null;
         }, 5000);
     }
@@ -84,10 +83,14 @@ class WebSocketService {
     }
 
     public close() {
-        this.socket?.close();
         if (this.reconnectTimeout) {
             clearTimeout(this.reconnectTimeout);
             this.reconnectTimeout = null;
+        }
+        if (this.socket) {
+             this.socket.onclose = null; 
+             this.socket.close();
+             this.socket = null;
         }
     }
 }
