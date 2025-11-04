@@ -1,5 +1,3 @@
-// src/pages/CitizenAppeals.tsx
-
 import { useState, useRef, useCallback } from 'react';
 import MainLayout from '@/components/MainLayout';
 import { 
@@ -34,18 +32,10 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-// Импортируем функцию API и тип данных
-// УБЕДИТЕСЬ, что файл src/api/feedback.ts содержит ФУНКЦИИ createFeedback и uploadFeedbackFiles
 import { createFeedback, uploadFeedbackFiles, FeedbackData } from '@/api/feedback'; 
-
-// Импорты статических файлов (предполагаем, что пути верны)
 import polObrac2022 from '@/assets/file/form/Pol_obrac_grazdan_2022.pdf';
 import polObracIzm2024 from '@/assets/file/form/Pol_obrac_grazdan_izm_2024.pdf';
 import polObracIzm2025 from '@/assets/file/form/Pol_obrac_grazdan_izm_2025.pdf';
-
-
-// --- Типы и начальное состояние ---
 const initialFormData = {
     lastName: '',
     firstName: '',
@@ -61,9 +51,6 @@ interface Captcha {
     question: string;
     answer: string;
 }
-// -----------------------------------
-
-// --- Утилиты ---
 const formatBytes = (bytes: number, decimals = 2) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -93,7 +80,6 @@ const generateCaptcha = (): Captcha => {
 
     return { question, answer: String(answer) };
 };
-// -------------------
 
 
 const CitizenAppeals = () => {
@@ -101,12 +87,9 @@ const CitizenAppeals = () => {
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
     const [captcha, setCaptcha] = useState(generateCaptcha);
     const [captchaAnswer, setCaptchaAnswer] = useState('');
-    // Добавлен статус для файлов
     const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'partial-success'>('idle'); 
     const [errorMessage, setErrorMessage] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    // --- Управление состоянием ---
     const documents = [
         { title: 'Положение о порядке рассмотрения обращений граждан (2022)', url: polObrac2022 },
         { title: 'Изменения в положение о порядке рассмотрения обращений граждан от 10.09.2024', url: polObracIzm2024 },
@@ -140,15 +123,11 @@ const CitizenAppeals = () => {
         setFormStatus('idle');
         setErrorMessage('');
     }, []);
-    // -------------------
-
-    // --- Обработчик отправки формы ---
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setFormStatus('loading');
         setErrorMessage('');
 
-        // 1. Проверка Капчи и Согласия
         if (captchaAnswer.trim() !== captcha.answer) {
             setErrorMessage('Неверный ответ на математический пример. Попробуйте еще раз.');
             setFormStatus('error');
@@ -162,7 +141,6 @@ const CitizenAppeals = () => {
             return;
         }
 
-        // 2. Сбор текстовых данных для JSON-запроса
         const dataToSend: FeedbackData = {
             first_name: formData.firstName,   
             second_name: formData.lastName,   
@@ -175,47 +153,35 @@ const CitizenAppeals = () => {
         
         let feedbackId: number | void;
 
-        // 3. Отправка текстовых данных (JSON)
         try {
-            // Ожидаем, что createFeedback вернет ID, если статус 200, или void, если 204
             feedbackId = await createFeedback(dataToSend); 
         } catch (error: any) {
             setFormStatus('error');
             setErrorMessage(error.message || 'Ошибка отправки текстовых данных.');
             setCaptcha(generateCaptcha());
             setCaptchaAnswer('');
-            return; // Останавливаемся
+            return; 
         }
 
-        // 4. Отправка файлов (multipart/form-data)
         if (uploadedFiles.length > 0) {
             
-            // Если нет файлов, но бэкенд не вернул ID (статус 204), мы можем продолжать.
-            // Если есть файлы И нет ID, это ошибка логики бэкенда.
             if (!feedbackId && uploadedFiles.length > 0) {
                  setErrorMessage('Текстовые данные отправлены, но не удалось получить ID для привязки файлов. Файлы не будут загружены.');
-                 setFormStatus('partial-success'); // Частичный успех
+                 setFormStatus('partial-success'); 
             } else {
                 try {
-                    // Отправляем файлы, используя полученный ID
-                    // TypeScript гарантирует, что feedbackId: number | void. 
-                    // Если он number, используем его, если void, используем 0 или null (зависит от API)
                     await uploadFeedbackFiles(feedbackId as number, uploadedFiles);
 
                 } catch (error: any) {
-                    // Если файлы не загрузились, показываем успех основной части с предупреждением.
                     setErrorMessage(`Текстовое обращение создано, но произошла ошибка при загрузке файлов: ${error.message || 'Ошибка сети/сервера при загрузке файлов.'}`);
                     setFormStatus('partial-success'); 
-                    return; // Завершаем выполнение, чтобы показать сообщение.
+                    return; 
                 }
             }
         }
         
-        // 5. Полный успех
         setFormStatus('success'); 
     };
-
-    // -----------------------------------
 
 
     return (
@@ -308,7 +274,7 @@ const CitizenAppeals = () => {
                                 </Alert>
                             )}
                             
-                            {/* Поля формы (без изменений) */}
+                            {/* Поля формы*/}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <Label htmlFor="lastName" className="block text-sm font-medium text-foreground mb-2">Фамилия *</Label>
