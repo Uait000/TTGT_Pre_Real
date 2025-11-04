@@ -309,24 +309,14 @@
     transform: translateY(0);
   }
 }
-/* ================================================================
-  СТИЛИ ДОСТУПНОСТИ (ИСПРАВЛЕННАЯ ВЕРСИЯ v6)
-================================================================
-*/
 
-/* --- НАСТРОЙКИ ШРИФТА --- */
 html.font-size-medium {
-  font-size: 18px !important; /* База (16px) * 1.125 = 18px */
+  font-size: 18px !important; 
 }
 html.font-size-large {
-  font-size: 22px !important; /* Компромиссный размер */
+  font-size: 22px !important; 
 }
 
-
-/* --- ИСПРАВЛЕНИЕ МАКЕТА ДЛЯ БОЛЬШОГО ШРИФТА (НОВЫЙ КОД v6) --- */
-
-/* 1. Общие правила для всего контента (Оставляем) */
-/* Заставляет текст переноситься, а не вылезать за пределы. */
 html.font-size-large main,
 html.font-size-large section,
 html.font-size-large div {
@@ -334,20 +324,14 @@ html.font-size-large div {
   overflow-wrap: break-word;
 }
 
-/* 2. Фикс для Заголовков (Оставляем) */
-/* "Сдерживаем" заголовки (h1, h2...), 
-   чтобы они не ломали макет.
-*/
 html.font-size-large h1,
 html.font-size-large h2,
 html.font-size-large h3,
 html.font-size-large h4,
 html.font-size-large h5 {
-    line-height: 1.2 !important; /* Уменьшаем межстрочный интервал */
+    line-height: 1.2 !important; 
 }
 
-/* 3. Для верхнего меню (header / nav) - (ИЗМЕНЕНО v6) */
-/* Находим родителя .nav-item (без >) */
 html.font-size-large nav:has(.nav-item),
 html.font-size-large div:has(.nav-item) {
   flex-wrap: wrap !important;
@@ -356,21 +340,15 @@ html.font-size-large div:has(.nav-item) {
   padding-top: 8px !important;
   padding-bottom: 8px !important;
   justify-content: center !important; 
-  gap: 8px !important; /* Добавляем отступ */
+  gap: 8px !important; 
 }
 
-/* (НОВОЕ v6) - Заставляем сами ссылки 
-   не сжиматься до неузнаваемости.
-   Это должно принудить родителя к переносу.
-*/
 html.font-size-large .nav-item {
-    flex-shrink: 0 !important; /* Не сжиматься */
-    flex-grow: 0 !important; /* Не расти */
-    white-space: nowrap !important; /* Текст ссылки на 1 строку */
+    flex-shrink: 0 !important; 
+    flex-grow: 0 !important; 
+    white-space: nowrap !important; 
 }
 
-/* 4. Для информационных блоков - (ИЗМЕНЕНО v6) */
-/* Находим родителя (без >) */
 html.font-size-large div:has(.info-block) {
   flex-wrap: wrap !important;
   justify-content: center !important; 
@@ -383,10 +361,6 @@ html.font-size-large .info-block {
   flex-basis: 160px !important;
 }
 
-
-/* --- НАСТРОЙКИ КОНТРАСТА --- */
-
-/* 1. Высокий контраст (Черным по белому) */
 html.contrast-high-contrast body {
   background-color: #fff !important;
   color: #000 !important;
@@ -401,14 +375,13 @@ html.contrast-high-contrast * {
 html.contrast-high-contrast img,
 html.contrast-high-contrast video,
 html.contrast-high-contrast svg {
-  filter: grayscale(100%); /* Делаем картинки ч/б */
+  filter: grayscale(100%); 
 }
 html.contrast-high-contrast a {
   text-decoration: underline !important;
   font-weight: bold !important;
 }
 
-/* 2. Инвертированный (Белым по черному) */
 html.contrast-inverted body {
   background-color: #000 !important;
   color: #fff !important;
@@ -420,7 +393,6 @@ html.contrast-inverted * {
   box-shadow: none !important;
   text-shadow: none !important;
 }
-/* Инвертируем картинки, но убираем цвет, чтобы не было "негатива" */
 html.contrast-inverted img,
 html.contrast-inverted video,
 html.contrast-inverted svg {
@@ -428,15 +400,14 @@ html.contrast-inverted svg {
 }
 html.contrast-inverted a {
   text-decoration: underline !important;
-  color: #00D1FF !important; /* Яркий цвет для ссылок */
+  color: #00D1FF !important; 
   font-weight: bold !important;
 }
 
-/* --- НАСТРОЙКА ИЗОБРАЖЕНИЙ --- */
 html.images-hidden img,
 html.images-hidden video,
 html.images-hidden [style*="background-image"],
 html.images-hidden svg {
   display: none !important;
-  visibility: hidden !important; /* Прячем все картинки, видео и SVG */
+  visibility: hidden !important; 
 }
