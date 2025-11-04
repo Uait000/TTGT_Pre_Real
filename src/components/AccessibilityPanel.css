@@ -1,0 +1,194 @@
+/* Стили для "отвязанной" панели.
+  Использует position: fixed, чтобы не "прыгать" и не "блымать".
+*/
+.accessibility-panel {
+  /* --- Позиционирование --- */
+  position: fixed; /* <-- Ключевое! */
+  top: 10px;
+  right: 10px;
+  z-index: 9999; /* Поверх ВСЕХ элементов */
+
+  /* --- Внешний вид --- */
+  background: #ffffff;
+  border: 1px solid #ccc;
+  padding: 16px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  min-width: 300px; 
+  max-width: 90vw;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.access-panel-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.access-panel-group strong {
+  margin-right: auto;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.access-panel-group button {
+  padding: 6px 12px;
+  cursor: pointer;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  color: #333;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.access-panel-group button:hover {
+  background: #e0e0e0;
+  border-color: #aaa;
+}
+
+.access-panel-group button.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+  font-weight: bold;
+}
+
+/* Стили для кнопок "Выключить изображения", "Сбросить", "Закрыть" */
+.access-panel-group button[aria-label="Выключить изображения"],
+.access-panel-group button[aria-label="Включить изображения"] {
+  flex-grow: 1;
+  background: #fff;
+  border: 1px solid #ccc;
+}
+.access-panel-group button[aria-label="Выключить изображения"]:hover,
+.access-panel-group button[aria-label="Включить изображения"]:hover {
+  background: #f7f7f7;
+}
+
+
+.access-panel-actions {
+  margin-top: 10px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.access-panel-actions button {
+  flex-grow: 1;
+  background-color: #f8f8f8;
+}
+
+.access-panel-actions button.close-panel-btn {
+  background-color: #e9e9e9;
+  font-weight: bold;
+}
+
+
+/* ==========================================================
+   --- ФИКС ЦВЕТОВ ПАНЕЛИ В РЕЖИМАХ КОНТРАСТА ---
+   ==========================================================
+*/
+
+/* 1. Когда включен инвертированный режим (белым по черному) */
+html.contrast-inverted .accessibility-panel {
+  background: #222 !important; /* Делаем фон панели темным */
+  color: #fff !important; /* Делаем текст на ней белым */
+  border-color: #fff !important;
+}
+
+/* Стили кнопок (A, A, A) в инвертированном режиме */
+html.contrast-inverted .accessibility-panel button {
+  background: #444 !important;
+  color: #fff !important;
+  border-color: #888 !important;
+}
+html.contrast-inverted .accessibility-panel button:hover {
+  background: #555 !important;
+  border-color: #aaa !important;
+}
+html.contrast-inverted .accessibility-panel button.active {
+  background: #00aaff !important; /* Ярко-синий для акцента */
+  color: #000 !important;
+  border-color: #00aaff !important;
+}
+html.contrast-inverted .access-panel-actions button {
+  background: #444 !important;
+  color: #fff !important;
+  border-color: #888 !important;
+}
+html.contrast-inverted .access-panel-actions button.close-panel-btn {
+  background-color: #ddd !important;
+  color: #000 !important;
+}
+
+
+/* 2. Когда включен высокий контраст (черным по белому) */
+html.contrast-high-contrast .accessibility-panel {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+}
+html.contrast-high-contrast .accessibility-panel button {
+  background: #fff !important;
+  color: #000 !important;
+  border: 1px solid #000 !important;
+  font-weight: bold !important;
+}
+html.contrast-high-contrast .accessibility-panel button:hover {
+  background: #eee !important;
+}
+html.contrast-high-contrast .accessibility-panel button.active {
+  background: #000 !important;
+  color: #fff !important;
+}
+html.contrast-high-contrast .access-panel-actions button {
+  background: #fff !important;
+  color: #000 !important;
+  border: 1px solid #000 !important;
+}
+html.contrast-high-contrast .access-panel-actions button.close-panel-btn {
+  background-color: #ccc !important;
+  color: #000 !important;
+}
+
+
+/* ==========================================================
+   --- НОВЫЙ КОД: ФИКС ДЛЯ РОДНОЙ "ТЁМНОЙ ТЕМЫ" (.dark) ---
+   ==========================================================
+*/
+
+/* Когда включена тёмная тема (.dark) ... */
+html.dark .accessibility-panel {
+  background: #333; /* ... делаем фон панели темным ... */
+  color: #fff;      /* ... а текст белым ... */
+  border-color: #555;
+}
+
+/* ... и обновляем стили кнопок ... */
+html.dark .accessibility-panel button {
+  background: #555;
+  color: #fff;
+  border-color: #777;
+}
+html.dark .accessibility-panel button:hover {
+  background: #666;
+  border-color: #888;
+}
+/* Оставляем .active таким же синим для акцента */
+html.dark .accessibility-panel button.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+html.dark .access-panel-actions button {
+  background: #555;
+  color: #fff;
+  border-color: #777;
+}
+html.dark .access-panel-actions button.close-panel-btn {
+  background-color: #444;
+}
+

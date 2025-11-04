@@ -55,15 +55,30 @@ import StartInScience from "./pages/StartInScience";
 import AdminPanel from "./pages/AdminPanel";
 import Zamena from "./pages/Zamena";
 
+// --- НОВЫЕ ИМПОРТЫ ---
+// useAccessibility больше не нужен здесь, но AccessibilityProvider все еще нужен
+import { AccessibilityProvider } from './context/AccessibilityContext'; 
+import { AccessibilityPanel } from './components/AccessibilityPanel';
+
+
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
+// --- НОВЫЙ КОМПОНЕНТ ДЛЯ РЕНДЕРА ПАНЕЛИ ---
+// Он нужен, чтобы получить доступ к Контексту
+const AppContent: React.FC = () => {
+  // const { isPanelOpen } = useAccessibility(); // <-- УДАЛЕНО
+
+  return (
+    <>
+      {/* Рендерим панель *безусловно*. 
+        Компонент сам решит, показываться ему или нет.
+        Это убирает ошибку TypeScript.
+      */}
+      <AccessibilityPanel/> 
+
       <BrowserRouter>
         <Routes>
+          {/* ... ВСЕ ВАШИ РОУТЫ ... */}
           <Route path="/" element={<Index />} />
           <Route path="/history" element={<History />} />
           <Route path="/administration" element={<Administration />} />
@@ -112,13 +127,26 @@ const App = () => (
           <Route path="/anniversary-95" element={<Anniversary95 />} />
           <Route path="/victory-80" element={<Victory80 />} />
           <Route path="/start-in-science" element={<StartInScience />} />
-
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+    </>
+  );
+};
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      {/* ОБОРАЧИВАЕМ ВСЕ В ПРОВАЙДЕР ДОСТУПНОСТИ */}
+      <AccessibilityProvider>
+        <AppContent />
+      </AccessibilityProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
 
 export default App;
+
