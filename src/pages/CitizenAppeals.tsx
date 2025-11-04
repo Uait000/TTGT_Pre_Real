@@ -1,5 +1,7 @@
-import { useState, useRef } from 'react';
-import MainLayout from '@/components/MainLayout'; 
+// src/pages/CitizenAppeals.tsx
+
+import { useState, useRef, useCallback } from 'react';
+import MainLayout from '@/components/MainLayout';
 import { 
     FileText, 
     Upload, 
@@ -33,12 +35,17 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+// Импортируем функцию API и тип данных
+// УБЕДИТЕСЬ, что файл src/api/feedback.ts содержит ФУНКЦИИ createFeedback и uploadFeedbackFiles
+import { createFeedback, uploadFeedbackFiles, FeedbackData } from '@/api/feedback'; 
 
+// Импорты статических файлов (предполагаем, что пути верны)
 import polObrac2022 from '@/assets/file/form/Pol_obrac_grazdan_2022.pdf';
 import polObracIzm2024 from '@/assets/file/form/Pol_obrac_grazdan_izm_2024.pdf';
 import polObracIzm2025 from '@/assets/file/form/Pol_obrac_grazdan_izm_2025.pdf';
 
 
+// --- Типы и начальное состояние ---
 const initialFormData = {
     lastName: '',
     firstName: '',
@@ -46,11 +53,17 @@ const initialFormData = {
     email: '',
     phone: '',
     subject: '',
-    message: '',
+    message: '', 
     agreement: false
 };
 
+interface Captcha {
+    question: string;
+    answer: string;
+}
+// -----------------------------------
 
+// --- Утилиты ---
 const formatBytes = (bytes: number, decimals = 2) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -60,30 +73,46 @@ const formatBytes = (bytes: number, decimals = 2) => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 };
 
+const generateCaptcha = (): Captcha => {
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    const operator = Math.random() > 0.5 ? '+' : '-';
+
+    let question;
+    let answer;
+
+    if (operator === '+') {
+        question = `${num1} + ${num2}`;
+        answer = num1 + num2;
+    } else {
+        const minNum = Math.min(num1, num2);
+        const maxNum = Math.max(num1, num2);
+        question = `${maxNum} - ${minNum}`;
+        answer = maxNum - minNum;
+    }
+
+    return { question, answer: String(answer) };
+};
+// -------------------
+
+
 const CitizenAppeals = () => {
     const [formData, setFormData] = useState(initialFormData);
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+    const [captcha, setCaptcha] = useState(generateCaptcha);
     const [captchaAnswer, setCaptchaAnswer] = useState('');
-    const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    // Добавлен статус для файлов
+    const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'partial-success'>('idle'); 
     const [errorMessage, setErrorMessage] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    // --- Управление состоянием ---
     const documents = [
-        {
-            title: 'Положение о порядке рассмотрения обращений граждан (2022)',
-            url: polObrac2022
-        },
-        {
-            title: 'Изменения в положение о порядке рассмотрения обращений граждан от 10.09.2024',
-            url: polObracIzm2024
-        },
-        {
-            title: 'Изменения в положение о порядке рассмотрения обращений граждан от 23.04.2025',
-            url: polObracIzm2025
-        }
+        { title: 'Положение о порядке рассмотрения обращений граждан (2022)', url: polObrac2022 },
+        { title: 'Изменения в положение о порядке рассмотрения обращений граждан от 10.09.2024', url: polObracIzm2024 },
+        { title: 'Изменения в положение о порядке рассмотрения обращений граждан от 23.04.2025', url: polObracIzm2025 }
     ];
 
-    
     const handleInputChange = (field: string, value: string | boolean) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
@@ -103,22 +132,28 @@ const CitizenAppeals = () => {
         setUploadedFiles(prev => prev.filter((_, i) => i !== index));
     };
 
-    const resetForm = () => {
+    const resetForm = useCallback(() => {
         setFormData(initialFormData);
         setUploadedFiles([]);
         setCaptchaAnswer('');
+        setCaptcha(generateCaptcha());
         setFormStatus('idle');
         setErrorMessage('');
-    };
+    }, []);
+    // -------------------
 
+    // --- Обработчик отправки формы ---
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setFormStatus('loading');
         setErrorMessage('');
 
-        if (captchaAnswer !== '12') {
-            setErrorMessage('Неверный ответ на математический пример.');
+        // 1. Проверка Капчи и Согласия
+        if (captchaAnswer.trim() !== captcha.answer) {
+            setErrorMessage('Неверный ответ на математический пример. Попробуйте еще раз.');
             setFormStatus('error');
+            setCaptcha(generateCaptcha());
+            setCaptchaAnswer('');
             return;
         }
         if (!formData.agreement) {
@@ -127,37 +162,60 @@ const CitizenAppeals = () => {
             return;
         }
 
-        const data = new FormData();
-        data.append('lastName', formData.lastName);
-        data.append('firstName', formData.firstName);
-        data.append('middleName', formData.middleName);
-        data.append('email', formData.email);
-        data.append('phone', formData.phone);
-        data.append('subject', formData.subject);
-        data.append('message', formData.message);
-        data.append('recipient', 'kovixi@mail.ru'); 
+        // 2. Сбор текстовых данных для JSON-запроса
+        const dataToSend: FeedbackData = {
+            first_name: formData.firstName,   
+            second_name: formData.lastName,   
+            middle_name: formData.middleName, 
+            email: formData.email,
+            phone: formData.phone,
+            topic: formData.subject,      
+            content: formData.message,    
+        };
+        
+        let feedbackId: number | void;
 
-        uploadedFiles.forEach((file, i) => {
-            data.append(`file_${i+1}`, file, file.name);
-        });
-
+        // 3. Отправка текстовых данных (JSON)
         try {
-            const response = await fetch('/api/send-appeal', {
-                method: 'POST',
-                body: data,
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `Ошибка сервера: ${response.statusText}`);
-            }
-            setFormStatus('success');
-
+            // Ожидаем, что createFeedback вернет ID, если статус 200, или void, если 204
+            feedbackId = await createFeedback(dataToSend); 
         } catch (error: any) {
             setFormStatus('error');
-            setErrorMessage(error.message || 'Не удалось подключиться к серверу. Попробуйте позже.');
+            setErrorMessage(error.message || 'Ошибка отправки текстовых данных.');
+            setCaptcha(generateCaptcha());
+            setCaptchaAnswer('');
+            return; // Останавливаемся
         }
+
+        // 4. Отправка файлов (multipart/form-data)
+        if (uploadedFiles.length > 0) {
+            
+            // Если нет файлов, но бэкенд не вернул ID (статус 204), мы можем продолжать.
+            // Если есть файлы И нет ID, это ошибка логики бэкенда.
+            if (!feedbackId && uploadedFiles.length > 0) {
+                 setErrorMessage('Текстовые данные отправлены, но не удалось получить ID для привязки файлов. Файлы не будут загружены.');
+                 setFormStatus('partial-success'); // Частичный успех
+            } else {
+                try {
+                    // Отправляем файлы, используя полученный ID
+                    // TypeScript гарантирует, что feedbackId: number | void. 
+                    // Если он number, используем его, если void, используем 0 или null (зависит от API)
+                    await uploadFeedbackFiles(feedbackId as number, uploadedFiles);
+
+                } catch (error: any) {
+                    // Если файлы не загрузились, показываем успех основной части с предупреждением.
+                    setErrorMessage(`Текстовое обращение создано, но произошла ошибка при загрузке файлов: ${error.message || 'Ошибка сети/сервера при загрузке файлов.'}`);
+                    setFormStatus('partial-success'); 
+                    return; // Завершаем выполнение, чтобы показать сообщение.
+                }
+            }
+        }
+        
+        // 5. Полный успех
+        setFormStatus('success'); 
     };
+
+    // -----------------------------------
 
 
     return (
@@ -177,9 +235,9 @@ const CitizenAppeals = () => {
                         <TabsTrigger 
                             value="form" 
                             className="py-2.5 text-sm font-semibold transition-all duration-300
-                                       data-[state=active]:bg-primary 
-                                       data-[state=active]:text-primary-foreground 
-                                       data-[state=active]:shadow-md"
+                                        data-[state=active]:bg-primary 
+                                        data-[state=active]:text-primary-foreground 
+                                        data-[state=active]:shadow-md"
                         >
                             <Send className="w-4 h-4 mr-2" />
                             Форма обращения
@@ -188,9 +246,9 @@ const CitizenAppeals = () => {
                         <TabsTrigger 
                             value="docs" 
                             className="py-2.5 text-sm font-semibold transition-all duration-300
-                                       data-[state=active]:bg-primary 
-                                       data-[state=active]:text-primary-foreground 
-                                       data-[state=active]:shadow-md"
+                                        data-[state=active]:bg-primary 
+                                        data-[state=active]:text-primary-foreground 
+                                        data-[state=active]:shadow-md"
                         >
                             <FileText className="w-4 h-4 mr-2" />
                             Нормативные документы
@@ -199,9 +257,9 @@ const CitizenAppeals = () => {
                         <TabsTrigger 
                             value="faq" 
                             className="py-2.5 text-sm font-semibold transition-all duration-300
-                                       data-[state=active]:bg-primary 
-                                       data-[state=active]:text-primary-foreground 
-                                       data-[state=active]:shadow-md"
+                                        data-[state=active]:bg-primary 
+                                        data-[state=active]:text-primary-foreground 
+                                        data-[state=active]:shadow-md"
                         >
                             <Download className="w-4 h-4 mr-2" />
                             Часто задаваемые вопросы
@@ -218,12 +276,19 @@ const CitizenAppeals = () => {
                                 Заполните форму
                             </h2>
                             
-                            {formStatus === 'success' && (
-                                <Alert variant="success" className="bg-green-50 border-green-300 text-green-800">
-                                    <CheckCircle className="h-4 w-4" />
-                                    <AlertTitle>Отправлено!</AlertTitle>
+                            {/* Уведомления */}
+                            {(formStatus === 'success' || formStatus === 'partial-success') && (
+                                <Alert 
+                                    variant={formStatus === 'success' ? "success" : "destructive"}
+                                    className={formStatus === 'success' ? "bg-green-50 border-green-300 text-green-800" : "bg-yellow-50 border-yellow-300 text-yellow-800"}
+                                >
+                                    {formStatus === 'success' ? <CheckCircle className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
+                                    <AlertTitle>{formStatus === 'success' ? "Отправлено!" : "Частичный успех с предупреждением"}</AlertTitle>
                                     <AlertDescription>
-                                        Ваше обращение успешно зарегистрировано. Мы свяжемся с вами в ближайшее время.
+                                        {formStatus === 'success' 
+                                            ? "Ваше обращение успешно зарегистрировано (включая все файлы)."
+                                            : errorMessage 
+                                        }
                                         <Button 
                                             type="button" 
                                             variant="ghost" 
@@ -243,6 +308,7 @@ const CitizenAppeals = () => {
                                 </Alert>
                             )}
                             
+                            {/* Поля формы (без изменений) */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <Label htmlFor="lastName" className="block text-sm font-medium text-foreground mb-2">Фамилия *</Label>
@@ -294,6 +360,7 @@ const CitizenAppeals = () => {
                                 />
                             </div>
                             
+                            {/* Блок загрузки файлов */}
                             <div>
                                 <Label className="block text-sm font-medium text-foreground mb-2">Прикрепить файлы</Label>
                                 <input
@@ -320,6 +387,13 @@ const CitizenAppeals = () => {
                                 
                                 {uploadedFiles.length > 0 && (
                                     <div className="mt-4 space-y-2">
+                                        <Alert variant="default" className="bg-blue-50 border-blue-300 text-blue-800">
+                                            <AlertCircle className="h-4 w-4" />
+                                            <AlertTitle>Внимание</AlertTitle>
+                                            <AlertDescription>
+                                                Файлы будут отправлены **отдельным запросом** после успешной регистрации текстового обращения.
+                                            </AlertDescription>
+                                        </Alert>
                                         {uploadedFiles.map((file, index) => (
                                             <div key={index} className="flex items-center justify-between p-2 pl-3 bg-secondary/50 rounded-lg border border-border/50">
                                                 <div className="flex items-center space-x-2 min-w-0">
@@ -342,10 +416,13 @@ const CitizenAppeals = () => {
                                 )}
                             </div>
 
+                            {/* Блок с динамической капчей */}
                             <div>
                                 <Label className="block text-sm font-medium text-foreground mb-2">Проверка *</Label>
                                 <div className="flex items-center space-x-4 p-4 bg-secondary/50 rounded-lg">
-                                    <span className="text-lg font-semibold text-foreground">10 + 2 =</span>
+                                    <span className="text-lg font-semibold text-foreground">
+                                        {captcha.question} =
+                                    </span>
                                     <Input
                                         required
                                         type="number"
@@ -357,6 +434,7 @@ const CitizenAppeals = () => {
                                 </div>
                             </div>
 
+                            {/* Чекбокс согласия */}
                             <div className="flex items-start space-x-3 pt-4 border-t border-border/50">
                                 <Checkbox
                                     id="agreement"
@@ -370,6 +448,7 @@ const CitizenAppeals = () => {
                                 </Label>
                             </div>
 
+                            {/* Кнопки */}
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Button
                                     type="submit"
@@ -396,7 +475,7 @@ const CitizenAppeals = () => {
                         </form>
                     </TabsContent>
 
-                    {/* --- Вкладка 2: ДОКУМЕНТЫ --- */}
+                    {/* --- Вкладки 2 и 3 (FAQ) --- */}
                     <TabsContent value="docs" className="p-6 md:p-10">
                         <h2 className="text-2xl font-semibold text-primary mb-6">Нормативные документы</h2>
                         <div className="space-y-3">
@@ -418,7 +497,6 @@ const CitizenAppeals = () => {
                         </div>
                     </TabsContent>
 
-                    {/* --- Вкладка 3: FAQ --- */}
                     <TabsContent value="faq" className="p-6 md:p-10">
                         <h2 className="text-2xl font-semibold text-primary mb-6 text-center">
                             Часто задаваемые вопросы
