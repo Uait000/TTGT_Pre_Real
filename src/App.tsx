@@ -54,10 +54,12 @@ import Victory80 from "./pages/Victory80";
 import StartInScience from "./pages/StartInScience";
 import AdminPanel from "./pages/AdminPanel";
 import Zamena from "./pages/Zamena";
+import ScheduleFileHandler from "./pages/ScheduleFileHandler";
 import { AccessibilityProvider } from './context/AccessibilityContext'; 
 import { AccessibilityPanel } from './components/AccessibilityPanel';
-const queryClient = new QueryClient();
+import { AuthProvider } from './context/AuthContext';
 
+const queryClient = new QueryClient();
 
 const AppContent: React.FC = () => {
   return (
@@ -113,7 +115,11 @@ const AppContent: React.FC = () => {
           <Route path="/anniversary-95" element={<Anniversary95 />} />
           <Route path="/victory-80" element={<Victory80 />} />
           <Route path="/start-in-science" element={<StartInScience />} />
-          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/panel" element={<AdminPanel />} />
+          
+          {/* Маршрут для обработки файлов расписания из БД */}
+          <Route path="/api/files/fixed/schedule/:filename" element={<ScheduleFileHandler />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
@@ -126,12 +132,13 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <AccessibilityProvider>
-        <AppContent />
-      </AccessibilityProvider>
+      <AuthProvider>
+        <AccessibilityProvider>
+          <AppContent />
+        </AccessibilityProvider>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
 
 export default App;
-

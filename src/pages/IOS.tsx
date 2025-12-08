@@ -1,70 +1,103 @@
+// src/pages/IOS.tsx
 import MainLayout from '@/components/MainLayout'; 
-import { ExternalLink, FileText } from 'lucide-react';
-import doc_1 from '@/assets/file/Spisok_EOR_08.02.01.pdf';
-import doc_2 from '@/assets/file/Spisok_EOR_08.02.10.pdf';
-import doc_3 from '@/assets/file/Spisok_EOR_09.02.01.pdf';
-import doc_4 from '@/assets/file/Spisok_EOR_11.02.06.pdf';
-import doc_5 from '@/assets/file/Spisok_EOR_13.02.07.pdf';
-import doc_6 from '@/assets/file/Spisok_EOR_22.02.06.pdf';
-import doc_7 from '@/assets/file/Spisok_EOR_23.02.01.pdf';
-import doc_8 from '@/assets/file/Spisok_EOR_23.02.04.pdf';
-import doc_9 from '@/assets/file/Spisok_EOR_23.02.06.01.pdf';
-import doc_10 from '@/assets/file/Spisok_EOR_23.02.06.03.pdf';
-import doc_11 from '@/assets/file/Spisok_EOR_27.02.03.pdf';
-import doc_12 from '@/assets/file/Spisok_EOR_38.02.01.pdf';
-import dogovor from '@/assets/file/Dogovor_Internet_2025.pdf';
-import pol_1 from '@/assets/file/pologenieoEOISN_TTGT_2023.pdf';
-import pol_2 from '@/assets/file/Pologenie_EIOS_izm_15.05.2024.pdf';
+import { ExternalLink, FileText, AlignLeft } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import iosContentApi, { type IOSContent } from '@/api/ios-content';
+import { BASE_URL } from '@/api/config';
+
+// Расширяем интерфейс, так как API может возвращать text_content, который мы добавили
+interface ExtendedIOSContent extends IOSContent {
+    text_content?: string;
+}
 
 const IOS = () => {
-    
-    const mainDocuments = [
-        { title: 'Договор на оказание услуг по доступу к сети Интернет на 2025 г.', file: dogovor },
-        { title: 'Положение об электронной информационно-образовательной среде ТТЖТ - филиала РГУПС', file: pol_1 },
-        { title: 'Изменения в Положение об электронной информационно-образовательной среде ТТЖТ - филиала РГУПС', file: pol_2 },
-    ];
+    // Храним данные сгруппированными по типам: { "Название раздела": [массив элементов] }
+    const [groupedContent, setGroupedContent] = useState<Record<string, ExtendedIOSContent[]>>({});
+    const [isLoading, setIsLoading] = useState(true);
 
-    const specialtyResources = [
-        { title: '08.02.01 Строительство и эксплуатация зданий и сооружений', file: doc_1 },
-        { title: '08.02.10 Строительство железных дорог, путь и путевое хозяйство', file: doc_2 },
-        { title: '09.02.01 Компьютерные системы и комплексы', file: doc_3 },
-        { title: '11.02.06 Техническая эксплуатация транспортного радиоэлектронного оборудования', file: doc_4 },
-        { title: '13.02.07 Электроснабжение', file: doc_5 },
-        { title: '22.02.06 Сварочное производство', file: doc_6 },
-        { title: '23.02.01 Организация перевозок и управление на транспорте', file: doc_7 },
-        { title: '23.02.04 Техническая эксплуатация подъемно-транспортных, строительных, дорожных машин', file: doc_8 },
-        { title: '23.02.06 Техническая эксплуатация подвижного состава (электроподвижной состав)', file: doc_9 },
-        { title: '23.02.06 Техническая эксплуатация подвижного состава (вагоны)', file: doc_10 },
-        { title: '27.02.03 Автоматика и телемеханика на транспорте', file: doc_11 },
-        { title: '38.02.01 Экономика и бухгалтерский учет', file: doc_12 },
-    ];
+    useEffect(() => {
+        loadContent();
+    }, []);
 
-    const externalLibraries = [
-        { title: 'Электронная библиотека УМЦ ЖДТ', url: 'http://umczdt.ru/books/' },
-        { title: 'Электронно-библиотечная система Лань', url: 'https://e.lanbook.com' },
-        { title: 'Электронно-библиотечная система IPR SMART', url: 'http://www.iprbookshop.ru/' },
-        { title: 'Образовательная платформа Юрайт', url: 'https://urait.ru/' },
-        { title: 'Электронный архив и база данных СМИ Public.ru', url: 'https://rgups.public.ru/' },
-        { title: 'Национальная электронная библиотека', url: 'https://rusneb.ru/' },
-    ];
-    
-    const internalSystems = [
-        { title: 'Электронно-образовательная среда ТТЖТ', url: 'http://tihtgt.ru/' },
-        { title: '"Сетевой город.Образование". Модуль ПОО', url: 'https://spo.rso23.ru' },
-        { title: 'ФГИС "Моя школа"', url: 'https://myschool.edu.ru' },
-        { title: 'Дистанционные образовательные технологии в ТТЖТ', url: 'http://дистанционное24.рф' },
-        { title: 'Информационно-коммуникативная образовательная платформа «Сферум»', url: 'http://sferum.ru/' },
-    ];
+    const loadContent = async () => {
+        try {
+            setIsLoading(true);
+            const data = await iosContentApi.getAll();
+            
+            // 1. Фильтруем опубликованные
+            const publishedContent = data.filter(item => item.is_published) as ExtendedIOSContent[];
 
-    const federalResources = [
-        { title: 'Министерство науки и высшего образования Российской Федерации', url: 'https://minobrnauki.gov.ru/' },
-        { title: 'Министерство просвещения Российской Федерации', url: 'https://edu.gov.ru/' },
-        { title: 'Федеральная служба по надзору в сфере образования и науки', url: 'https://obrnadzor.gov.ru/' },
-        { title: 'Федеральный портал «Российское образование»', url: 'https://www.edu.ru/' },
-        { title: 'Информационная система «Единое окно доступа к образовательным ресурсам»', url: 'http://window.edu.ru/' },
-        { title: 'Федеральный центр информационно-образовательных ресурсов', url: 'http://fcior.edu.ru/' },
-        { title: 'Единая коллекция цифровых образовательных ресурсов', url: 'http://school-collection.edu.ru/' }
-    ];
+            // 2. Группируем по полю type (которое теперь мы пишем вручную)
+            const groups: Record<string, ExtendedIOSContent[]> = {};
+            
+            publishedContent.forEach(item => {
+                const typeName = item.type || 'Прочее'; // Если тип не указан, кидаем в "Прочее"
+                if (!groups[typeName]) {
+                    groups[typeName] = [];
+                }
+                groups[typeName].push(item);
+            });
+
+            // 3. Сортируем элементы внутри групп по order_index
+            Object.keys(groups).forEach(key => {
+                groups[key].sort((a, b) => a.order_index - b.order_index);
+            });
+
+            setGroupedContent(groups);
+        } catch (error) {
+            console.error('Ошибка загрузки контента IOS:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Функция для получения URL
+    const getFileUrl = (item: ExtendedIOSContent) => {
+        if (item.external_url) {
+            return item.external_url;
+        }
+        
+        if (item.files && item.files.length > 0) {
+            if (item.files[0].url && item.files[0].url.startsWith('http')) {
+                return item.files[0].url;
+            }
+            if (item.files[0].id) {
+                return `${BASE_URL}/files/${item.files[0].id}`;
+            }
+        }
+        
+        // Fallback для старых данных
+        if (item.file_url) {
+            return item.file_url.startsWith('http') ? item.file_url : `${BASE_URL}${item.file_url}`;
+        }
+        
+        return '#';
+    };
+
+    // Проверка, есть ли ссылка/файл (чтобы рисовать кнопку)
+    const hasLink = (item: ExtendedIOSContent) => {
+        return !!(item.external_url || (item.files && item.files.length > 0) || item.file_url);
+    };
+
+    // Проверка, является ли ссылка внешней (для иконки)
+    const isExternal = (item: ExtendedIOSContent) => {
+        return !!item.external_url;
+    };
+
+    if (isLoading) {
+        return (
+            <MainLayout>
+                <div className="bg-white rounded-lg shadow-sm border border-border p-8">
+                    <div className="flex justify-center items-center py-10">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    </div>
+                </div>
+            </MainLayout>
+        );
+    }
+
+    // Получаем список разделов (ключей) и сортируем их (опционально можно добавить логику порядка разделов)
+    const sectionKeys = Object.keys(groupedContent).sort();
 
     return (
         <MainLayout>
@@ -73,66 +106,65 @@ const IOS = () => {
                 <p className="text-center text-muted-foreground mb-12">Доступ к информационным системам и образовательным ресурсам</p>
                 
                 <div className="space-y-12">
-                    <section>
-                        <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-l-4 border-primary pl-4">Основные документы</h2>
-                        <div className="space-y-3">
-                            {mainDocuments.map((doc, index) => (
-                                <a key={index} href={doc.file} target="_blank" rel="noopener noreferrer" className="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-primary/50 transition-all duration-300 group">
-                                    <FileText className="w-6 h-6 text-primary mr-4 flex-shrink-0" />
-                                    <span className="text-foreground group-hover:text-primary transition-colors">{doc.title}</span>
-                                </a>
-                            ))}
+                    {sectionKeys.length > 0 ? (
+                        sectionKeys.map((sectionTitle) => (
+                            <section key={sectionTitle}>
+                                <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-l-4 border-primary pl-4">
+                                    {sectionTitle}
+                                </h2>
+                                
+                                <div className="grid grid-cols-1 gap-4">
+                                    {groupedContent[sectionTitle].map((item) => (
+                                        <div 
+                                            key={item.id} 
+                                            className="bg-white rounded-lg border border-gray-200 p-5 hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-md"
+                                        >
+                                            {/* 1. Заголовок элемента */}
+                                            <h3 className="text-lg font-medium text-gray-900 mb-2">
+                                                {item.title}
+                                            </h3>
+
+                                            {/* 2. Текстовый контент (HTML из редактора) */}
+                                            {item.text_content && (
+                                                <div 
+                                                    className="prose prose-sm max-w-none text-gray-600 mb-4"
+                                                    dangerouslySetInnerHTML={{ __html: item.text_content }}
+                                                />
+                                            )}
+
+                                            {/* 3. Кнопка/Ссылка на файл или ресурс (если есть) */}
+                                            {hasLink(item) && (
+                                                <div className="mt-3">
+                                                    <a 
+                                                        href={getFileUrl(item)} 
+                                                        target="_blank"
+                                                        rel="noopener noreferrer" 
+                                                        className="inline-flex items-center px-4 py-2 bg-gray-50 text-primary rounded-md hover:bg-primary hover:text-white transition-colors text-sm font-medium border border-gray-200 hover:border-primary"
+                                                    >
+                                                        {isExternal(item) ? (
+                                                            <>
+                                                                <ExternalLink className="w-4 h-4 mr-2" />
+                                                                Перейти к ресурсу
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <FileText className="w-4 h-4 mr-2" />
+                                                                Открыть документ
+                                                            </>
+                                                        )}
+                                                    </a>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        ))
+                    ) : (
+                        <div className="text-center text-gray-500 py-10">
+                            Информация пока не добавлена
                         </div>
-                    </section>
-                    
-                    <section>
-                        <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-l-4 border-primary pl-4">Списки электронных образовательных ресурсов по специальностям</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {specialtyResources.map((res, index) => (
-                                <a key={index} href={res.file} target="_blank" rel="noopener noreferrer" className="flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 group transform hover:scale-[1.02]">
-                                    <FileText className="w-5 h-5 text-gray-400 group-hover:text-primary mr-3 flex-shrink-0 transition-colors" />
-                                    <span className="text-sm text-foreground">{res.title}</span>
-                                </a>
-                            ))}
-                        </div>
-                    </section>
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                        <section>
-                            <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-l-4 border-primary pl-4">Внешние электронные библиотеки и платформы</h2>
-                            <div className="space-y-3">
-                                {externalLibraries.map((lib, index) => (
-                                    <a key={index} href={lib.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-primary/50 transition-all duration-300 group">
-                                        <span className="text-foreground">{lib.title}</span>
-                                        <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
-                                    </a>
-                                ))}
-                            </div>
-                        </section>
-                        <section>
-                            <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-l-4 border-primary pl-4">Внутренние информационные системы</h2>
-                            <div className="space-y-3">
-                                {internalSystems.map((sys, index) => (
-                                    <a key={index} href={sys.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-primary/50 transition-all duration-300 group">
-                                        <span className="text-foreground">{sys.title}</span>
-                                        <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
-                                    </a>
-                                ))}
-                            </div>
-                        </section>
-                    </div>
-                    
-                    <section>
-                        <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-l-4 border-primary pl-4">Федеральные образовательные ресурсы</h2>
-                        <div className="space-y-3">
-                            {federalResources.map((res, index) => (
-                                <a key={index} href={res.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-primary/50 transition-all duration-300 group">
-                                    <span className="text-foreground">{res.title}</span>
-                                    <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
-                                </a>
-                            ))}
-                        </div>
-                    </section>
+                    )}
                 </div>
             </div>
         </MainLayout>

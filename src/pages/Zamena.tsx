@@ -2,14 +2,42 @@ import { useEffect, useRef, useState } from 'react';
 import MainLayout from '@/components/MainLayout';
 import { zamenaApi } from '@/api/zamena'; 
 import { Button } from '@/components/ui/button';
-import { Download, QrCode, FileWarning, RefreshCw, Loader2 } from 'lucide-react'; 
+import { Download, FileWarning, RefreshCw, Loader2, Smartphone, Globe } from 'lucide-react'; 
 import { motion } from 'framer-motion'; 
 
 const Zamena = () => {
     const wsRef = useRef<WebSocket | null>(null);
     const iframeRef = useRef<HTMLIFrameElement | null>(null);
     const [pdfUrl, setPdfUrl] = useState<string | null>(null); 
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
+    const [isMobile, setIsMobile] = useState(false);
+    const [isIOS, setIsIOS] = useState(false);
+    const [isMacOS, setIsMacOS] = useState(false);
+
+    // Функция для определения User Agent
+    const detectUserAgent = () => {
+        const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+        
+        // Проверка на iOS
+        const ios = /iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream;
+        setIsIOS(ios);
+        
+        // Проверка на macOS (но не iOS)
+        const mac = /Macintosh|MacIntel|MacPPC|Mac68K/.test(userAgent) && !ios;
+        setIsMacOS(mac);
+        
+        // Проверка на мобильные устройства
+        const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+        setIsMobile(mobile);
+        
+        console.log('User Agent Detection:', {
+            userAgent,
+            isIOS: ios,
+            isMacOS: mac,
+            isMobile: mobile,
+            shouldHideAPK: (ios || mac)
+        });
+    };
 
     const updateIframeSource = (newUrl: string | null) => {
         if (newUrl) {
@@ -38,9 +66,8 @@ const Zamena = () => {
         }
     };
 
-
     useEffect(() => {
-        
+        detectUserAgent(); // Определяем устройство при загрузке
         fetchInitialUrl(); 
         const connectWebSocket = () => {
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -78,13 +105,16 @@ const Zamena = () => {
         return () => {
             if (wsRef.current) wsRef.current.close();
         };
-    }, []); 
+    }, []);
 
     const handleDownload = () => {
         if (pdfUrl) {
             window.open(pdfUrl, '_blank');
         }
     };
+
+    // Показывать кнопку APK только если не iOS и не macOS
+    const shouldShowAPKButton = !isIOS && !isMacOS;
 
     return (
         <MainLayout>
@@ -103,7 +133,7 @@ const Zamena = () => {
                 </div>
             </motion.div>
 
-            {/* Блок с кнопкой Скачать */}
+            {/* Блок с кнопками приложений */}
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -113,26 +143,77 @@ const Zamena = () => {
                 <div className="absolute -top-16 -right-16 w-48 h-48 bg-white/10 rounded-full filter blur-2xl opacity-50" />
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
                     <div className="flex-1">
-                        <h2 className="text-2xl font-bold text-white mb-2">
-                            Скачать приложение с расписанием
-                        </h2>
-                        <p className="text-blue-100 mb-5">
-                            Получите быстрый доступ к расписанию и заменам на вашем мобильном устройстве.
+                        <div className="flex items-center gap-3 mb-3">
+                            <Smartphone className="w-7 h-7 text-white" />
+                            <h2 className="text-2xl font-bold text-white">
+                                Приложение с расписанием
+                            </h2>
+                        </div>
+                        <p className="text-blue-100 mb-6 max-w-2xl">
+                            Скачайте наше приложение, чтобы отслеживать замены и расписание в реальном времени на вашем мобильном устройстве.
                         </p>
-                        <Button
-                            onClick={handleDownload}
-                            disabled={!pdfUrl}
-                            className="bg-white/90 text-primary hover:bg-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-md hover:shadow-lg text-base font-semibold"
-                        >
-                            <Download className="w-5 h-5" />
-                            Скачать приложение
-                        </Button>
+                        
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            {/* Кнопка веб-приложения (всегда показывать) */}
+                            <Button
+                                onClick={() => window.open('https://schedulettgt-static.website.yandexcloud.net/', '_blank')}
+                                className="bg-white/90 text-primary hover:bg-white px-4 py-2.5 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-md hover:shadow-lg font-medium text-sm min-w-[180px] justify-center"
+                            >
+                                <Globe className="w-4 h-4" />
+                                Приложение веб
+                            </Button>
+                            
+                            {/* Кнопка APK - показывать только на Android и Windows/Linux */}
+                            {shouldShowAPKButton && (
+                                <Button
+                                    onClick={() => window.open('https://ttgt-api-isxb.onrender.com/schedule/android/download', '_blank')}
+                                    className="bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 px-4 py-2.5 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-md hover:shadow-lg font-medium text-sm min-w-[180px] justify-center"
+                                >
+                                    <Download className="w-4 h-4" />
+                                    Скачать APK
+                                </Button>
+                            )}
+                            
+                            {/* Для iOS и macOS показываем информационное сообщение */}
+                            {(isIOS || isMacOS) && (
+                                <div className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-lg p-3 flex items-center gap-2 min-w-[180px]">
+                                    <Smartphone className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                                    <span className="text-xs text-amber-100">
+                                        Для {isIOS ? 'iOS' : 'macOS'} используйте веб-приложение
+                                    </span>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50 shadow-inner">
-                        <div className="w-32 h-32 flex flex-col items-center justify-center text-center text-gray-700">
-                            <QrCode className="w-16 h-16 text-primary" />
-                            <div className="text-xs mt-2 font-medium">QR-код</div>
-                            <div className="text-xs">для скачивания</div>
+                    
+                    {/* Декоративный элемент с информацией об устройстве */}
+                    <div className="hidden md:block">
+                        <div className="relative">
+                            <div className={`w-40 h-40 ${isIOS || isMacOS ? 'bg-gradient-to-br from-amber-500/10 to-orange-500/10' : 'bg-gradient-to-br from-white/10 to-white/5'} rounded-2xl backdrop-blur-sm border ${isIOS || isMacOS ? 'border-amber-500/30' : 'border-white/20'} p-4 flex flex-col items-center justify-center`}>
+                                <div className={`w-24 h-24 ${isIOS || isMacOS ? 'bg-gradient-to-br from-amber-500/20 to-orange-500/10' : 'bg-gradient-to-br from-white/20 to-white/10'} rounded-lg border ${isIOS || isMacOS ? 'border-amber-500/30' : 'border-white/30'} flex items-center justify-center mb-3`}>
+                                    {isIOS ? (
+                                        <div className="text-center">
+                                            <div className="text-white/80 text-2xl mb-1">🍎</div>
+                                            <span className="text-white/60 text-xs">iOS</span>
+                                        </div>
+                                    ) : isMacOS ? (
+                                        <div className="text-center">
+                                            <div className="text-white/80 text-2xl mb-1">💻</div>
+                                            <span className="text-white/60 text-xs">macOS</span>
+                                        </div>
+                                    ) : (
+                                        <Smartphone className="w-12 h-12 text-white/80" />
+                                    )}
+                                </div>
+                                <span className="text-white/80 text-sm font-medium text-center">
+                                    {isIOS ? 'Только веб-приложение' : 
+                                     isMacOS ? 'Используйте веб-приложение' : 
+                                     'Доступно на Android'}
+                                </span>
+                            </div>
+                            {/* Декоративные точки */}
+                            <div className={`absolute -top-2 -right-2 w-4 h-4 ${isIOS || isMacOS ? 'bg-amber-400' : 'bg-yellow-400'} rounded-full animate-pulse`}></div>
+                            <div className="absolute -bottom-2 -left-2 w-3 h-3 bg-blue-400 rounded-full animate-pulse delay-500"></div>
                         </div>
                     </div>
                 </div>
@@ -169,7 +250,6 @@ const Zamena = () => {
                     <p>Документ отображается в режиме реального времени. При обновлении замен на сервере, он автоматически обновится у вас на странице.</p>
                 </div>
             </motion.div>
-
         </MainLayout>
     );
 };

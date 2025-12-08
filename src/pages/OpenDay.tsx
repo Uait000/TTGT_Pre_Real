@@ -1,22 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MainLayout from '@/components/MainLayout'; 
 import { Video, Users, Info, MapPin, Phone, Calendar, CheckCircle } from 'lucide-react';
-
-const remoteDates = [
-    { date: '31 октября 2024 года', time: '13:00' },
-    { date: '12 декабря 2024 года', time: '13:00' },
-    { date: '20 февраля 2025 года', time: '13:00' },
-    { date: '03 апреля 2025 года', time: '13:00' },
-];
-
-const inPersonDates = [
-    { date: '30 ноября 2024 года', time: '10:00' },
-    { date: '01 марта 2025 года', time: '10:00' },
-    { date: '26 апреля 2025 года', time: '10:00' },
-];
+import { settingsApi, type OpenDaySettings } from '@/api/settings';
 
 const OpenDay = () => {
     const [activeTab, setActiveTab] = useState('remote');
+    const [settings, setSettings] = useState<OpenDaySettings | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        loadSettings();
+    }, []);
+
+    const loadSettings = async () => {
+        try {
+            console.log('📥 Загрузка настроек для страницы...');
+            const openDaySettings = await settingsApi.getOpenDaySettings();
+            console.log('✅ Настройки загружены:', openDaySettings);
+            setSettings(openDaySettings);
+        } catch (error) {
+            console.error('❌ Ошибка загрузки настроек:', error);
+            // Используем настройки по умолчанию при ошибке
+            setSettings({
+                title: 'Графики проведения 2024/2025 учебный год',
+                remote_dates: [
+                    { date: '31 октября 2024 года', time: '13:00' },
+                    { date: '12 декабря 2024 года', time: '13:00' },
+                    { date: '20 февраля 2025 года', time: '13:00' },
+                    { date: '03 апреля 2025 года', time: '13:00' }
+                ],
+                in_person_dates: [
+                    { date: '30 ноября 2024 года', time: '10:00' },
+                    { date: '01 марта 2025 года', time: '10:00' },
+                    { date: '26 апреля 2025 года', time: '10:00' }
+                ]
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading || !settings) {
+        return (
+            <MainLayout>
+                <div className="flex justify-center items-center py-20">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                </div>
+            </MainLayout>
+        );
+    }
 
     return (
         <MainLayout>
@@ -25,7 +57,7 @@ const OpenDay = () => {
                 День открытых дверей
             </h1>
             <h2 className="text-xl lg:text-2xl font-semibold text-gray-700 text-center mb-10">
-                Графики проведения 2024/2025 учебный год
+                {settings.title}
             </h2>
             
             <div className="max-w-4xl mx-auto">
@@ -60,7 +92,7 @@ const OpenDay = () => {
                             <h3 className="text-2xl font-bold text-gray-800 mb-2">В дистанционном формате</h3>
                             <p className="text-gray-600 mb-6">Для удалённых территорий</p>
                             <div className="space-y-4">
-                                {remoteDates.map((item, index) => (
+                                {settings.remote_dates.map((item, index) => (
                                     <div 
                                         key={index} 
                                         className="flex flex-col sm:flex-row justify-between sm:items-center bg-gray-50 p-5 rounded-xl border border-gray-200 shadow-sm"
@@ -83,7 +115,7 @@ const OpenDay = () => {
                             <h3 className="text-2xl font-bold text-gray-800 mb-2">В очном формате</h3>
                             <p className="text-gray-600 mb-6">При стабильной санитарно-эпидемиологической обстановки в условиях распространения инфекционных заболеваний</p>
                             <div className="space-y-4">
-                                {inPersonDates.map((item, index) => (
+                                {settings.in_person_dates.map((item, index) => (
                                     <div 
                                         key={index} 
                                         className="flex flex-col sm:flex-row justify-between sm:items-center bg-gray-50 p-5 rounded-xl border border-gray-200 shadow-sm"

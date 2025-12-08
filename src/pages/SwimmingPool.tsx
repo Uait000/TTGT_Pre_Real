@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import MainLayout from '@/components/MainLayout'; 
+import MainLayout from '@/components/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ChevronLeft, ChevronRight, Waves, FileText, Users, Phone, Film, ExternalLink } from 'lucide-react'; 
+import { ChevronLeft, ChevronRight, Waves, FileText, Users, Phone, Film, ExternalLink } from 'lucide-react';
+import { settingsApi } from '@/api/settings';
+
 import Prik1 from '@/assets/file/Prikaz_Stoim_05072024.pdf';
 import Prik2 from '@/assets/file/Prikaz_Stoim_01012025.pdf';
 import Prav from '@/assets/file/Pravila_polz_bass_30122021.pdf';
@@ -15,18 +16,93 @@ import sw_4 from '@/assets/pictures/phoca_thumb_l_324.jpg';
 import sw_5 from '@/assets/pictures/phoca_thumb_l_325.jpg';
 import sw_6 from '@/assets/pictures/phoca_thumb_l_326.jpg';
 
+// Дефолтные HTML таблицы (для начального рендера)
+const DEFAULT_TABLE1_HTML = `<table class="w-full border-collapse border border-gray-300">
+<thead><tr class="bg-green-100"><th class="border border-gray-300 p-2 font-semibold text-green-900 text-center">Наименование услуги</th><th class="border border-gray-300 p-2 font-semibold text-green-900 text-center">Количество занятий</th><th class="border border-gray-300 p-2 font-semibold text-green-900 text-center">Стоимость (руб.)</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 p-2 text-center">Обучение спортивному плаванию</td><td class="border border-gray-300 p-2 text-center">4 (1 раз в неделю)</td><td class="border border-gray-300 p-2 text-center font-medium">2000</td></tr>
+<tr><td class="border border-gray-300 p-2 text-center">Обучение первичным навыкам плавания</td><td class="border border-gray-300 p-2 text-center">4 (1 раз в неделю)</td><td class="border border-gray-300 p-2 text-center font-medium">2000</td></tr>
+<tr><td class="border border-gray-300 p-2 text-center">Обучение спортивному плаванию</td><td class="border border-gray-300 p-2 text-center">8 (2 раза в неделю)</td><td class="border border-gray-300 p-2 text-center font-medium">4000</td></tr>
+<tr><td class="border border-gray-300 p-2 text-center">Обучение первичным навыкам плавания</td><td class="border border-gray-300 p-2 text-center">8 (2 раза в неделю)</td><td class="border border-gray-300 p-2 text-center font-medium">4000</td></tr>
+<tr><td class="border border-gray-300 p-2 text-center">Обучение спортивному плаванию</td><td class="border border-gray-300 p-2 text-center">12 (3 раза в неделю)</td><td class="border border-gray-300 p-2 text-center font-medium">6000</td></tr>
+<tr><td class="border border-gray-300 p-2 text-center">Обучение первичным навыкам плавания</td><td class="border border-gray-300 p-2 text-center">12 (3 раза в неделю)</td><td class="border border-gray-300 p-2 text-center font-medium">6000</td></tr>
+</tbody></table>`;
+
+const DEFAULT_TABLE2_HTML = `<table class="w-full border-collapse border border-gray-300">
+<thead><tr class="bg-blue-100"><th class="border border-gray-300 p-2 font-semibold text-blue-900 text-center">Наименование услуги</th><th class="border border-gray-300 p-2 font-semibold text-blue-900 text-center">Количество занятий</th><th class="border border-gray-300 p-2 font-semibold text-blue-900 text-center">Стоимость (руб.)</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 p-2 text-center">Разовое посещение</td><td class="border border-gray-300 p-2 text-center">1</td><td class="border border-gray-300 p-2 text-center font-medium">450</td></tr>
+<tr><td class="border border-gray-300 p-2 text-center">Абонемент</td><td class="border border-gray-300 p-2 text-center">4 в месяц</td><td class="border border-gray-300 p-2 text-center font-medium">1 600</td></tr>
+<tr><td class="border border-gray-300 p-2 text-center">Абонемент</td><td class="border border-gray-300 p-2 text-center">8 в месяц</td><td class="border border-gray-300 p-2 text-center font-medium">3 200</td></tr>
+</tbody></table>`;
+
+const DEFAULT_TABLE3_HTML = `<table class="w-full border-collapse border border-gray-300">
+<thead><tr class="bg-purple-100"><th class="border border-gray-300 p-2 font-semibold text-purple-900 text-center">Наименование услуги</th><th class="border border-gray-300 p-2 font-semibold text-purple-900 text-center">Количество занятий</th><th class="border border-gray-300 p-2 font-semibold text-purple-900 text-center">Стоимость (руб.)</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 p-2 text-center">Разовое посещение для работников</td><td class="border border-gray-300 p-2 text-center">1</td><td class="border border-gray-300 p-2 text-center font-medium text-green-600">Бесплатно</td></tr>
+<tr><td class="border border-gray-300 p-2 text-center">Абонемент для работников</td><td class="border border-gray-300 p-2 text-center">2 в неделю</td><td class="border border-gray-300 p-2 text-center font-medium">1600 / месяц</td></tr>
+<tr><td class="border border-gray-300 p-2 text-center">Разовое посещение для студентов (внеурочно)</td><td class="border border-gray-300 p-2 text-center">1</td><td class="border border-gray-300 p-2 text-center font-medium">200</td></tr>
+</tbody></table>`;
+
+const DEFAULT_INSTRUCTORS = [
+    { name: "Шароглазов Константин Леонидович", position: "призер Чемпионата России на открытой воде, КМС по плаванию" },
+    { name: "Фастова Маргарита Витальевна", position: "преподаватель физ. культуры, отличник ГТО" },
+    { name: "Бердыч Светлана Александровна", position: "преподаватель физ. культуры, КМС по спорт. ориентированию" },
+    { name: "Буров Андрей Викторович", position: "преподаватель физ. культуры, КМС по легкой атлетике, Чемпион России" }
+];
+
+const DEFAULT_DESCRIPTION = `<p><strong>«Плавать рекомендуется с детства и до глубокой старости.»</strong> - Заведующая бассейном Г.А. Лапова</p>
+<p>Во время плавания увеличивается объем легких, ускоряется процесс насыщения кислородом организма. Вода обладает массирующим и расслабляющим эффектом, что благотворно влияет на нервную систему. Люди, посещающие бассейн, меньше подвержены нервным расстройствам, бессонницам, реже болеют и дольше живут.</p>
+<p>Возможность плавать в любое время года без ограничений по возрасту и состоянию здоровья – вот, что по-настоящему ценно!</p>
+<p><strong>Приглашаем всех желающих посетить бассейн Тихорецкого техникума железнодорожного транспорта!</strong></p>`;
 
 const SwimmingPool = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [data, setData] = useState({
+        slides: [sw_1, sw_2, sw_3, sw_4, sw_5, sw_6],
+        description: DEFAULT_DESCRIPTION,
+        instructors: DEFAULT_INSTRUCTORS,
+        contact_phone: "8 (86196) 6-20-03",
+        contact_name: "Лапова Г.А.",
+        documents: [
+            { title: "Приказ 'Об установлении стоимости физкультурно-оздоровительных услуг...' с 01.01.2025 г.", file: Prik2 },
+            { title: "Приказ 'Об установлении стоимости услуг по обучению...' с 06.07.2024 г.", file: Prik1 },
+            { title: "Правила пользования бассейном ТТЖТ - филиала РГУПС", file: Prav },
+            { title: "Положение о плавательном бассейне ТТЖТ - филиала РГУПС", file: Polog },
+            { title: "Расписание занятий с 01 октября по 31 октября 2025 года", file: Rasp }
+        ],
+        table1_html: DEFAULT_TABLE1_HTML,
+        table2_html: DEFAULT_TABLE2_HTML,
+        table3_html: DEFAULT_TABLE3_HTML
+    });
 
-    const images = [
-        { id: 1, src: sw_1, alt: 'Бассейн 1' },
-        { id: 2, src: sw_2, alt: 'Бассейн 2' },
-        { id: 3, src: sw_3, alt: 'Бассейн 3' },
-        { id: 4, src: sw_4, alt: 'Бассейн 4' },
-        { id: 5, src: sw_5, alt: 'Бассейн 5' },
-        { id: 6, src: sw_6, alt: 'Бассейн 6' },
-    ];
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const settings = await settingsApi.getPageData('swimming_pool_page');
+                if (settings) {
+                    setData(prevData => ({
+                        ...prevData,
+                        ...settings,
+                        slides: (settings.slides && settings.slides.length > 0) ? settings.slides : prevData.slides,
+                        description: settings.description || prevData.description,
+                        instructors: (settings.instructors && settings.instructors.length > 0) ? settings.instructors : prevData.instructors,
+                        contact_phone: settings.contact_phone || prevData.contact_phone,
+                        contact_name: settings.contact_name || prevData.contact_name,
+                        documents: (settings.documents && settings.documents.length > 0) ? settings.documents : prevData.documents,
+                        table1_html: settings.table1_html || prevData.table1_html,
+                        table2_html: settings.table2_html || prevData.table2_html,
+                        table3_html: settings.table3_html || prevData.table3_html
+                    }));
+                }
+            } catch (error) {
+                console.error('Error loading swimming pool data:', error);
+            }
+        };
+        loadData();
+    }, []);
+
+    const images = data.slides.map((src, id) => ({ id, src }));
 
     const nextSlide = () => {
         setCurrentSlide((prev) => (prev + 1) % images.length);
@@ -41,13 +117,21 @@ const SwimmingPool = () => {
         return () => clearInterval(slideInterval);
     }, [images.length]);
 
-    const documents = [
-        { title: 'Приказ "Об установлении стоимости физкультурно-оздоровительных услуг..." с 01.01.2025 г.', file: Prik2, type: 'pdf' },
-        { title: 'Приказ "Об установлении стоимости услуг по обучению..." с 06.07.2024 г.', file: Prik1, type: 'pdf' },
-        { title: 'Правила пользования бассейном ТТЖТ - филиала РГУПС', file: Prav, type: 'pdf' },
-        { title: 'Положение о плавательном бассейне ТТЖТ - филиала РГУПС', file: Polog, type: 'pdf' },
-        { title: 'Расписание занятий с 01 октября по 31 октября 2025 года', file: Rasp, type: 'pdf' },
-    ];
+    const renderTableFromHTML = (html: string) => {
+        if (!html) {
+            return (
+                <div className="text-center py-8 text-gray-500">
+                    Таблица будет доступна после заполнения через админ-панель
+                </div>
+            );
+        }
+        return (
+            <div 
+                className="table-container"
+                dangerouslySetInnerHTML={{ __html: html }}
+            />
+        );
+    };
 
     return (
         <MainLayout>
@@ -61,18 +145,11 @@ const SwimmingPool = () => {
                 <div className="space-y-12">
 
                     <section className="text-center bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-200 p-8 shadow-sm">
-                        <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                            <em>"Плавать рекомендуется с детства и до глубокой старости."</em> - Заведующая бассейном Г.А. Лапова
-                        </p>
-                        <p className="text-gray-600 leading-relaxed max-w-3xl mx-auto mb-4">
-                            Во время плавания увеличивается объем легких, ускоряется процесс насыщения кислородом организма. Вода обладает массирующим и расслабляющим эффектом, что благотворно влияет на нервную систему. Люди, посещающие бассейн, меньше подвержены нервным расстройствам, бессонницам, реже болеют и дольше живут.
-                        </p>
-                        <p className="text-gray-600 leading-relaxed max-w-3xl mx-auto mb-6">
-                            Возможность плавать в любое время года без ограничений по возрасту и состоянию здоровья – вот, что по-настоящему ценно!
-                        </p>
-                        <p className="text-blue-700 text-xl font-semibold">
-                            Приглашаем всех желающих посетить бассейн Тихорецкого техникума железнодорожного транспорта!
-                        </p>
+                        {/* Добавлен класс rich-text-content */}
+                        <div 
+                            className="text-lg text-gray-700 leading-relaxed max-w-4xl mx-auto prose prose-lg rich-text-content"
+                            dangerouslySetInnerHTML={{ __html: data.description }}
+                        />
                     </section>
 
                     {/* --- Карусель --- */}
@@ -81,7 +158,7 @@ const SwimmingPool = () => {
                             <div className="flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
                                 {images.map((image) => (
                                     <div key={image.id} className="w-full flex-shrink-0">
-                                        <img src={image.src} alt={image.alt} className="w-full h-[60vh] object-cover" />
+                                        <img src={image.src} alt={`Бассейн ${image.id + 1}`} className="w-full h-[60vh] object-cover" />
                                     </div>
                                 ))}
                             </div>
@@ -100,90 +177,43 @@ const SwimmingPool = () => {
                     </section>
 
                     <section className="space-y-8">
-
-                        {/* Таблица 1 */}
                         <Card className="border-green-300 shadow-sm overflow-hidden"> 
                             <CardHeader className="bg-green-100 p-4 border-b border-green-300"> 
                                 <CardTitle className="text-xl font-semibold text-green-800 text-center">Групповые занятия для детей с 7 лет</CardTitle>
                                 <p className="text-sm text-green-700 text-center">Дополнительные общеобразовательные программы</p>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow className="bg-green-50"> 
-                                            <TableHead className="font-semibold text-green-900 text-center">Наименование услуги</TableHead>
-                                            <TableHead className="font-semibold text-green-900 text-center">Количество занятий</TableHead>
-                                            <TableHead className="font-semibold text-green-900 text-center">Стоимость (руб.)</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        <TableRow><TableCell className="text-center">Обучение спортивному плаванию</TableCell><TableCell className="text-center">4 (1 раз в неделю)</TableCell><TableCell className="text-center font-medium">2000</TableCell></TableRow>
-                                        <TableRow><TableCell className="text-center">Обучение первичным навыкам плавания</TableCell><TableCell className="text-center">4 (1 раз в неделю)</TableCell><TableCell className="text-center font-medium">2000</TableCell></TableRow>
-                                        <TableRow><TableCell className="text-center">Обучение спортивному плаванию</TableCell><TableCell className="text-center">8 (2 раза в неделю)</TableCell><TableCell className="text-center font-medium">4000</TableCell></TableRow>
-                                        <TableRow><TableCell className="text-center">Обучение первичным навыкам плавания</TableCell><TableCell className="text-center">8 (2 раза в неделю)</TableCell><TableCell className="text-center font-medium">4000</TableCell></TableRow>
-                                        <TableRow><TableCell className="text-center">Обучение спортивному плаванию</TableCell><TableCell className="text-center">12 (3 раза в неделю)</TableCell><TableCell className="text-center font-medium">6000</TableCell></TableRow>
-                                        <TableRow><TableCell className="text-center">Обучение первичным навыкам плавания</TableCell><TableCell className="text-center">12 (3 раза в неделю)</TableCell><TableCell className="text-center font-medium">6000</TableCell></TableRow>
-                                    </TableBody>
-                                </Table>
+                                {renderTableFromHTML(data.table1_html)}
                             </CardContent>
                         </Card>
 
-                        {/* Таблица 2 */}
                         <Card className="border-blue-300 shadow-sm overflow-hidden"> 
                             <CardHeader className="bg-blue-100 p-4 border-b border-blue-300"> 
                                 <CardTitle className="text-xl font-semibold text-blue-800 text-center">Для взрослых и детей старше 14 лет</CardTitle>
                                 <p className="text-sm text-blue-700 text-center">Оказание услуг по плаванию с 01.01.2025 г.</p>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow className="bg-blue-50"> 
-                                            <TableHead className="font-semibold text-blue-900 text-center">Наименование услуги</TableHead>
-                                            <TableHead className="font-semibold text-blue-900 text-center">Количество занятий</TableHead>
-                                            <TableHead className="font-semibold text-blue-900 text-center">Стоимость (руб.)</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        <TableRow><TableCell className="text-center">Разовое посещение</TableCell><TableCell className="text-center">1</TableCell><TableCell className="text-center font-medium">450</TableCell></TableRow>
-                                        <TableRow><TableCell className="text-center">Абонемент</TableCell><TableCell className="text-center">4 в месяц</TableCell><TableCell className="text-center font-medium">1 600</TableCell></TableRow>
-                                        <TableRow><TableCell className="text-center">Абонемент</TableCell><TableCell className="text-center">8 в месяц</TableCell><TableCell className="text-center font-medium">3 200</TableCell></TableRow>
-                                    </TableBody>
-                                </Table>
+                                {renderTableFromHTML(data.table2_html)}
                             </CardContent>
                         </Card>
 
-                        {/* Таблица 3 */}
-                        <Card className="border-purple-300 shadow-sm overflow-hidden lg:col-span-1"> 
+                        <Card className="border-purple-300 shadow-sm overflow-hidden"> 
                             <CardHeader className="bg-purple-100 p-4 border-b border-purple-300"> 
                                 <CardTitle className="text-xl font-semibold text-purple-800 text-center">Для работников и студентов ТТЖТ</CardTitle>
                                 <p className="text-sm text-purple-700 text-center">Оказание услуг по плаванию с 01.01.2025 г.</p>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow className="bg-purple-50"> 
-                                            <TableHead className="font-semibold text-purple-900 text-center">Наименование услуги</TableHead>
-                                            <TableHead className="font-semibold text-purple-900 text-center">Количество занятий</TableHead>
-                                            <TableHead className="font-semibold text-purple-900 text-center">Стоимость (руб.)</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        <TableRow><TableCell className="text-center">Разовое посещение для работников</TableCell><TableCell className="text-center">1</TableCell><TableCell className="text-center font-medium text-green-600">Бесплатно</TableCell></TableRow>
-                                        <TableRow><TableCell className="text-center">Абонемент для работников</TableCell><TableCell className="text-center">2 в неделю</TableCell><TableCell className="text-center font-medium">1600 / месяц</TableCell></TableRow>
-                                        <TableRow><TableCell className="text-center">Разовое посещение для студентов (внеурочно)</TableCell><TableCell className="text-center">1</TableCell><TableCell className="text-center font-medium">200</TableCell></TableRow>
-                                    </TableBody>
-                                </Table>
+                                {renderTableFromHTML(data.table3_html)}
                             </CardContent>
                         </Card>
                     </section>
 
-                    {/* --- Секция Документы --- */}
                     <section>
                         <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center flex items-center justify-center">
                             <FileText className="w-7 h-7 mr-3 text-gray-500"/> Документы для скачивания
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {documents.map((doc, index) => (
+                            {data.documents.map((doc, index) => (
                                 <a
                                     key={index}
                                     href={doc.file}
@@ -199,7 +229,6 @@ const SwimmingPool = () => {
                         </div>
                     </section>
 
-                    {/* --- Секция Инструкторы и Контакты --- */}
                     <section className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 p-8 shadow-sm">
                         <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center flex items-center justify-center">
                             <Users className="w-7 h-7 mr-3 text-gray-500"/> Наши инструкторы и контакты
@@ -208,66 +237,31 @@ const SwimmingPool = () => {
                             <div>
                                 <h3 className="text-lg font-semibold text-gray-700 mb-3">Инструкторы по плаванию:</h3>
                                 <ul className="space-y-3 text-gray-600">
-                                    <li className="flex items-start">
-                                        <Waves className="w-5 h-5 mr-3 mt-1 text-blue-400 flex-shrink-0"/>
-                                        <div>
-                                            <strong>Шароглазов Константин Леонидович</strong><br/>
-                                            <span className="text-sm">(призер Чемпионата России на открытой воде, КМС по плаванию)</span>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start">
-                                        <Waves className="w-5 h-5 mr-3 mt-1 text-blue-400 flex-shrink-0"/>
-                                        <div>
-                                            <strong>Фастова Маргарита Витальевна</strong><br/>
-                                            <span className="text-sm">(преподаватель физ. культуры, отличник ГТО)</span>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start">
-                                        <Waves className="w-5 h-5 mr-3 mt-1 text-blue-400 flex-shrink-0"/>
-                                        <div>
-                                            <strong>Бердыч Светлана Александровна</strong><br/>
-                                            <span className="text-sm">(преподаватель физ. культуры, КМС по спорт. ориентированию)</span>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start">
-                                        <Waves className="w-5 h-5 mr-3 mt-1 text-blue-400 flex-shrink-0"/>
-                                        <div>
-                                            <strong>Буров Андрей Викторович</strong><br/>
-                                            <span className="text-sm">(преподаватель физ. культуры, КМС по легкой атлетике, Чемпион России)</span>
-                                        </div>
-                                    </li>
+                                    {data.instructors.map((instructor, index) => (
+                                        <li key={index} className="flex items-start">
+                                            <Waves className="w-5 h-5 mr-3 mt-1 text-blue-400 flex-shrink-0"/>
+                                            <div>
+                                                <strong>{instructor.name}</strong><br/>
+                                                <span className="text-sm">({instructor.position})</span>
+                                            </div>
+                                        </li>
+                                    ))}
                                 </ul>
                             </div>
                             <div className="bg-white p-6 rounded-lg border border-gray-200 text-center shadow-inner">
                                 <h3 className="text-lg font-semibold text-gray-700 mb-4">Узнать подробности:</h3>
                                 <p className="flex items-center justify-center text-gray-800 text-lg mb-2">
                                     <Phone className="w-5 h-5 mr-2 text-primary"/>
-                                    <a href="tel:88619662003" className="hover:text-primary transition-colors">8 (86196) 6-20-03</a>, доб. 134
+                                    <a href={`tel:${data.contact_phone.replace(/\D/g,'')}`} className="hover:text-primary transition-colors">{data.contact_phone}</a>, доб. 134
                                 </p>
                                 <p className="text-gray-600 text-sm">
-                                    Заведующая бассейном: Лапова Г.А.
+                                    Заведующая бассейном: {data.contact_name}
                                 </p>
                                 <p className="text-xs text-gray-400 mt-4">Реклама</p>
                             </div>
                         </div>
                     </section>
 
-                    {/* --- Секция Видео --- */}
-                    <a
-                        href="https://open.edu.gov.ru/quality-of-education/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-8 shadow-sm hover:shadow-lg hover:border-purple-400 transition-all duration-300 group transform hover:-translate-y-1"
-                    >
-                        <div className="flex items-center mb-4">
-                            <Film className="w-8 h-8 text-purple-600 mr-4 flex-shrink-0" />
-                            <h2 className="text-2xl font-semibold text-purple-800 group-hover:text-purple-900 transition-colors">Ролик о НОКО</h2>
-                        </div>
-                        <p className="text-gray-700 group-hover:text-gray-800 transition-colors flex items-center justify-between">
-                            <span>Ролик о проведении независимой оценки качества условий осуществления образовательной деятельности организациями</span>
-                            <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-purple-600 transition-colors flex-shrink-0 ml-4" />
-                        </p>
-                    </a>
                 </div>
             </div>
         </MainLayout>

@@ -1,112 +1,62 @@
+import { useState, useEffect } from 'react';
 import MainLayout from '@/components/MainLayout'; 
-import { FileText } from 'lucide-react';
-import rushabel from '@/assets/pictures/ria_8451769hr_c79.webp'
-import R1 from '@/assets/file/russia/V_Vser_stud_konf_Rossia_Belarus_2025_Programma.pdf';
-import R2 from '@/assets/file/russia/V_Vser_stud_konf_Rossiya_Belarus_2025_Spisok_Uchastn.pdf';
-import R3 from '@/assets/file/russia/V_Vser_stud_konf_Rossia_Belarus_2025_Protokol_S_bal.pdf';
-import R4 from '@/assets/file/russia/V_Vser_stud_konf_Rossia_Belarus_2025_Itog_Protokol.pdf';
-import R5 from '@/assets/file/russia/V_Vser_stud_konf_Rossia_Belarus_2025_Sbornik.pdf';
-import R6 from '@/assets/file/russia/Rossiya_Belorus_2024_Spisok_Pod_Doc.pdf';
-import R7 from '@/assets/file/russia/Rossiya_Belorus_2024_Programma.pdf';
-import R8 from '@/assets/file/russia/Rossiya_Belorus_2024_Protokol_zas_kom.pdf';
-import R9 from '@/assets/file/russia/Rossiya_Belorus_2024_Protokol_itog_zas_kom.pdf';
-import R10 from '@/assets/file/russia/Rossiya_Belorus_2024_Sbornik.pdf';
-import R11 from '@/assets/file/russia/III_MK_Ros_Belars_pol_31.03.2023.pdf';
-import R12 from '@/assets/file/russia/III_MK_Ros_Belars_programma_31.03.2023.pdf';
-import R13 from '@/assets/file/russia/III_MK_Ros_Belars_spisok_uch_31.03.2023.pdf';
-import R14 from '@/assets/file/russia/III_MK_Ros_Belars__Protokol_it_zased_kom.pdf';
-import R15 from '@/assets/file/russia/III_MK_Ros_Belars_spisok_pobedit_31.03.2023.pdf';
-import R16 from '@/assets/file/russia/III_MK_Ros_Belars_Sbornik_tezisov_31032023.pdf';
+import { FileText, Download, Loader2 } from 'lucide-react';
+import { pageContentApi, ContentType, type PageContent } from '@/api/page-content';
+import { BASE_URL } from '@/api/config';
+import rushabel from '@/assets/pictures/ria_8451769hr_c79.webp';
 
 const RussiaBelarusConference = () => {
-    const documents2025 = [
-        {
-            title: 'Положение о проведении V Всероссийской студенческой конференции с международным участием "Россия и Беларусь - вехи общей истории", посвященной Победе советского народа в Великой Отечественной войне',
-            url: '#'
-        },
-        {
-            title: 'Программа работы V Всероссийской студенческой конференции с международным участием "Россия и Беларусь - вехи общей истории", посвященной Победе советского народа в Великой Отечественной войне',
-            url: R1
-        },
-        {
-            title: 'Список подавших документы для участия в V Всероссийской студенческой конференции с международным участием "Россия и Беларусь - вехи общей истории", посвященной Победе советского народа в Великой Отечественной войне',
-            url: R2
-        },
-        {
-            title: 'Протокол заседания экспертной комиссии участников очного этапа V Всероссийской студенческой конференции с международным участием "Россия и Беларусь – вехи общей истории", посвященной Победе советского народа в Великой Отечественной войне (27-28 марта 2025 г.)',
-            url: R3
-        },
-        {
-            title: 'Протокол итогового заседания экспертной комиссии. Результаты V Всероссийской студенческой конференции с международным участием "Россия и Беларусь - вехи общей истории", посвящённой Победе советского народа в Великой Отечественной войне (27-28 марта 2025 г.)',
-            url: R4
-        },
-        {
-            title: 'Материалы V Всероссийской студенческой конференции с международным участием "Россия и Беларусь - вехи общей истории", посвященной Победе советского народа в Великой Отечественной войне',
-            url: R5
-        }
-    ];
+    const [documents, setDocuments] = useState<PageContent[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const documents2024 = [
-        {
-            title: 'Положение о проведении IV Всероссийской студенческой конференции с международным участием "Россия и Беларусь - вехи общей истории", посвященной Победе советского народа в Великой Отечественной войне',
-            url: '#' 
-        },
-        {
-            title: 'Список подавших документы для участия в IV Всероссийской студенческой конференции с международным участием "Россия и Беларусь - вехи общей истории", посвященной Победе советского народа в Великой Отечественной войне',
-            url: R6
-        },
-        {
-            title: 'Программа работы IV Всероссийской студенческой конференции с международным участием "Россия и Беларусь - вехи общей истории", посвященной Победе советского народа в Великой Отечественной войне',
-            url: R7
-        },
-        {
-            title: 'Протокол заседания экспертной комиссии участников очного этапа IV Всероссийской студенческой конференции с международным участием «Россия и Беларусь - вехи общей истории», посвящённой Победе советского народа в Великой Отечественной войне (28-29 марта 2024 г.)',
-            url: R8
-        },
-        {
-            title: 'Протокол итогового заседания экспертной комиссии. Результаты IV Всероссийской студенческой конференции с международным участием «Россия и Беларусь - вехи общей истории», посвящённой Победе советского народа в Великой Отечественной войне (28-29 марта 2024 г.)',
-            url: R9
-        },
-        {
-            title: 'Материалы IV Всероссийской студенческой конференции с международным участием "Россия и Беларусь - вехи общей истории", посвященной Победе советского народа в Великой Отечественной войне',
-            url: R10
-        }
-    ];
+    useEffect(() => {
+        loadDocuments();
+    }, []);
 
-    const documents2023 = [
-        {
-            title: 'Положение о проведении III межрегиональной студенческой конференции с международным участием «Россия и Беларусь - вехи общей истории», посвящённой Победе советского народа в Великой Отечественной войне',
-            url: R11
-        },
-        {
-            title: 'Программа конференции',
-            url: R12
-        },
-        {
-            title: 'Список подавших документы для участия',
-            url: R13
-        },
-        {
-            title: 'Протокол итогового заседания экспертной комиссии оценивания участников очного этапа с применением дистанционных технологий',
-            url: R14
-        },
-        {
-            title: 'Список победителей, призёров и соискателей III межрегиональной студенческой конференции',
-            url: R15
-        },
-        {
-            title: 'Сборник тезисов работ участников III межрегиональной студенческой конференции с международным участием «Россия и Беларусь – вехи общей истории»',
-            url: R16
+    const loadDocuments = async () => {
+        try {
+            const docs = await pageContentApi.getPublicAll(ContentType.RussiaBelarus);
+            setDocuments(docs);
+        } catch (error) {
+            console.error('Ошибка загрузки документов:', error);
+            setDocuments([]);
+        } finally {
+            setLoading(false);
         }
-    ];
+    };
+
+    // Группируем документы по годам
+    const documentsByYear = documents.reduce((acc, doc) => {
+        const year = doc.year || new Date().getFullYear();
+        if (!acc[year]) {
+            acc[year] = [];
+        }
+        acc[year].push(doc);
+        return acc;
+    }, {} as Record<number, PageContent[]>);
+
+    // Сортируем года по убыванию
+    const sortedYears = Object.keys(documentsByYear)
+        .map(Number)
+        .sort((a, b) => b - a);
+
+    if (loading) {
+        return (
+            <MainLayout>
+                <div className="flex justify-center items-center py-20">
+                    <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                </div>
+            </MainLayout>
+        );
+    }
 
     return (
-
         <MainLayout>
             <div className="bg-white rounded-lg shadow-sm border border-border p-8">
                 <h1 className="text-3xl font-bold text-primary mb-8 text-center">Россия и Беларусь - вехи общей истории</h1>
                 
                 <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/50 p-8">
+                    {/* Изображение */}
                     <div className="w-full aspect-[16/6] bg-gradient-to-br from-red-100 to-red-200 rounded-lg overflow-hidden shadow-lg mb-8">
                         <img
                             src={rushabel}
@@ -115,70 +65,75 @@ const RussiaBelarusConference = () => {
                         />
                     </div>
 
-                    <div className="space-y-8">
-                        {/* 2025 год */}
-                        <div className="bg-white rounded-lg p-6 shadow-sm">
-                            <h2 className="text-2xl font-bold text-red-600 mb-6 border-b border-red-200 pb-3">2025 год:</h2>
-                            <div className="space-y-4">
-                                {documents2025.map((doc, index) => (
-                                    <a
-                                        key={index}
-                                        href={doc.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-start space-x-4 p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-lg border border-red-200 hover:shadow-lg hover:scale-105 transition-all duration-300 group"
-                                    >
-                                        <FileText className="w-5 h-5 text-red-600 group-hover:text-red-700 transition-colors flex-shrink-0 mt-0.5" />
-                                        <span className="text-foreground font-medium group-hover:text-red-700 transition-colors leading-relaxed">
-                                            {doc.title}
-                                        </span>
-                                    </a>
-                                ))}
-                            </div>
+                    {sortedYears.length === 0 ? (
+                        <div className="text-center py-12 text-gray-500">
+                            <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                            <p className="text-lg">Материалы конференции будут добавлены в ближайшее время</p>
                         </div>
+                    ) : (
+                        <div className="space-y-8">
+                            {sortedYears.map((year) => {
+                                const yearDocuments = documentsByYear[year];
+                                const yearColor = yearDocuments[0]?.color || '#3b82f6';
 
-                        {/* 2024 год */}
-                        <div className="bg-white rounded-lg p-6 shadow-sm">
-                            <h2 className="text-2xl font-bold text-blue-600 mb-6 border-b border-blue-200 pb-3">2024 год:</h2>
-                            <div className="space-y-4">
-                                {documents2024.map((doc, index) => (
-                                    <a
-                                        key={index}
-                                        href={doc.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-start space-x-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border border-blue-200 hover:shadow-lg hover:scale-105 transition-all duration-300 group"
-                                    >
-                                        <FileText className="w-5 h-5 text-blue-600 group-hover:text-blue-700 transition-colors flex-shrink-0 mt-0.5" />
-                                        <span className="text-foreground font-medium group-hover:text-blue-700 transition-colors leading-relaxed">
-                                            {doc.title}
-                                        </span>
-                                    </a>
-                                ))}
-                            </div>
-                        </div>
+                                return (
+                                    <div key={year} className="bg-white rounded-lg p-6 shadow-sm">
+                                        <h2 
+                                            className="text-2xl font-bold mb-6 border-b pb-3"
+                                            style={{ color: yearColor, borderColor: yearColor }}
+                                        >
+                                            {year} год:
+                                        </h2>
+                                        <div className="space-y-4">
+                                            {yearDocuments.map((doc) => {
+                                                const fileUrl = doc.files && doc.files.length > 0 
+                                                    ? `${BASE_URL}/files/${doc.files[0].id}`
+                                                    : null;
 
-                        {/* 2023 год */}
-                        <div className="bg-white rounded-lg p-6 shadow-sm">
-                            <h2 className="text-2xl font-bold text-green-600 mb-6 border-b border-green-200 pb-3">2023 год:</h2>
-                            <div className="space-y-4">
-                                {documents2023.map((doc, index) => (
-                                    <a
-                                        key={index}
-                                        href={doc.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-start space-x-4 p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border border-green-200 hover:shadow-lg hover:scale-105 transition-all duration-300 group"
-                                    >
-                                        <FileText className="w-5 h-5 text-green-600 group-hover:text-green-700 transition-colors flex-shrink-0 mt-0.5" />
-                                        <span className="text-foreground font-medium group-hover:text-green-700 transition-colors leading-relaxed">
-                                            {doc.title}
-                                        </span>
-                                    </a>
-                                ))}
-                            </div>
+                                                return (
+                                                    <a
+                                                        key={doc.id}
+                                                        href={fileUrl || '#'}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-start space-x-4 p-4 rounded-lg border hover:shadow-lg hover:scale-105 transition-all duration-300 group"
+                                                        style={{ 
+                                                            background: `linear-gradient(to right, ${yearColor}10, ${yearColor}05)`,
+                                                            borderColor: `${yearColor}30`
+                                                        }}
+                                                    >
+                                                        <FileText 
+                                                            className="w-5 h-5 transition-colors flex-shrink-0 mt-0.5" 
+                                                            style={{ color: yearColor }}
+                                                        />
+                                                        <div className="flex-1">
+                                                            <span 
+                                                                className="font-medium group-hover:underline transition-colors leading-relaxed"
+                                                                style={{ color: yearColor }}
+                                                            >
+                                                                {doc.title}
+                                                            </span>
+                                                            {doc.description && (
+                                                                <p className="text-sm text-gray-600 mt-1">
+                                                                    {doc.description}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                        {fileUrl && (
+                                                            <Download 
+                                                                className="w-4 h-4 flex-shrink-0 mt-0.5" 
+                                                                style={{ color: yearColor }}
+                                                            />
+                                                        )}
+                                                    </a>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </MainLayout>

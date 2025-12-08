@@ -1,287 +1,578 @@
-import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; 
+import { useState, useEffect } from 'react';
+import MainLayout from '@/components/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink, Download, FileText, CalendarDays, Smartphone } from 'lucide-react';
+import { 
+    ExternalLink, 
+    Download, 
+    FileText, 
+    CalendarDays, 
+    Smartphone,
+    Search,
+    RefreshCw,
+    AlertTriangle,
+    CheckCircle2,
+    Loader2
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { scheduleApi, type ScheduleData } from '@/api/schedule';
+import documentsApi from '@/api/documents';
+import { useToast } from '@/hooks/use-toast';
+import { BASE_URL } from '@/api/config';
+import { settingsApi } from '@/api/settings';
 
-// 1 Курс
-import A11 from '@/assets/file/class/A11.pdf';
-import V11 from '@/assets/file/class/V11.pdf';
-import D11 from '@/assets/file/class/D11.pdf';
-import D12 from '@/assets/file/class/D12.pdf';
-import KS11 from '@/assets/file/class/KS11.pdf';
-import KS12 from '@/assets/file/class/KS12.pdf';
-import KS13 from '@/assets/file/class/KS13.pdf';
-import L11 from '@/assets/file/class/L11.pdf';
-import L12 from '@/assets/file/class/L12.pdf';
-import L13 from '@/assets/file/class/L13.pdf';
-import L14 from '@/assets/file/class/L14.pdf';
-import L15 from '@/assets/file/class/L15.pdf';
-import P11 from '@/assets/file/class/P11.pdf';
-import PM11 from '@/assets/file/class/PM11.pdf';
-import R11 from '@/assets/file/class/R11.pdf';
-import S11 from '@/assets/file/class/S11.pdf';
-import SP11 from '@/assets/file/class/SP11.pdf';
-import ES11 from '@/assets/file/class/ES11.pdf';
-
-// 2 Курс
-import A21 from '@/assets/file/class/A21.pdf';
-import V21 from '@/assets/file/class/V21.pdf';
-import D21 from '@/assets/file/class/D21.pdf';
-import D22 from '@/assets/file/class/D22.pdf';
-import D23 from '@/assets/file/class/D23.pdf';
-import KS21 from '@/assets/file/class/KS21.pdf';
-import KS22 from '@/assets/file/class/KS22.pdf';
-import KS23 from '@/assets/file/class/KS23.pdf';
-import L21 from '@/assets/file/class/L21.pdf';
-import L22 from '@/assets/file/class/L22.pdf';
-import L23 from '@/assets/file/class/L23.pdf';
-import L24 from '@/assets/file/class/L24.pdf';
-import L25 from '@/assets/file/class/L25.pdf';
-import P21 from '@/assets/file/class/P21.pdf';
-import PM21 from '@/assets/file/class/PM21.pdf';
-import R21 from '@/assets/file/class/R21.pdf';
-import S21 from '@/assets/file/class/S21.pdf';
-import SP21 from '@/assets/file/class/SP21.pdf';
-import E21 from '@/assets/file/class/E21.pdf';
-import ES21 from '@/assets/file/class/ES21.pdf';
-
-// 3 Курс
-import A31 from '@/assets/file/class/A31.pdf';
-import V31 from '@/assets/file/class/V31.pdf';
-import D31 from '@/assets/file/class/D31.pdf';
-import D32 from '@/assets/file/class/D32.pdf';
-import D33 from '@/assets/file/class/D33.pdf';
-import KS31 from '@/assets/file/class/KS31.pdf';
-import KS32 from '@/assets/file/class/KS32.pdf';
-import L31 from '@/assets/file/class/L31.pdf';
-import L32 from '@/assets/file/class/L32.pdf';
-import L33 from '@/assets/file/class/L33.pdf';
-import L34 from '@/assets/file/class/L34.pdf';
-import L35 from '@/assets/file/class/L35.pdf';
-import L36 from '@/assets/file/class/L36.pdf';
-import P31 from '@/assets/file/class/P31.pdf';
-import PM31 from '@/assets/file/class/PM31.pdf';
-import PM32 from '@/assets/file/class/PM32.pdf';
-import R31 from '@/assets/file/class/R31.pdf';
-import S31 from '@/assets/file/class/S31.pdf';
-import SP31 from '@/assets/file/class/SP31.pdf';
-import ES31 from '@/assets/file/class/ES31.pdf';
-
-// 4 Курс
-import A41 from '@/assets/file/class/A41.pdf';
-import V41 from '@/assets/file/class/V41.pdf';
-import KS41 from '@/assets/file/class/KS41.pdf';
-import KS42 from '@/assets/file/class/KS42.pdf';
-import L41 from '@/assets/file/class/L41.pdf';
-import L42 from '@/assets/file/class/L42.pdf';
-import L43 from '@/assets/file/class/L43.pdf';
-import L44 from '@/assets/file/class/L44.pdf';
-import L45 from '@/assets/file/class/L45.pdf';
-import PM41 from '@/assets/file/class/PM41.pdf';
-import R41 from '@/assets/file/class/R41.pdf';
-import S41 from '@/assets/file/class/S41.pdf';
-import SP41 from '@/assets/file/class/SP41.pdf';
-import ES41 from '@/assets/file/class/ES41.pdf';
-
-// Общие файлы
-import Kurs1 from '@/assets/file/class/1kurs.pdf';
-import Kurs2 from '@/assets/file/class/2kurs.pdf';
-import Kurs3 from '@/assets/file/class/3kurs.pdf';
-import Kurs4 from '@/assets/file/class/4kurs.pdf';
-import GrafKons from '@/assets/file/class/Grafik_Proved_Konsult_Prepodavat_1sem_25_26.pdf';
-
-//ЗАОЧНОЕ
-import Grafzo from '@/assets/file/class/graf_zo_2025.pdf';
-import D41z from '@/assets/file/class/D41z.pdf';
-import L41z from '@/assets/file/class/L41z.pdf';
-import P41z from '@/assets/file/class/P41z.pdf';
-
-const schedulePdfs: Record<string, string> = {
-    'A11': A11, 'V11': V11, 'D11': D11, 'D12': D12, 'KS11': KS11, 'KS12': KS12, 'KS13': KS13, 'L11': L11, 'L12': L12, 'L13': L13, 'L14': L14, 'L15': L15, 'P11': P11, 'PM11': PM11, 'R11': R11, 'S11': S11, 'SP11': SP11, 'ES11': ES11,
-    'A21': A21, 'V21': V21, 'D21': D21, 'D22': D22, 'D23': D23, 'KS21': KS21, 'KS22': KS22, 'KS23': KS23, 'L21': L21, 'L22': L22, 'L23': L23, 'L24': L24, 'L25': L25, 'P21': P21, 'PM21': PM21, 'R21': R21, 'S21': S21, 'SP21': SP21, 'E21': E21, 'ES21': ES21,
-    'A31': A31, 'V31': V31, 'D31': D31, 'D32': D32, 'D33': D33, 'KS31': KS31, 'KS32': KS32, 'L31': L31, 'L32': L32, 'L33': L33, 'L34': L34, 'L35': L35, 'L36': L36, 'P31': P31, 'PM31': PM31, 'PM32': PM32, 'R31': R31, 'S31': S31, 'SP31': SP31, 'ES31': ES31,
-    'A41': A41, 'V41': V41, 'KS41': KS41, 'KS42': KS42, 'L41': L41, 'L42': L42, 'L43': L43, 'L44': L44, 'L45': L45, 'PM41': PM41, 'R41': R41, 'S41': S41, 'SP41': SP41, 'ES41': ES41,
-};
+interface ScheduleTab {
+  course: string;
+  groups: string[];
+}
 
 const Schedule = () => {
-    const scheduleData = [
-        { course: '1 курс', groups: ['А-1-1', 'В-1-1', 'Д-1-1', 'Д-1-2', 'КС-1-1', 'КС-1-2', 'КС-1-3', 'Л-1-1', 'Л-1-2', 'Л-1-3', 'Л-1-4', 'Л-1-5', 'П-1-1', 'ПМ-1-1', 'Р-1-1', 'С-1-1', 'СП-1-1', 'ЭС-1-1'] },
-        { course: '2 курс', groups: ['А-2-1', 'В-2-1', 'Д-2-1', 'Д-2-2', 'Д-2-3', 'КС-2-1', 'КС-2-2', 'КС-2-3', 'Л-2-1', 'Л-2-2', 'Л-2-3', 'Л-2-4', 'Л-2-5', 'П-2-1', 'ПМ-2-1', 'Р-2-1', 'С-2-1', 'СП-2-1', 'Э-2-1', 'ЭС-2-1'] },
-        { course: '3 курс', groups: ['А-3-1', 'В-3-1', 'Д-3-1', 'Д-3-2', 'Д-3-3', 'КС-3-1', 'КС-3-2', 'Л-3-1', 'Л-3-2', 'Л-3-3', 'Л-3-4', 'Л-3-5', 'Л-3-6', 'П-3-1', 'ПМ-3-1', 'ПМ-3-2', 'Р-3-1', 'С-3-1', 'СП-3-1', 'ЭС-3-1'] },
-        { course: '4 курс', groups: ['А-4-1', 'В-4-1', 'КС-4-1', 'КС-4-2', 'Л-4-1', 'Л-4-2', 'Л-4-3', 'Л-4-4', 'Л-4-5', 'ПМ-4-1', 'Р-4-1', 'С-4-1', 'СП-4-1', 'ЭС-4-1'] }
-    ];
+    const [scheduleData, setScheduleData] = useState<ScheduleData>({ 
+      courses: { '1': [], '2': [], '3': [], '4': [] }, 
+      teachers: [] 
+    });
+    const [scheduleTabs, setScheduleTabs] = useState<ScheduleTab[]>([]);
+    const [activeTab, setActiveTab] = useState<string>('');
+    const [teacherSearchQuery, setTeacherSearchQuery] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadingSchedule, setLoadingSchedule] = useState<string | null>(null);
+    const [apiAvailable, setApiAvailable] = useState(true);
+    
+    const [generalDocuments, setGeneralDocuments] = useState<any[]>([]);
+    const [correspondenceDocuments, setCorrespondenceDocuments] = useState<any[]>([]);
+    const [documentsLoading, setDocumentsLoading] = useState(true);
+    const [sessionPeriod, setSessionPeriod] = useState('c 15 сентября 2025 г. по 27 сентября 2025 г.:');
 
-    const [activeTab, setActiveTab] = useState(scheduleData[0].course);
+    const { toast } = useToast();
 
-
-    const formatGroupName = (groupName: string) => {
-        let formattedName = groupName.replace(/-/g, ''); 
-        if (formattedName.startsWith('КС')) formattedName = formattedName.replace('КС', 'KS');
-        else if (formattedName.startsWith('ПМ')) formattedName = formattedName.replace('ПМ', 'PM');
-        else if (formattedName.startsWith('СП')) formattedName = formattedName.replace('СП', 'SP');
-        else if (formattedName.startsWith('ЭС')) formattedName = formattedName.replace('ЭС', 'ES');
-        else if (formattedName.startsWith('А')) formattedName = formattedName.replace('А', 'A');
-        else if (formattedName.startsWith('В')) formattedName = formattedName.replace('В', 'V');
-        else if (formattedName.startsWith('Д')) formattedName = formattedName.replace('Д', 'D');
-        else if (formattedName.startsWith('Л')) formattedName = formattedName.replace('Л', 'L');
-        else if (formattedName.startsWith('П')) formattedName = formattedName.replace('П', 'P');
-        else if (formattedName.startsWith('Р')) formattedName = formattedName.replace('Р', 'R');
-        else if (formattedName.startsWith('С')) formattedName = formattedName.replace('С', 'S');
-        else if (formattedName.startsWith('Э')) formattedName = formattedName.replace('Э', 'E');
-        return formattedName;
-    }
-
-    const getSchedulePdfUrl = (groupName: string) => {
-        const formattedName = formatGroupName(groupName); 
-        const file = schedulePdfs[formattedName];
-        if (!file) {
-            console.warn(`PDF not found for group: ${groupName} (formatted as ${formattedName}).`);
-            return '#'; 
+    const loadScheduleData = async () => {
+        setIsLoading(true);
+        try {
+            const data = await scheduleApi.getScheduleData();
+            setScheduleData(data);
+            setApiAvailable(true);
+            
+            console.log('📊 Формируем вкладки из данных:', data);
+            
+            const tabs: ScheduleTab[] = [];
+            
+            if (data.courses) {
+              Object.entries(data.courses).forEach(([courseNumber, groups]) => {
+                if (Array.isArray(groups) && groups.length > 0) {
+                  tabs.push({
+                    course: `${courseNumber} курс`,
+                    groups: groups
+                  });
+                }
+              });
+            }
+            
+            if (Array.isArray(data.teachers) && data.teachers.length > 0) {
+              tabs.push({
+                course: 'Преподавателям',
+                groups: data.teachers
+              });
+            }
+            
+            console.log('📑 Созданные вкладки:', tabs);
+            setScheduleTabs(tabs);
+            
+            if (tabs.length > 0 && !activeTab) {
+              setActiveTab(tabs[0].course);
+            } else if (tabs.length === 0) {
+              setActiveTab('1 курс');
+            }
+            
+        } catch (error) {
+            console.error('❌ Ошибка загрузки данных расписания:', error);
+            setApiAvailable(false);
+            setScheduleData({ 
+              courses: { '1': [], '2': [], '3': [], '4': [] }, 
+              teachers: [] 
+            });
+            setScheduleTabs([]);
+        } finally {
+            setIsLoading(false);
         }
-        return file;
     };
-    
-    const mainScheduleDocs = [
-        { title: 'Расписание учебных занятий 1 курс', file: Kurs1 },
-        { title: 'Расписание учебных занятий 2 курс', file: Kurs2 },
-        { title: 'Расписание учебных занятий 3 курс', file: Kurs3 },
-        { title: 'Расписание учебных занятий 4 курс', file: Kurs4 },
-    ];
 
-    const consultationDoc = {
-        title: 'График проведения консультаций преподавателями в 1 семестре 2025 - 2026 учебного года',
-        file: GrafKons
+    // Загрузка документов
+    const loadDocuments = async () => {
+      setDocumentsLoading(true);
+      try {
+        console.log('🔄 Начинаем загрузку документов...');
+        
+        let allDocuments = [];
+        
+        // Пробуем сначала админский endpoint
+        try {
+          console.log('📥 Пробуем загрузить через getAll (админский)...');
+          allDocuments = await documentsApi.getAll();
+          console.log('✅ getAll успешно:', allDocuments.length, 'документов');
+          
+          // Фильтруем только опубликованные документы
+          allDocuments = allDocuments.filter(doc => doc.is_published === true);
+          console.log('✅ После фильтрации опубликованных:', allDocuments.length, 'документов');
+          
+        } catch (adminError) {
+          console.log('❌ getAll не сработал, пробуем getPublicAll...');
+          try {
+            allDocuments = await documentsApi.getPublicAll();
+            console.log('✅ getPublicAll успешно:', allDocuments.length, 'документов');
+          } catch (publicError) {
+            console.error('❌ Оба метода не сработали:', publicError);
+            allDocuments = [];
+          }
+        }
+
+        console.log('📄 Все загруженные документы:', allDocuments);
+
+        // ФИЛЬТРАЦИЯ ДОКУМЕНТОВ
+        const generalDocs = allDocuments.filter(doc => {
+          if (!doc) return false;
+          
+          // Проверяем наличие файла
+          const hasFile = doc.file_url || (doc.files && doc.files.length > 0);
+          if (!hasFile) {
+            console.log('❌ Документ без файла:', doc.document_title || doc.title);
+            return false;
+          }
+          
+          const sectionTitle = (doc.section_title || '').toLowerCase();
+          const docTitle = (doc.document_title || doc.title || '').toLowerCase();
+          
+          // Общие документы - все, что НЕ относится к заочному отделению
+          const isGeneral = !sectionTitle.includes('заоч') && 
+                           !sectionTitle.includes('сесси') && 
+                           !sectionTitle.includes('график') &&
+                           !docTitle.includes('заоч') &&
+                           !docTitle.includes('сесси') &&
+                           !docTitle.includes('график') &&
+                           !docTitle.match(/\(\w\)$/);
+          
+          if (isGeneral) {
+            console.log('✅ Общий документ:', docTitle);
+          }
+          
+          return isGeneral;
+        });
+
+        const correspondenceDocs = allDocuments.filter(doc => {
+          if (!doc) return false;
+          
+          // Проверяем наличие файла
+          const hasFile = doc.file_url || (doc.files && doc.files.length > 0);
+          if (!hasFile) {
+            return false;
+          }
+          
+          const sectionTitle = (doc.section_title || '').toLowerCase();
+          const docTitle = (doc.document_title || doc.title || '').toLowerCase();
+          
+          // Документы заочного отделения
+          const isCorrespondence = sectionTitle.includes('заоч') || 
+                                  sectionTitle.includes('сесси') ||
+                                  sectionTitle.includes('график') ||
+                                  docTitle.includes('заоч') ||
+                                  docTitle.includes('сесси') ||
+                                  docTitle.includes('график') ||
+                                  docTitle.match(/\(\w\)$/);
+          
+          if (isCorrespondence) {
+            console.log('✅ Документ заочного отделения:', docTitle);
+          }
+          
+          return isCorrespondence;
+        });
+
+        console.log('📊 Результаты фильтрации:', {
+          general: generalDocs.length,
+          correspondence: correspondenceDocs.length
+        });
+
+        setGeneralDocuments(generalDocs);
+        setCorrespondenceDocuments(correspondenceDocs);
+        
+      } catch (error) {
+        console.error('❌ Критическая ошибка загрузки документов:', error);
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось загрузить документы',
+          variant: 'destructive'
+        });
+        setGeneralDocuments([]);
+        setCorrespondenceDocuments([]);
+      } finally {
+        setDocumentsLoading(false);
+      }
     };
-    
-    const partTimeSchedules = [
-        { title: 'Календарный учебный график заочного отделения на 2025 - 2026 учебный год', url: Grafzo },
-    ];
-    const partTimeSessions = [
-        { title: 'Д-4-1(з)', url: D41z },
-        { title: 'Л-4-1(з)', url: L41z },
-        { title: 'П-4-1(з)', url: P41z },
-    ];
+
+    // Загрузка периода сессии из настроек
+    const loadSessionPeriod = async () => {
+      try {
+        const settings = await settingsApi.getScheduleSettings();
+        setSessionPeriod(settings.session_period);
+        console.log('📅 Период сессии загружен:', settings.session_period);
+      } catch (error) {
+        console.error('❌ Ошибка загрузки периода сессии:', error);
+      }
+    };
+
+    useEffect(() => {
+        loadScheduleData();
+        loadDocuments();
+        loadSessionPeriod();
+    }, []);
+
+    const handleScheduleClick = async (name: string) => {
+        setLoadingSchedule(name);
+        try {
+            const url = scheduleApi.getScheduleUrl(name);
+            console.log('🔗 Открываем расписание:', url);
+            window.open(url, '_blank');
+        } catch (error) {
+            console.error('❌ Ошибка открытия расписания:', error);
+        } finally {
+            setLoadingSchedule(null);
+        }
+    };
+
+    const getFilteredTeachers = () => {
+        const teacherTab = scheduleTabs.find(tab => tab.course === 'Преподавателям');
+        if (!teacherTab) return [];
+        
+        return teacherTab.groups.filter(teacher => 
+            teacher.toLowerCase().includes(teacherSearchQuery.toLowerCase())
+        );
+    };
+
+    const getActiveCourseGroups = () => {
+      if (!activeTab) return [];
+      
+      const activeTabData = scheduleTabs.find(tab => tab.course === activeTab);
+      return activeTabData ? activeTabData.groups : [];
+    };
+
+    // Вспомогательные функции для получения URL файла
+    const getFileUrl = (doc: any) => {
+      if (doc.file_url) return doc.file_url;
+      if (doc.files && doc.files.length > 0 && doc.files[0].url) {
+        return doc.files[0].url;
+      }
+      if (doc.files && doc.files.length > 0 && doc.files[0].id) {
+        return `${BASE_URL}/files/${doc.files[0].id}`;
+      }
+      return '';
+    };
+
+    // Вспомогательные функции для получения названия документа
+    const getDocumentTitle = (doc: any) => {
+      return doc.document_title || doc.title || 'Документ';
+    };
+
+    // Вспомогательные функции для фильтрации документов
+    const getGeneralDocuments = () => {
+      return generalDocuments.filter(doc => {
+        if (!doc) return false;
+        const fileUrl = getFileUrl(doc);
+        return fileUrl && fileUrl !== '';
+      });
+    };
+
+    const getCorrespondenceGraphs = () => {
+      return correspondenceDocuments.filter(doc => {
+        if (!doc) return false;
+        const sectionTitle = (doc.section_title || '').toLowerCase();
+        const docTitle = (doc.document_title || doc.title || '').toLowerCase();
+        const fileUrl = getFileUrl(doc);
+        
+        return (sectionTitle.includes('график') || docTitle.includes('график')) && 
+               fileUrl && fileUrl !== '';
+      });
+    };
+
+    const getCorrespondenceSchedules = () => {
+      return correspondenceDocuments.filter(doc => {
+        if (!doc) return false;
+        const sectionTitle = (doc.section_title || '').toLowerCase();
+        const docTitle = (doc.document_title || doc.title || '').toLowerCase();
+        const fileUrl = getFileUrl(doc);
+        
+        return (sectionTitle.includes('сесси') || 
+                docTitle.includes('сесси') ||
+                docTitle.match(/\(\w\)$/)) && 
+               fileUrl && fileUrl !== '';
+      });
+    };
+
+    const totalGroups = scheduleData.courses ? 
+      Object.values(scheduleData.courses).flat().length : 0;
+    const totalTeachers = Array.isArray(scheduleData.teachers) ? 
+      scheduleData.teachers.length : 0;
+    const totalItems = totalGroups + totalTeachers;
+
+    const activeGroups = getActiveCourseGroups();
+    const filteredTeachers = getFilteredTeachers();
+    const isTeacherTab = activeTab === 'Преподавателям';
+    const itemsToShow = isTeacherTab ? filteredTeachers : activeGroups;
+
+    if (isLoading) {
+        return (
+            <MainLayout>
+                <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12">
+                    <div className="flex flex-col items-center justify-center py-20">
+                        <Loader2 className="w-12 h-12 animate-spin text-primary mb-4" />
+                        <p className="text-lg text-gray-600">Загрузка расписания...</p>
+                    </div>
+                </div>
+            </MainLayout>
+        );
+    }
 
     return (
         <MainLayout>
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12">
-                <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
-                    <CalendarDays className="w-10 h-10 mr-4 text-accent" />
-                    Расписание занятий
-                </h1>
-                <p className="text-center text-lg text-muted-foreground mb-10 max-w-3xl mx-auto">
-                    Актуальное расписание занятий для очного и заочного отделений.
-                </p>
+                
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+                    <div className="flex items-center justify-center md:justify-start mb-4 md:mb-0">
+                        <CalendarDays className="w-10 h-10 mr-4 text-accent" />
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-primary tracking-tight">
+                            Расписание занятий
+                        </h1>
+                    </div>
+                    <Button
+                        variant="outline"
+                        onClick={() => {
+                          loadScheduleData();
+                          loadDocuments();
+                          loadSessionPeriod();
+                        }}
+                        disabled={isLoading || documentsLoading}
+                        className="flex items-center gap-2 self-center"
+                    >
+                        <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                        Обновить
+                    </Button>
+                </div>
 
-                <section className="mb-12 bg-gradient-to-r from-primary to-blue-700 rounded-xl shadow-lg p-8 flex flex-col md:flex-row items-center justify-between text-white">
-                    <div className="flex items-center mb-4 md:mb-0">
-                        <Smartphone className="w-12 h-12 mr-5 flex-shrink-0" />
-                        <div>
-                            <h2 className="text-2xl font-bold">Расписание всегда под рукой!</h2>
-                            <p className="text-blue-100">Скачайте наше приложение, чтобы отслеживать замены и расписание в реальном времени.</p>
+                <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                            <CalendarDays className="w-5 h-5 text-blue-600" />
+                            <span className="text-blue-800 font-semibold">Группы</span>
+                        </div>
+                        <p className="text-2xl font-bold text-blue-700">{totalGroups}</p>
+                        <p className="text-sm text-blue-600">учебных групп</p>
+                    </div>
+                    
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                            <CheckCircle2 className="w-5 h-5 text-green-600" />
+                            <span className="text-green-800 font-semibold">Преподаватели</span>
+                        </div>
+                        <p className="text-2xl font-bold text-green-700">{totalTeachers}</p>
+                        <p className="text-sm text-green-600">преподавателей</p>
+                    </div>
+                    
+                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                            <FileText className="w-5 h-5 text-purple-600" />
+                            <span className="text-purple-800 font-semibold">Всего</span>
+                        </div>
+                        <p className="text-2xl font-bold text-purple-700">{totalItems}</p>
+                        <p className="text-sm text-purple-600">расписаний</p>
+                    </div>
+                </div>
+
+                {!apiAvailable && (
+                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <div className="flex items-center gap-3">
+                            <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                            <div>
+                                <h3 className="font-semibold text-red-800">API расписания недоступно</h3>
+                                <p className="text-red-700 text-sm">
+                                    Не удалось загрузить данные расписания. Пожалуйста, попробуйте позже.
+                                </p>
+                            </div>
                         </div>
                     </div>
-                    <Button 
-                        variant="secondary" 
-                        className="bg-white text-primary hover:bg-gray-100 font-semibold shadow-md transition-transform transform hover:scale-105"
-                        onClick={() => alert('Ссылка на приложение!')} 
-                    >
-                        <Download className="w-5 h-5 mr-2" />
-                        Скачать приложение
-                    </Button>
-                </section>
+                )}
+
+<section className="mb-12 bg-gradient-to-r from-primary to-blue-700 rounded-xl shadow-lg p-8 flex flex-col md:flex-row items-center justify-between text-white">
+    <div className="flex items-center mb-4 md:mb-0">
+        <Smartphone className="w-12 h-12 mr-5 flex-shrink-0" />
+        <div>
+            <h2 className="text-2xl font-bold">Расписание всегда под рукой!</h2>
+            <p className="text-blue-100">Скачайте наше приложение, чтобы отслеживать замены и расписание в реальном времени.</p>
+        </div>
+    </div>
+
+    {/* --- НАЧАЛО ИЗМЕНЕНИЙ --- */}
+    {/* Оборачиваем кнопки в div с flex-col и gap-3 */}
+    <div className="flex flex-col gap-3 w-full md:w-auto"> 
+        <Button 
+            variant="secondary" 
+            className="bg-white text-primary hover:bg-gray-100 font-semibold shadow-md transition-transform transform hover:scale-105 w-full"
+            onClick={() => window.open('https://schedulettgt-static.website.yandexcloud.net/', '_blank')}
+        >
+            <Download className="w-5 h-5 mr-2" />
+            Приложение веб
+        </Button>
+
+        <Button 
+            variant="secondary" 
+            className="bg-white text-primary hover:bg-gray-100 font-semibold shadow-md transition-transform transform hover:scale-105 w-full"
+            onClick={() => window.open('https://ttgt-api-isxb.onrender.com/schedule/android/download', '_blank')}
+        >
+            <Download className="w-5 h-5 mr-2" />
+            Скачать приложение apk
+        </Button>
+    </div>
+    {/* --- КОНЕЦ ИЗМЕНЕНИЙ --- */}
+
+</section>
 
                 <section className="mb-12">
                     <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Очное отделение</h2>
+                    
                     <div className="flex justify-center flex-wrap gap-2 mb-6">
-                        {scheduleData.map((course) => (
+                        {['1 курс', '2 курс', '3 курс', '4 курс', 'Преподавателям'].map((courseName) => (
                             <Button
-                                key={course.course}
-                                variant={activeTab === course.course ? 'default' : 'outline'}
+                                key={courseName}
+                                variant={activeTab === courseName ? 'default' : 'outline'}
                                 className={`text-lg font-semibold py-3 px-6 rounded-full transition-all duration-300 ${
-                                    activeTab === course.course 
+                                    activeTab === courseName 
                                     ? 'bg-primary text-white shadow-lg scale-105' 
                                     : 'text-gray-600 bg-white hover:bg-gray-100'
                                 }`}
-                                onClick={() => setActiveTab(course.course)}
+                                onClick={() => {
+                                    setActiveTab(courseName);
+                                    setTeacherSearchQuery(''); 
+                                }}
                             >
-                                {course.course}
+                                {courseName}
                             </Button>
                         ))}
                     </div>
 
                     <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 p-6 min-h-[200px]">
-                        {scheduleData.map((course) => (
-                            <div 
-                                key={course.course}
-                                className={`flex flex-wrap gap-3 justify-center ${activeTab === course.course ? 'flex' : 'hidden'}`}
-                            >
-                                {course.groups.map((group) => {
-                                    const pdfUrl = getSchedulePdfUrl(group);
-                                    const isLinkDisabled = pdfUrl === '#';
+                        {isTeacherTab && (
+                            <div className="mb-6 max-w-lg mx-auto">
+                                <label htmlFor="teacher-search" className="sr-only">Поиск по фамилии</label>
+                                <div className="relative rounded-full shadow-sm">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <Search className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="search"
+                                        name="teacher-search"
+                                        id="teacher-search"
+                                        className="block w-full border-gray-300 rounded-full pl-11 pr-4 py-3 text-base focus:ring-primary focus:border-primary"
+                                        placeholder="Поиск по фамилии"
+                                        value={teacherSearchQuery}
+                                        onChange={(e) => setTeacherSearchQuery(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                        
+                        <div className="flex flex-wrap gap-3 justify-center">
+                            {itemsToShow.length > 0 ? (
+                                itemsToShow.map((item) => {
+                                    const isLoadingItem = loadingSchedule === item;
                                     
                                     return (
-                                        <a
-                                            key={group}
-                                            href={pdfUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
+                                        <button
+                                            key={item}
+                                            onClick={() => handleScheduleClick(item)}
+                                            disabled={isLoadingItem}
                                             className={`
-                                                inline-block bg-white text-primary border-2 border-gray-300 font-semibold px-5 py-2.5 rounded-lg text-base
-                                                transition-all duration-300 shadow-sm 
-                                                hover:bg-primary hover:text-white hover:border-primary hover:scale-105 hover:shadow-md
-                                                ${isLinkDisabled ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-500 line-through' : ''}
+                                                inline-flex items-center justify-center font-semibold px-5 py-2.5 rounded-lg text-base
+                                                transition-all duration-300 shadow-sm border-2
+                                                hover:scale-105 hover:shadow-md relative
+                                                disabled:opacity-50 disabled:cursor-not-allowed
+                                                bg-white text-gray-800 border-blue-200 hover:bg-blue-50 hover:border-blue-300
                                             `}
-                                            title={isLinkDisabled ? 'Расписание для этой группы скоро появится' : `Скачать расписание ${group}`}
-                                            onClick={(e) => isLinkDisabled && e.preventDefault()} 
+                                            title={`Открыть расписание для ${item}`}
                                         >
-                                            {group}
-                                        </a>
+                                            {isLoadingItem ? (
+                                                <>
+                                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                    Загрузка...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {item}
+                                                    <CheckCircle2 className="w-4 h-4 ml-2 text-blue-600" />
+                                                </>
+                                            )}
+                                        </button>
                                     );
-                                })}
-                            </div>
-                        ))}
+                                })
+                            ) : (
+                                <div className="text-center py-8 w-full">
+                                    <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                    <p className="text-gray-500">
+                                        {isTeacherTab 
+                                            ? teacherSearchQuery 
+                                                ? 'Преподаватель не найден' 
+                                                : 'Нет данных о преподавателях'
+                                            : `Нет данных для ${activeTab.toLowerCase()}`
+                                        }
+                                    </p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </section>
 
-                {/* Раздел "Важные документы" */}
                 <section className="mb-12">
                     <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Общие документы и графики</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Общее расписание */}
-                        {mainScheduleDocs.map((doc) => (
-                            <a
-                                key={doc.title}
-                                href={doc.file}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-between p-5 bg-blue-50 rounded-lg border-2 border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition-all duration-300 group"
-                            >
-                                <div className="flex items-center">
-                                    <FileText className="w-6 h-6 mr-3 text-blue-600" />
-                                    <span className="text-blue-800 font-semibold">{doc.title}</span>
+                        {documentsLoading ? (
+                            Array.from({ length: 4 }).map((_, index) => (
+                                <div key={index} className="flex items-center justify-between p-5 bg-gray-50 rounded-lg border-2 border-gray-200 animate-pulse">
+                                    <div className="flex items-center">
+                                        <FileText className="w-6 h-6 mr-3 text-gray-300" />
+                                        <div className="h-4 bg-gray-200 rounded w-32"></div>
+                                    </div>
+                                    <Download className="w-5 h-5 text-gray-300" />
                                 </div>
-                                <Download className="w-5 h-5 text-blue-500 group-hover:text-blue-700 transition-colors" />
-                            </a>
-                        ))}
-                        {/* График консультаций */}
-                        <a
-                            href={consultationDoc.file}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="md:col-span-2 flex items-center justify-between p-5 bg-green-50 rounded-lg border-2 border-green-200 hover:bg-green-100 hover:border-green-300 transition-all duration-300 group"
-                        >
-                            <div className="flex items-center">
-                                <FileText className="w-6 h-6 mr-3 text-green-600" />
-                                <span className="text-green-800 font-semibold">{consultationDoc.title}</span>
+                            ))
+                        ) : getGeneralDocuments().length > 0 ? (
+                            getGeneralDocuments().map((doc) => {
+                                const fileUrl = getFileUrl(doc);
+                                const title = getDocumentTitle(doc);
+                                
+                                return (
+                                    <a
+                                        key={doc.id}
+                                        href={fileUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center justify-between p-5 bg-blue-50 rounded-lg border-2 border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition-all duration-300 group"
+                                    >
+                                        <div className="flex items-center">
+                                            <FileText className="w-6 h-6 mr-3 text-blue-600" />
+                                            <span className="text-blue-800 font-semibold">{title}</span>
+                                        </div>
+                                        <Download className="w-5 h-5 text-blue-500 group-hover:text-blue-700 transition-colors" />
+                                    </a>
+                                );
+                            })
+                        ) : (
+                            <div className="md:col-span-2 text-center py-8">
+                                <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                <p className="text-gray-500">Нет доступных документов</p>
+                                {!documentsLoading && (
+                                    <p className="text-sm text-gray-400 mt-2">
+                                        Всего документов в системе: {generalDocuments.length}
+                                    </p>
+                                )}
                             </div>
-                            <Download className="w-5 h-5 text-green-500 group-hover:text-green-700 transition-colors" />
-                        </a>
+                        )}
                     </div>
                 </section>
 
-                {/* Дизайн для Заочного отделения */}
                 <section>
                     <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Заочное отделение</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -291,21 +582,49 @@ const Schedule = () => {
                                 <CardTitle className="text-xl font-semibold text-gray-800">Учебные графики</CardTitle>
                             </CardHeader>
                             <CardContent className="p-5 space-y-3">
-                                {partTimeSchedules.map((doc, index) => (
-                                    <a
-                                        key={index}
-                                        href={doc.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-primary/50 transition-all duration-300 group"
-                                    >
-                                        <div className="flex items-center">
-                                            <FileText className="w-5 h-5 mr-3 text-gray-400 group-hover:text-primary transition-colors" />
-                                            <span className="text-foreground font-medium group-hover:text-primary transition-colors">{doc.title}</span>
+                                {documentsLoading ? (
+                                    Array.from({ length: 2 }).map((_, index) => (
+                                        <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 animate-pulse">
+                                            <div className="flex items-center">
+                                                <FileText className="w-5 h-5 mr-3 text-gray-300" />
+                                                <div className="h-4 bg-gray-200 rounded w-40"></div>
+                                            </div>
+                                            <ExternalLink className="w-5 h-5 text-gray-300" />
                                         </div>
-                                        <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
-                                    </a>
-                                ))}
+                                    ))
+                                ) : getCorrespondenceGraphs().length > 0 ? (
+                                    getCorrespondenceGraphs().map((doc) => {
+                                        const fileUrl = getFileUrl(doc);
+                                        const title = getDocumentTitle(doc);
+                                        
+                                        return (
+                                            <a
+                                                key={doc.id}
+                                                href={fileUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-primary/50 transition-all duration-300 group"
+                                            >
+                                                <div className="flex items-center">
+                                                    <FileText className="w-5 h-5 mr-3 text-gray-400 group-hover:text-primary transition-colors" />
+                                                    <span className="text-foreground font-medium group-hover:text-primary transition-colors">
+                                                        {title}
+                                                    </span>
+                                                </div>
+                                                <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
+                                            </a>
+                                        );
+                                    })
+                                ) : (
+                                    <div className="text-center py-4">
+                                        <p className="text-gray-500">Нет доступных учебных графиков</p>
+                                        {!documentsLoading && (
+                                            <p className="text-sm text-gray-400 mt-1">
+                                                Всего документов заочного отделения: {correspondenceDocuments.length}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
 
@@ -314,21 +633,43 @@ const Schedule = () => {
                                 <CardTitle className="text-xl font-semibold text-gray-800">Расписание сессий</CardTitle>
                             </CardHeader>
                             <CardContent className="p-5">
-                                <p className="text-gray-600 mb-4 font-medium">c 15 сентября 2025 г. по 27 сентября 2025 г.:</p>
+                                <p className="text-gray-600 mb-4 font-medium">{sessionPeriod}</p>
                                 <div className="flex flex-wrap gap-2">
-                                    {partTimeSessions.map((session) => (
-                                        <a
-                                            key={session.title}
-                                            href={session.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-block bg-white text-primary border border-gray-300 font-medium px-4 py-2 rounded-full text-sm 
-                                                        transition-all duration-200 shadow-sm 
-                                                        hover:bg-primary hover:text-white hover:border-primary hover:scale-105 hover:shadow-md"
-                                        >
-                                            {session.title}
-                                        </a>
-                                    ))}
+                                    {documentsLoading ? (
+                                        Array.from({ length: 3 }).map((_, index) => (
+                                            <div key={index} className="inline-block bg-gray-100 border border-gray-200 font-medium px-4 py-2 rounded-full text-sm animate-pulse">
+                                                <div className="h-4 bg-gray-200 rounded w-16"></div>
+                                            </div>
+                                        ))
+                                    ) : getCorrespondenceSchedules().length > 0 ? (
+                                        getCorrespondenceSchedules().map((doc) => {
+                                            const fileUrl = getFileUrl(doc);
+                                            const title = getDocumentTitle(doc);
+                                            
+                                            return (
+                                                <a
+                                                    key={doc.id}
+                                                    href={fileUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-block bg-white text-primary border border-gray-300 font-medium px-4 py-2 rounded-full text-sm 
+                                                                    transition-all duration-200 shadow-sm 
+                                                                    hover:bg-primary hover:text-white hover:border-primary hover:scale-105 hover:shadow-md"
+                                                >
+                                                    {title}
+                                                </a>
+                                            );
+                                        })
+                                    ) : (
+                                        <div>
+                                            <p className="text-gray-500">Нет доступных расписаний сессий</p>
+                                            {!documentsLoading && (
+                                                <p className="text-sm text-gray-400 mt-1">
+                                                    Всего документов заочного отделения: {correspondenceDocuments.length}
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>

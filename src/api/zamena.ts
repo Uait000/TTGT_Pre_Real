@@ -1,33 +1,45 @@
+// src/api/zamena.ts
 import { getAuthHeaders } from "@/api/auth"; 
 import { BASE_URL, ADMIN_API_PREFIX } from "@/api/config";
 
 const PUBLIC_ZAMENA_URL = `${BASE_URL}/files/fixed/zamena`;
 const ADMIN_UPLOAD_URL = `${BASE_URL}${ADMIN_API_PREFIX}/fixedfiles/zamena`;
 
-export const zamenaApi = {
+// Добавляем версию для кэширования
+let zamenaVersion = Date.now();
 
-    get: async (): Promise<{ url: string | null }> => {
+export const zamenaApi = {
+    get: async (): Promise<{ url: string | null; version: number }> => {
         try {
-            const response = await fetch(PUBLIC_ZAMENA_URL, {
+            // Добавляем параметр версии для избежания кэширования
+            const url = `${PUBLIC_ZAMENA_URL}?v=${zamenaVersion}`;
+            const response = await fetch(url, {
                 method: 'GET', 
-                cache: 'no-store', 
+                cache: 'no-store',
+                headers: {
+                    'Cache-Control': 'no-cache'
+                }
             });
 
             if (response.ok) {
-                return { url: PUBLIC_ZAMENA_URL };
+                return { url, version: zamenaVersion };
             } else {
-                return { url: null };
+                return { url: null, version: zamenaVersion };
             }
         } catch (error) {
             console.error("Ошибка при проверке статуса файла замен:", error);
-            return { url: null };
+            return { url: null, version: zamenaVersion };
         }
     },
 
     upload: async (file: File): Promise<void> => {
         const formData = new FormData();
-        formData.append('file', file);
+        // ИСПРАВЛЕНИЕ: правильное название поля
+        formData.append('updatedFile', file);
 
+        console.log('📤 Начинаем загрузку файла замен:', file.name);
+        console.log('📝 Поле формы: updatedFile');
+        
         const response = await fetch(ADMIN_UPLOAD_URL, {
             method: 'PATCH',
             headers: getAuthHeaders(true), 
@@ -35,16 +47,58 @@ export const zamenaApi = {
         });
 
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            console.error("Ошибка загрузки файла замен:", response.status, errorData);
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch {
+                errorData = {};
+            }
             
-            const detail = errorData.detail?.[0]?.msg 
-                           || errorData.detail 
-                           || 'Неизвестная ошибка сервера';
-                           
-            throw new Error(`Ошибка ${response.status}: ${detail}`);
+            console.error("❌ Ошибка загрузки файла замен:", response.status, errorData);
+            
+            // Более детальный анализ ошибки
+            let errorMessage = 'Неизвестная ошибка сервера';
+            
+            if (response.status === 422) {
+                errorMessage = 'Ошибка валидации данных';
+                if (errorData.detail) {
+                    if (Array.isArray(errorData.detail)) {
+                        errorMessage = errorData.detail.map((d: any) => d.msg).join(', ');
+                    } else {
+                        errorMessage = errorData.detail;
+                    }
+                }
+            } else if (response.status === 401) {
+                errorMessage = 'Недостаточно прав для загрузки файла';
+            } else if (response.status === 500) {
+                errorMessage = 'Внутренняя ошибка сервера';
+            }
+            
+            throw new Error(`Ошибка ${response.status}: ${errorMessage}`);
         }
         
+        // Обновляем версию после успешной загрузки
+        zamenaVersion = Date.now();
+        console.log('✅ Файл замен успешно загружен, новая версия:', zamenaVersion);
+        
+        // Отправляем событие об обновлении
+        window.dispatchEvent(new CustomEvent('zamenaUpdated', { 
+            detail: { version: zamenaVersion } 
+        }));
+        
         return;
+    },
+
+    // Метод для принудительного обновления версии
+    forceRefresh: (): void => {
+        zamenaVersion = Date.now();
+        window.dispatchEvent(new CustomEvent('zamenaUpdated', { 
+            detail: { version: zamenaVersion } 
+        }));
+    },
+
+    // Получить текущую версию
+    getCurrentVersion: (): number => {
+        return zamenaVersion;
     }
 };

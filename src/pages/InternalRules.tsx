@@ -18,8 +18,8 @@ const InternalRules = () => {
 
     return (
         <MainLayout>
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-12">
-                <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4 text-center tracking-tight flex items-center justify-center">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 md:p-12">
+                <h1 className="text-3xl md:text-5xl font-extrabold text-primary mb-4 text-center tracking-tight flex items-center justify-center flex-wrap">
                     <AlertTriangle className="w-10 h-10 mr-4 text-accent" />
                     Правила внутреннего распорядка
                 </h1>
@@ -27,9 +27,10 @@ const InternalRules = () => {
                     Соблюдение этих правил — основа уважения к себе и окружающим, а также залог успешного и безопасного обучения.
                 </p>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                {/* ИСПРАВЛЕНА СЕТКА: xl:grid-cols-1, 2xl:grid-cols-2 */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2 gap-12">
                     <section className="bg-gradient-to-br from-red-50 to-pink-100 rounded-xl border border-red-200 p-8 shadow-inner">
-                        <h2 className="text-3xl font-bold text-red-700 mb-8 flex items-center">
+                        <h2 className="text-2xl md:text-3xl font-bold text-red-700 mb-8 flex items-center">
                             <XCircle className="w-8 h-8 mr-3 flex-shrink-0" />
                             I. Студентам запрещено:
                         </h2>
@@ -39,15 +40,14 @@ const InternalRules = () => {
                                     key={rule.id} 
                                     className="flex items-start space-x-4 p-4 bg-white/70 rounded-lg border border-red-100 shadow-sm"
                                 >
-
                                     <XCircle className="w-6 h-6 text-red-600 mt-1 flex-shrink-0" /> 
-                                    <p className="text-gray-700 leading-relaxed">{rule.text}</p>
+                                    <p className="text-gray-700 leading-relaxed text-sm md:text-base">{rule.text}</p>
                                 </div>
                             ))}
                         </div>
                     </section>
                     <section className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl border border-green-200 p-8 shadow-inner">
-                        <h2 className="text-3xl font-bold text-green-700 mb-8 flex items-center">
+                        <h2 className="text-2xl md:text-3xl font-bold text-green-700 mb-8 flex items-center">
                             <CheckCircle className="w-8 h-8 mr-3 flex-shrink-0" />
                             II. Студенты обязаны:
                         </h2>
@@ -58,7 +58,7 @@ const InternalRules = () => {
                                     className="flex items-start space-x-4 p-4 bg-white/70 rounded-lg border border-green-100 shadow-sm"
                                 >
                                     <CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
-                                    <p className="text-gray-700 leading-relaxed">{rule.text}</p>
+                                    <p className="text-gray-700 leading-relaxed text-sm md:text-base">{rule.text}</p>
                                 </div>
                             ))}
                         </div>

@@ -8,25 +8,52 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
     proxy: {
-      // Это для твоего API
-      '/api': { 
-        target: 'http://185.13.47.146:50123',
+      '/auth': {
+        target: 'https://ttgt-api-isxb.onrender.com',
         changeOrigin: true,
       },
-      // Это для файлов
-      '/files': { 
-        target: 'http://185.13.47.146:50123',
+      '/content': {
+        target: 'https://ttgt-api-isxb.onrender.com',
         changeOrigin: true,
       },
-
-      // --- ГЛАВНОЕ ДЛЯ WEBSOCKET (Proxy) ---
-      '/websocket/': { 
-        target: 'ws://185.13.47.146:50123',
+      '/settings': {
+        target: 'https://ttgt-api-isxb.onrender.com',
+        changeOrigin: true,
+      },
+      '/admin/settings': {
+        target: 'https://ttgt-api-isxb.onrender.com',
+        changeOrigin: true,
+      },
+      '/admin': {
+        target: 'https://ttgt-api-isxb.onrender.com',
+        changeOrigin: true,
+        bypass: (req, res, options) => {
+          // Если браузер просит HTML-страницу, не проксируем,
+          // а отдаем /index.html, чтобы React-приложение загрузилось
+          if (req.headers.accept && req.headers.accept.includes('text/html')) {
+            return '/index.html';
+          }
+          // Во всех остальных случаях (API-запросы) - проксируем
+          return null;
+        },
+      },
+      '/api': {
+        target: 'https://ttgt-api-isxb.onrender.com',
+        changeOrigin: true,
+      },
+      '/files': {
+        target: 'https://ttgt-api-isxb.onrender.com',
+        changeOrigin: true,
+      },
+      '/websocket': {
+        target: 'https://ttgt-api-isxb.onrender.com',
         changeOrigin: true,
         ws: true,
+        rewrite: (path) => path.replace(/^\/websocket/, '/websocket')
       }
     }
   },
+
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {

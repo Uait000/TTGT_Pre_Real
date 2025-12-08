@@ -11,9 +11,10 @@ interface PostsListProps {
   onDelete: (post: Post) => void; 
   onCreate: () => void;
   refreshTrigger?: number;
+  category?: PostCategory; // Добавляем проп категории
 }
 
-export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger }: PostsListProps) {
+export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger, category = PostCategory.News }: PostsListProps) {
   const [posts, setPosts] = useState<Post[]>([]); 
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -24,7 +25,7 @@ export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger }
       const data = await postsApi.getAll({ 
           limit: 500,
           offset: 0,
-          category: PostCategory.News,
+          category: category, // Используем проп
       });
 
       if (Array.isArray(data)) {
@@ -43,7 +44,7 @@ export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger }
     } catch (error) {
       toast({
         title: 'Ошибка',
-        description: error instanceof Error ? error.message : 'Не удалось загрузить посты',
+        description: error instanceof Error ? error.message : 'Не удалось загрузить записи',
         variant: 'destructive',
       });
       setPosts([]);
@@ -54,7 +55,7 @@ export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger }
 
   useEffect(() => {
     loadPosts();
-  }, [refreshTrigger]);
+  }, [refreshTrigger, category]);
 
   const formatDate = (dateInSeconds: number) => {
     if (!dateInSeconds) return '';
@@ -71,50 +72,52 @@ export default function PostsList({ onEdit, onDelete, onCreate, refreshTrigger }
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Управление постами</h2>
+        <h2 className="text-2xl font-bold">Список записей</h2>
         <Button onClick={onCreate} className="gap-2">
           <Plus className="h-4 w-4" />
-          Создать новый пост
+          Добавить запись
         </Button>
       </div>
-      <div className="border rounded-lg">
+      <div className="border rounded-lg bg-white overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Заголовок</TableHead>
-              <TableHead>Автор</TableHead>
-              <TableHead>Дата публикации</TableHead>
-              <TableHead>Тип поста</TableHead>
-              <TableHead>Просмотры</TableHead>
+              <TableHead>Заголовок / Имя</TableHead>
+              {category !== PostCategory.Pride && <TableHead>Автор</TableHead>}
+              <TableHead>Дата</TableHead>
+              <TableHead>Статус</TableHead>
               <TableHead className="text-right">Действия</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {posts.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                  Нет постов для отображения
+                <TableCell colSpan={category !== PostCategory.Pride ? 5 : 4} className="text-center py-8 text-muted-foreground">
+                  Нет записей для отображения
                 </TableCell>
               </TableRow>
             ) : (
               posts.map((post) => (
                 <TableRow key={post.id}>
-                  <TableCell className="font-medium max-w-md truncate">{post.title}</TableCell>
-                  <TableCell>{post.author}</TableCell>
+                  <TableCell className="font-medium max-w-md truncate" title={post.title}>
+                    {post.title}
+                  </TableCell>
+                  {category !== PostCategory.Pride && <TableCell>{post.author}</TableCell>}
                   <TableCell>{formatDate(post.publish_date)}</TableCell>
                   <TableCell>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                      {POST_TAGS[post.type] || 'Неизвестно'}
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        post.status === 1 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {post.status === 1 ? 'Опубликован' : 'Черновик'}
                     </span>
                   </TableCell>
-                  <TableCell>{post.views}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="sm" onClick={() => onEdit(post)} className="gap-1">
-                        <Pencil className="h-4 w-4" /> Редактировать
+                        <Pencil className="h-4 w-4" />
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => onDelete(post)} className="gap-1 text-red-600 hover:text-red-700 hover:bg-red-50">
-                        <Trash2 className="h-4 w-4" /> Удалить
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>

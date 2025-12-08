@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ChevronDown } from 'lucide-react';
-// import instr from '../assets/file/Instr_LK_Abiturienta.pdf'; // Ошибка компиляции здесь
-// import centry from '../assets/file/Centry_Prit_2022-2023.pdf'; // Ошибка компиляции здесь
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -48,8 +46,6 @@ const Header = () => {
       href: '#',
       submenu: [
         { label: 'Личный кабинет', href: 'https://abitura.ttgt.org/abitur/profile/#/' },
-        // ИСПРАВЛЕНО: Заменяем импортированные переменные на абсолютные пути.
-        // Предполагается, что файлы лежат в папке 'public/file/'
         { label: 'Инструкция к ЛК', href: '/file/Instr_LK_Abiturienta.pdf' },
         { label: 'Контрольные цифры приема', href: '/applicants/admission-numbers' },
         { label: 'Центр притяжения ', href: '/file/Centry_Prit_2022-2023.pdf' },
@@ -134,7 +130,7 @@ const Header = () => {
               href={subItem.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="block px-8 py-2 text-sm text-muted-foreground hover:text-foreground"
+              className="block px-8 py-2 text-sm text-muted-foreground hover:text-primary"
               onClick={closeMenu}
           >
               {subItem.label}
@@ -145,7 +141,7 @@ const Header = () => {
            <Link
               key={subItem.label}
               to={subItem.href}
-              className="block px-8 py-2 text-sm text-muted-foreground hover:text-foreground"
+              className="block px-8 py-2 text-sm text-muted-foreground hover:text-primary"
               onClick={closeMenu}
            >
               {subItem.label}
@@ -157,36 +153,12 @@ const Header = () => {
   return (
     <header className="bg-white shadow-md border-b border-border sticky top-0 z-40">
       <div className="container mx-auto px-2 sm:px-4">
-        {/*
-          ИЗМЕНЕНИЯ ЗДЕСЬ:
-          - h-auto / sm:h-20: Позволяет шапке быть выше на мобильных, если нужно
-          - py-2 / sm:py-0: Добавляет отступ на мобильных
+        {/* БЛОК С ЛОГОТИПОМ И НАЗВАНИЕМ УДАЛЕН ОТСЮДА
+          Этот div теперь центрирует навигацию и служит якорем для мобильного меню
         */}
         <div className="relative flex justify-center items-center h-auto sm:h-20 w-full py-2 sm:py-0">
           
-          {/*
-            ИЗМЕНЕНИЯ ЗДЕСЬ:
-            - flex-col / sm:flex-row: В колонку на мобильных, в ряд на sm+
-            - items-center text-center / sm:items-center sm:text-left: Центруем текст на мобильных
-          */}
-          <Link to="/" className="flex flex-col items-center text-center sm:flex-row sm:items-center sm:text-left space-y-1 sm:space-y-0 sm:space-x-2 md:space-x-3 flex-shrink-0">
-            <img 
-              src="https://s2.radikal.cloud/2025/09/30/educenter-logo18562125e990d0a1.png" 
-              alt="Логотип" 
-              className="h-14 w-14 md:h-16 md:w-16 rounded-lg object-cover"
-            />
-            <div className="flex flex-col">
-              <h1 className="text-xs md:text-sm font-bold text-foreground leading-tight">
-                Тихорецкий техникум железнодорожного транспорта
-              </h1>
-              <h2 className="text-[10px] md:text-xs text-muted-foreground leading-tight">
-                филиала РГУПС
-              </h2>
-            </div>
-          </Link>
-          {/* КОНЕЦ ИЗМЕНЕНИЙ */}
-
-          <nav className="hidden lg:flex items-center space-x-6 h-full ml-10">
+          <nav className="hidden xl:flex items-center space-x-6 h-full">
             {menuItems.map((item) => (
               <div key={item.label} className="relative group h-full flex items-center">
                 {item.submenu.length > 0 ? (
@@ -232,21 +204,21 @@ const Header = () => {
               </div>
             ))}
           </nav>
+          
           <button
             onClick={toggleMobileMenu}
-            className="lg:hidden absolute right-4 inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+            className="xl:hidden absolute right-4 inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
           >
             {isMobileMenuOpen ? (
-              <X className="block h-6 w-6" />
+              <ChevronUp className="block h-6 w-6" />
             ) : (
-              <Menu className="block h-6 w-6" />
+              <ChevronDown className="block h-6 w-6" />
             )}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden border-t border-border">
+          <div className="xl:hidden border-t border-border">
             <div className="py-2 space-y-1">
               {menuItems.map((item) => (
                 <div key={item.label}>
@@ -254,14 +226,14 @@ const Header = () => {
                     <div>
                       <button
                         onClick={() => handleDropdownToggle(item.label)}
-                        className="w-full flex items-center justify-between px-4 py-2 text-sm text-foreground hover:bg-accent"
+                        className="w-full flex items-center justify-between px-4 py-2 text-sm text-foreground hover:bg-primary/10 hover:text-primary"
                       >
                         <span>{item.label}</span>
                         <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === item.label ? 'rotate-180' : ''}`} />
                       </button>
                       
                       {openDropdown === item.label && (
-                        <div className="bg-accent/50">
+                        <div className="bg-primary/5">
                           {item.submenu.map((subItem) => renderMobileSubMenuItem(subItem))}
                         </div>
                       )}
@@ -271,7 +243,7 @@ const Header = () => {
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block px-4 py-2 text-sm text-foreground hover:bg-accent"
+                      className="block px-4 py-2 text-sm text-foreground hover:bg-primary/10 hover:text-primary"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.label}
@@ -279,7 +251,7 @@ const Header = () => {
                   ) : (
                     <Link
                       to={item.href}
-                      className="block px-4 py-2 text-sm text-foreground hover:bg-accent"
+                      className="block px-4 py-2 text-sm text-foreground hover:bg-primary/10 hover:text-primary"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.label}
@@ -296,4 +268,3 @@ const Header = () => {
 };
 
 export default Header;
-

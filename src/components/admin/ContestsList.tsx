@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Pencil, Trash2, Plus, FileText } from 'lucide-react';
+import { Pencil, Trash2, Plus, FileText, Link as LinkIcon, Layers } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
@@ -38,14 +38,14 @@ export default function ContestsList() {
     try {
       setLoading(true);
       
+      // ИЗМЕНЕНИЕ: Лимит увеличен до 10000
       const data = await postsApi.getAll({ 
         category: PostCategory.Contests, 
-        limit: 100, 
+        limit: 10000, 
         offset: 0 
       });
 
       if (Array.isArray(data)) {
-        
         setPosts(data); 
       } else {
         setPosts([]);
@@ -111,8 +111,39 @@ export default function ContestsList() {
     });
   };
   
-  
   const cleanBaseUrl = BASE_URL.replace('/api', '');
+
+  // Helper to parse the dynamic body content for display
+  const renderContestContent = (post: Post) => {
+    try {
+      const items = JSON.parse(post.body);
+      if (Array.isArray(items)) {
+        return (
+          <div className="flex flex-col gap-1">
+            {items.map((item: any, idx: number) => (
+              <div key={idx} className="flex items-center gap-1 text-sm text-gray-600">
+                {item.type === 'link' ? <LinkIcon size={12}/> : <FileText size={12}/>}
+                <span className="truncate max-w-[200px]">{item.name}</span>
+              </div>
+            ))}
+          </div>
+        );
+      }
+    } catch (e) {
+      // Fallback for old posts
+      return (
+        <div className="flex flex-col gap-1">
+           {post.files && post.files.map((file, idx) => (
+             <div key={file.id} className="flex items-center gap-1 text-sm text-gray-600">
+               <FileText size={12} />
+               <span>{idx === 0 ? 'Положение' : 'Регламент'}</span>
+             </div>
+           ))}
+        </div>
+      );
+    }
+    return <span className="text-muted-foreground">-</span>;
+  };
 
   return (
     <div className="space-y-4">
@@ -132,59 +163,41 @@ export default function ContestsList() {
             <TableHeader>
               <TableRow>
                 <TableHead>Название</TableHead>
-                <TableHead>Автор</TableHead>
                 <TableHead>Дата публикации</TableHead>
-                <TableHead>Тип поста</TableHead>
-                <TableHead>PDF документы</TableHead>
+                <TableHead>Содержимое</TableHead>
+                <TableHead>Статус</TableHead>
                 <TableHead className="text-right">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {posts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                     Нет конкурсов для отображения
                   </TableCell>
                 </TableRow>
               ) : (
                 posts.map((post) => (
                   <TableRow key={post.id}>
-                    <TableCell className="font-medium max-w-md truncate">{post.title}</TableCell>
-                    <TableCell>{post.author}</TableCell>
+                    <TableCell className="font-medium max-w-md truncate">
+                        {post.title}
+                    </TableCell>
                     <TableCell>{formatDate(post.publish_date)}</TableCell>
                     <TableCell>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        {POST_TAGS[post.type] || 'Неизвестно'}
-                      </span>
+                      {renderContestContent(post)}
                     </TableCell>
                     <TableCell>
-                      <div className="flex flex-col gap-1">
-                        {post.files && post.files.length > 0 ? (
-                          post.files.map((file, index) => (
-                            <a
-                              key={file.id} 
-                              
-                              href={`${cleanBaseUrl}/files/${file.id}`} 
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1 text-primary hover:underline text-sm"
-                            >
-                              <FileText className="h-4 w-4" />
-                              {file.name || (index === 0 ? 'Положение' : 'Регламент')}
-                            </a>
-                          ))
-                        ) : (
-                          <span className="text-muted-foreground text-sm">Нет документов</span>
-                        )}
-                      </div>
+                        <Badge variant={post.status === 1 ? 'default' : 'secondary'}>
+                            {post.status === 1 ? 'Опубликован' : 'Черновик'}
+                        </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button variant="ghost" size="sm" onClick={() => handleEdit(JSON.parse(JSON.stringify(post)))} className="gap-1">
-                          <Pencil className="h-4 w-4" /> Редактировать
+                          <Pencil className="h-4 w-4" />
                         </Button>
                         <Button variant="ghost" size="sm" onClick={() => setDeleteId(post.id)} className="gap-1 text-red-600 hover:text-red-700 hover:bg-red-50">
-                          <Trash2 className="h-4 w-4" /> Удалить
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </TableCell>

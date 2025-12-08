@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "watch:html": "node watch.js",
+    "build": "D:\\TTGT_Pre_Real\\TTGT_Pre_Real\\.venv\\Scripts\\python.exe smart_convert_and_rename.py && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -43,12 +44,14 @@
     "@supabase/supabase-js": "^2.57.4",
     "@tanstack/react-query": "^5.83.0",
     "@vercel/blob": "^2.0.0",
+    "chokidar": "^4.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.24",
+    "iconv-lite": "^0.7.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
@@ -56,7 +59,9 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.3.8",
+    "react-fast-marquee": "^1.6.5",
     "react-hook-form": "^7.61.1",
+    "react-quill": "^2.0.0",
     "react-resizable-panels": "^2.1.9",
     "react-router-dom": "^6.30.1",
     "recharts": "^2.15.4",
@@ -83,6 +88,6 @@
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
-    "vite": "^7.1.12"
+    "vite": "^5.3.0"
   }
 }

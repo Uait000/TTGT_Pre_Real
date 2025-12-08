@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { BookOpen, CheckCircle, Users, Briefcase, Phone, Banknote, ArrowRight, Link as LinkIcon, Menu, X } from 'lucide-react';
+import React, { useRef, useState } from 'react'; 
+import { BookOpen, CheckCircle, Users, Briefcase, Phone, Banknote, ArrowRight, Link as LinkIcon, Menu, X, List } from 'lucide-react'; 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import SidebarCards from '@/components/SidebarCards';
@@ -14,63 +14,64 @@ import RnkBCreditPdf from '@/assets/file/obcred/RNKB.pdf';
 import RekomCreditPdf from '@/assets/file/obcred/Rekom_Obr_kredit.pdf';
 import InfoBlocks from '@/components/InfoBlocks';
 
+
 const parseContent = (text: string) => {
-    
-    if (!text) return null;
+    
+    if (!text) return null;
 
-    const links: Record<string, string> = {
-        'Чек-лист по оформлению': 'https://disk.yandex.ru/i/n_vuufHeE_589Q',
-        'Консультация онлайн': 'https://open.edu.gov.ru/faq/#type=73',
-        '«Что делать, если не поступил на бюджет?»': 'https://disk.yandex.ru/i/i-cUyb2wXpB99g',
-        'Интервью с участником проекта': 'https://disk.yandex.ru/i/KoPmFR_EX79mMQ',
-        'Информационный плакат об изменениях договора': 'https://vk.com/s/v1/doc/cady-s2ugsAbdjZvFqLww-6fv0_IDTYy0vhZEIsIkCarDxUSE6o',
-        'Буклет «Что делать, если не поступил на бюджет?»': 'https://disk.yandex.ru/i/i-cUyb2wXpB99g',
-        'Интервью с участником проекта «Обркредит в СПО»': 'https://disk.yandex.ru/i/KoPmFR_EX79mMQ',
-        'Информационный плакат «Образовательный кредит: за и против»': 'https://disk.yandex.ru/i/jsWcxSwzpXKFqQ',
-        'Постановление Правительства РФ от 15.09.2020 № 1448': 'https://firpo.ru/netcat_files/368/760/h_2665f95a1d1374f2234aa0d7843bc452',
-        'Методические рекомендации': 'https://disk.yandex.ru/i/VNdskTMuLQAm-w',
-        'Статистику по востребованности программы в разных регионах;': 'https://disk.yandex.ru/d/kzQ6xAsaz_wfCQ',
-        'Анализ эффективности реализации Проекта;': 'https://vk.com/doc-224704750_685300661?hash=jJVjCy78g7KsTKnVpyNRT9sUN0ashgZEuIkRLRoPlzX&dl=fVAjJEvqqZNtAPsuUXpnRN6PJcooAIuN6HFLlw6LnKL',
-        'Презентационные материалы для использования в работе.': 'https://vk.com/doc-224704750_688500043?hash=1G9zzcU4QFztzrBvEX5smOFIGRKsw79wH8gFk4gF8x8',
-        'Образовательный кредит Сбербанка с государственной поддержкой': SberCreditPdf,
-        'Образовательный кредит с господержкой': RnkBCreditPdf,
-        'ПАО Сбербанк, РНКБ Банк (ПАО) информируют студентов, получивших кредит на образование': RekomCreditPdf,
-    };
+    const links: Record<string, string> = {
+        'Чек-лист по оформлению': 'https://disk.yandex.ru/i/n_vuufHeE_589Q',
+        'Консультация онлайн': 'https://open.edu.gov.ru/faq/#type=73',
+        '«Что делать, если не поступил на бюджет?»': 'https://disk.yandex.ru/i/i-cUyb2wXpB99g',
+        'Интервью с участником проекта': 'https://disk.yandex.ru/i/KoPmFR_EX79mMQ',
+        'Информационный плакат об изменениях договора': 'https://vk.com/s/v1/doc/cady-s2ugsAbdjZvFqLww-6fv0_IDTYy0vhZEIsIkCarDxUSE6o',
+        'Буклет «Что делать, если не поступил на бюджет?»': 'https://disk.yandex.ru/i/i-cUyb2wXpB99g',
+        'Интервью с участником проекта «Обркредит в СПО»': 'https://disk.yandex.ru/i/KoPmFR_EX79mMQ',
+        'Информационный плакат «Образовательный кредит: за и против»': 'https://disk.yandex.ru/i/jsWcxSwzpXKFqQ',
+        'Постановление Правительства РФ от 15.09.2020 № 1448': 'https://firpo.ru/netcat_files/368/760/h_2665f95a1d1374f2234aa0d7843bc452',
+        'Методические рекомендации': 'https://disk.yandex.ru/i/VNdskTMuLQAm-w',
+        'Статистику по востребованности программы в разных регионах;': 'https://disk.yandex.ru/d/kzQ6xAsaz_wfCQ',
+        'Анализ эффективности реализации Проекта;': 'https://vk.com/doc-224704750_685300661?hash=jJVjCy78g7KsTKnVpyNRT9sUN0ashgZEuIkRLRoPlzX&dl=fVAjJEvqqZNtAPsuUXpnRN6PJcooAIuN6HFLlw6LnKL',
+        'Презентационные материалы для использования в работе.': 'https://vk.com/doc-224704750_688500043?hash=1G9zzcU4QFztzrBvEX5smOFIGRKsw79wH8gFk4gF8x8',
+        'Образовательный кредит Сбербанка с государственной поддержкой': SberCreditPdf,
+        'Образовательный кредит с господержкой': RnkBCreditPdf,
+        'ПАО Сбербанк, РНКБ Банк (ПАО) информируют студентов, получивших кредит на образование': RekomCreditPdf,
+    };
 
-    return text.split('\n').map((paragraph, pIndex) => {
-        if (paragraph.trim() === '') return <div key={pIndex} className="h-4" />;
+    return text.split('\n').map((paragraph, pIndex) => {
+        if (paragraph.trim() === '') return <div key={pIndex} className="h-4" />;
 
-        let processedParagraph: (string | JSX.Element)[] = [paragraph];
-        for (const [phrase, url] of Object.entries(links)) {
-            let tempProcessed: (string | JSX.Element)[] = [];
-            processedParagraph.forEach(part => {
-                if (typeof part === 'string' && part.includes(phrase)) {
-                    const splitParts = part.split(phrase);
-                    splitParts.forEach((textPart, i) => {
-                        tempProcessed.push(textPart);
-                        if (i < splitParts.length - 1) {
-                            tempProcessed.push(
-                                <a
-                                    href={url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    key={`${phrase}-${i}`}
-                                    className="font-semibold text-indigo-600 hover:text-indigo-800 hover:underline transition duration-300"
-                                >
-                                    {phrase}
-                                    <LinkIcon className="inline-block w-4 h-4 ml-1 -mt-1" />
-                                </a>
-                            );
-                        }
-                    });
-                } else {
-                    tempProcessed.push(part);
-                }
-            });
-            processedParagraph = tempProcessed;
-        }
-        return <p key={pIndex}>{processedParagraph}</p>;
-    });
+        let processedParagraph: (string | JSX.Element)[] = [paragraph];
+        for (const [phrase, url] of Object.entries(links)) {
+            let tempProcessed: (string | JSX.Element)[] = [];
+            processedParagraph.forEach(part => {
+                if (typeof part === 'string' && part.includes(phrase)) {
+                    const splitParts = part.split(phrase);
+                    splitParts.forEach((textPart, i) => {
+                        tempProcessed.push(textPart);
+                        if (i < splitParts.length - 1) {
+                            tempProcessed.push(
+                                <a
+                                    href={url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    key={`${phrase}-${i}`}
+                                    className="font-semibold text-indigo-600 hover:text-indigo-800 hover:underline transition duration-300"
+                                >
+                                    {phrase}
+                                    <LinkIcon className="inline-block w-4 h-4 ml-1 -mt-1" />
+                                </a>
+                            );
+                        }
+                    });
+                } else {
+                    tempProcessed.push(part);
+                }
+            });
+            processedParagraph = tempProcessed;
+        }
+        return <p key={pIndex}>{processedParagraph}</p>;
+    });
 };
 
 
@@ -87,9 +88,11 @@ const EducationCredit = () => {
     const scrollToSection = (key: keyof typeof sectionsRef) => {
         sectionsRef[key].current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         setIsMenuOpen(false);
+        setIsSidebarOpen(false); 
     };
     
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const originalBlocks = [
         { id: 'about', title: 'О Проекте', image: AboutImage, content: `Среднее профессиональное образование сегодня – это не просто диплом, а реальный старт для карьеры в перспективных отраслях: от IT и медицины до инженерного дела и сервиса. Колледжи и техникумы с каждым годом становятся всё популярнее, ведь они дают не только знания, но и практические навыки, востребованные работодателями.\n\nНо что делать, если бюджетное место не досталось, а платить за обучение самостоятельно сложно?\n\nНе отказывайтесь от мечты! Государство предлагает льготный кредит на образование с фиксированной ставкой всего 3%. Это гораздо выгоднее обычных кредитов: государство компенсирует большую часть процентов, а начать оплачивать основной долг можно после трудоустройства.\n\nПочему это работает?\n• Доступно с 14 лет (с согласия родителей);\n• Срок погашения – до 15 лет;\n• Не нужен залог или поручитель.\n\nКак это поможет именно вам?\nПредставьте: вы учитесь на (наименование профессии/специальности), осваиваете современные производственные технологии, а после выпуска начинаете работать в престижной организации или на предприятии. Ваш кредит не станет обузой – первые выплаты начнутся только через 9 месяцев после трудоустройства, а низкая ставка сделает платежи комфортными.\n\nХотите узнать больше?\nПереходите в раздел «О проекте», где собраны ответы на все вопросы: от списка документов до пошаговой инструкции по оформлению. Не упустите шанс получить профессию мечты – даже если сегодня кажется, что финансы стоят на пути!\n\nP.S. Уже более 37 000 студентов СПО воспользовались программой. Присоединяйтесь – ваше будущее начинается сейчас!\n\nОБРАЗОВАТЕЛЬНЫЙ КРЕДИТ` },
@@ -123,16 +126,47 @@ const EducationCredit = () => {
     return (
         <div className="min-h-screen bg-gray-50 font-sans">
             <Header />
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="xl:hidden fixed top-[6.5rem] left-3 z-40 p-2 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg text-primary border border-border/50"
+              aria-label="Открыть быстрое меню"
+            >
+              <List className="w-5 h-5" />
+            </button>
+            {isSidebarOpen && (
+              <div 
+                className="xl:hidden fixed inset-0 z-50 bg-black/50" 
+                onClick={() => setIsSidebarOpen(false)}
+              >
+                <div 
+                  className="fixed top-0 left-0 h-full w-72 bg-white z-60 p-6 shadow-xl"
+                  onClick={(e) => e.stopPropagation()} 
+                >
+                  <button 
+                    onClick={() => setIsSidebarOpen(false)} 
+                    className="absolute top-4 right-4 text-muted-foreground"
+                    aria-label="Закрыть меню"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                  <Sidebar />
+                </div>
+              </div>
+            )}
+
             <div className="flex">
-                <Sidebar />
-                <main className="flex-1 min-h-screen">
+                <div className="hidden xl:block">
+                  <Sidebar />
+                </div>
+                
+                <main className="flex-1 min-h-screen min-w-0"> 
                     <InfoBlocks />
                     <div className="relative bg-gradient-to-br from-indigo-500 to-purple-600 text-black overflow-hidden">
                         <div className="absolute inset-0 bg-black opacity-20"></div>
                         <img src={HeroImage} alt="Студенты на лекции" className="absolute inset-0 w-full h-full object-cover" />
                         <div className="container mx-auto px-6 py-20 md:py-32 text-center relative z-10">
                             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight drop-shadow-lg">
-                               
+                                
                             </h1>
                             <p className="mt-6 text-lg md:text-xl max-w-3xl mx-auto drop-shadow-md">
                                 
@@ -188,25 +222,24 @@ const EducationCredit = () => {
                         </div>
                     </div>
                 </main>
-                <aside className="w-80 bg-white border-l border-border p-6 sticky top-16 h-screen overflow-y-auto">
+                <aside className="w-80 bg-white border-l border-border p-6 sticky top-16 h-screen overflow-y-auto hidden xl:block">
                     <SidebarCards />
                 </aside>
             </div>
         </div>
     );
 };
-
 const Section = React.forwardRef<HTMLDivElement, { id: string, title: string, image: string, children: React.ReactNode }>(({ id, title, image, children }, ref) => (
-    <div id={id} ref={ref} className="bg-white rounded-3xl shadow-lg border border-gray-200/80 overflow-hidden scroll-mt-24">
-        <img src={image} alt={title} className="w-full h-56 md:h-64 object-cover" />
-        <div className="p-8 md:p-10">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">{title}</h2>
-            <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-4">
-                {children}
-            </div>
-        </div>
-    </div>
+    <div id={id} ref={ref} className="bg-white rounded-3xl shadow-lg border border-gray-200/80 overflow-hidden scroll-mt-24">
+        <img src={image} alt={title} className="w-full h-56 md:h-64 object-cover" />
+        <div className="p-8 md:p-10">
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">{title}</h2>
+            <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-4">
+                {children}
+            </div>
+        </div>
+    </div>
 ));
 
-export default EducationCredit;
 
+export default EducationCredit;

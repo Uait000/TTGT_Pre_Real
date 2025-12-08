@@ -404,6 +404,44 @@ html.contrast-inverted a {
   font-weight: bold !important;
 }
 
+/* ==========================================================================
+                    ПРОЗРАЧНОСТИ ДЛЯ ВЕРСИИ СЛАБОВИДЯЩИХ
+==========================================================================
+
+/* --- Режим: Высокая контрастность (Черным по белому) --- */
+html.contrast-high-contrast header,
+html.contrast-high-contrast .fixed-right-panel,
+html.contrast-high-contrast .accessibility-panel,
+html.contrast-high-contrast .modal-content,
+/* Контент модального окна из NewsModal.tsx */
+html.contrast-high-contrast div[class*="bg-white"][class*="shadow-2xl"][class*="max-w-4xl"] {
+    background-color: #fff !important;
+}
+
+/* Оверлеи (фоны) модальных окон из NewsModal.tsx */
+html.contrast-high-contrast div[class*="bg-black/60"][class*="z-[60]"],
+html.contrast-high-contrast div[class*="bg-black/90"][class*="z-[70]"] {
+    background-color: rgba(0, 0, 0, 0.85) !important;
+}
+
+
+/* --- Режим: Инвертированный (Белым по черному) --- */
+html.contrast-inverted header,
+html.contrast-inverted .fixed-right-panel,
+html.contrast-inverted .accessibility-panel,
+html.contrast-inverted .modal-content,
+/* Контент модального окна из NewsModal.tsx */
+html.contrast-inverted div[class*="bg-white"][class*="shadow-2xl"][class*="max-w-4xl"] {
+    background-color: #000 !important;
+}
+
+/* Оверлеи (фоны) модальных окон из NewsModal.tsx */
+html.contrast-inverted div[class*="bg-black/60"][class*="z-[60]"],
+html.contrast-inverted div[class*="bg-black/90"][class*="z-[70]"] {
+    background-color: rgba(0, 0, 0, 0.85) !important;
+}
+
+
 html.images-hidden img,
 html.images-hidden video,
 html.images-hidden [style*="background-image"],
@@ -411,3 +449,130 @@ html.images-hidden svg {
   display: none !important;
   visibility: hidden !important; 
 }
+
+
+/* Добавьте эти анимации в ваш index.css */
+
+/* Shine animation for ticker */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+  }
+}
+
+.animate-shine {
+  animation: shine 3s ease-in-out infinite;
+}
+
+/* Pulse animation for attention */
+@keyframes pulse-gentle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-gentle {
+  animation: pulse-gentle 2s ease-in-out infinite;
+}
+
+/* Smooth fade in for ticker */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ticker-enter {
+  animation: fadeInDown 0.5s ease-out;
+}
+
+
+
+
+
+
+/* ==========================================================
+   КЛАСС ДЛЯ ОТОБРАЖЕНИЯ КОНТЕНТА ИЗ РЕДАКТОРА (Rich Text)
+   Добавьте этот класс к div, в который вы выводите контент.
+   Пример: <div className="rich-text-content" dangerouslySetInnerHTML={...} />
+========================================================== */
+.rich-text-content {
+  font-size: 1rem;
+  line-height: 1.5; /* Базовый интервал, если не задан другой */
+  color: inherit;
+}
+
+/* Возвращаем стили для списков */
+.rich-text-content ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+}
+
+.rich-text-content ol {
+  list-style-type: decimal;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+}
+
+.rich-text-content li {
+  margin-bottom: 0.25rem;
+  padding-left: 0.25rem;
+}
+
+/* Отступы для параграфов */
+.rich-text-content p {
+  margin-bottom: 1rem;
+}
+
+/* Заголовки */
+.rich-text-content h1 { font-size: 2.25rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 1rem; line-height: 1.2; }
+.rich-text-content h2 { font-size: 1.875rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; line-height: 1.3; }
+.rich-text-content h3 { font-size: 1.5rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.75rem; }
+.rich-text-content h4 { font-size: 1.25rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; }
+
+/* Ссылки */
+.rich-text-content a {
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.rich-text-content a:hover {
+  color: #1d4ed8;
+}
+
+/* Цитаты */
+.rich-text-content blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  font-style: italic;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 1rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

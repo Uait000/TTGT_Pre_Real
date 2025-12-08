@@ -1,214 +1,275 @@
-import { useState } from 'react';
-import MainLayout from '@/components/MainLayout'; 
+import { useState, useEffect } from 'react';
+import MainLayout from '@/components/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, MapPin, Phone, User, FileText, Target, Car, GraduationCap, Building, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CheckCircle, MapPin, Phone, User, FileText, Target, Car, GraduationCap, X, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+import { settingsApi } from '@/api/settings';
+
 import avto1 from '@/assets/pictures/School.jpg';
 import avto2 from '@/assets/pictures/phoca_thumb_l_5237.jpg';
-
 
 const DrivingSchool = () => {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [data, setData] = useState({
+        slides: [avto1, avto2],
+        price: "60 000 ₽",
+        description: `<p>Автошкола по подготовке водителей транспортных средств категории «В» с механической и автоматической трансмиссией открыта на отделении дополнительного профессионального образования ТТЖТ - филиала РГУПС и работает на рынке образовательных услуг с октября 2010 года.</p>`,
+        goals_text: `<p>Основная цель работы автошколы – обучение основам безопасного управления, практическая отработка наиболее важных элементов управления автомобилем, преодоление психологического барьера непонимания между действиями новичка-водителя и поведением автомобиля на дороге.</p>`,
+        cars_list: ["Шевролет-Авео", "Рено Логан", "Педали дополнительного управления", "Камеры видеонаблюдения", "Современное техническое оснащение"],
+        advantages_list: [
+            "Качественная подготовка водителей", "Поэтапная оплата", "Вечернее время теории",
+            "Индивидуальный график вождения", "Обучение в выходные", "Широкий выбор авто",
+            "Свидетельство гос. образца", "Сдача в ГИБДД с нами", "Сопровождение до прав",
+            "Профессиональные инструкторы"
+        ],
+        contacts_text: "Адрес: ТТЖТ – филиал РГУПС, ул. Красноармейская, 57, каб. 116, 106а\nТелефон: 8(86196) 6-20-03, доб. 125, 135\nМобильный: 89884728160\nЗаведующий отделом: Токарев Максим Викторович",
+        docs_list: ["Паспорт", "Действующая мед. справка", "Фото 3×4 см (1 шт.)"]
+    });
 
-    const images = [
-        { src: avto1, alt: 'Автодром' },
-        { src: avto2, alt: 'Учебные автомобили' },
-    ];
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const settings = await settingsApi.getPageData('driving_school_page');
+                if (settings) {
+                    setData(prevData => ({
+                        ...prevData,
+                        ...settings,
+                        slides: (settings.slides && settings.slides.length > 0) ? settings.slides : prevData.slides,
+                        price: settings.price || prevData.price,
+                        description: settings.description || prevData.description,
+                        goals_text: settings.goals_text || prevData.goals_text,
+                        cars_list: settings.cars_list || prevData.cars_list,
+                        advantages_list: settings.advantages_list || prevData.advantages_list,
+                        contacts_text: settings.contacts_text || prevData.contacts_text,
+                        docs_list: settings.docs_list || prevData.docs_list
+                    }));
+                }
+            } catch (error) {
+                console.error('Error loading driving school data:', error);
+            }
+        };
+        loadData();
+    }, []);
 
-    const openLightbox = (index: number) => {
-        setCurrentImageIndex(index);
-        setLightboxOpen(true); 
-    };
-
-
-    const closeLightbox = () => {
-        setLightboxOpen(false);
-    };
-
-    const goToNextImage = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    };
-
-    const goToPrevImage = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + images.length - 1) % images.length);
-    };
+    const openLightbox = (index: number) => { setCurrentImageIndex(index); setLightboxOpen(true); };
+    const closeLightbox = () => setLightboxOpen(false);
+    const goToNextImage = () => setCurrentImageIndex((prev) => (prev + 1) % data.slides.length);
+    const goToPrevImage = () => setCurrentImageIndex((prev) => (prev + data.slides.length - 1) % data.slides.length);
 
     return (
         <MainLayout>
             <div className="bg-white rounded-2xl shadow-xl border border-border p-8 md:p-12">
-                <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6 text-center tracking-tight">Автошкола ТТЖТ</h1>
-                <p className="text-center text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">Качественная подготовка водителей категории «В» с 2010 года.</p>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-6 text-center tracking-tight flex items-center justify-center gap-3">
+                    <Car className="w-10 h-10 md:w-12 md:h-12 text-blue-600" />
+                    Автошкола ТТЖТ
+                </h1>
                 
-                <div className="space-y-12">
-                    <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                        <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-md h-full">
+                <div className="space-y-16">
+                    {/* Блок 1: Описание и Цена */}
+                    <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                        <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-sm h-full flex flex-col">
                             <CardHeader className="pb-4">
                                 <CardTitle className="text-2xl font-semibold text-blue-800 flex items-center">
-                                    <GraduationCap className="w-6 h-6 mr-3 text-blue-600"/> О нашей автошколе
+                                    <GraduationCap className="w-7 h-7 mr-3 text-blue-600"/> О нашей автошколе
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent>
-                                <p className="text-gray-700 leading-relaxed text-base">
-                                    Автошкола по подготовке водителей транспортных средств категории «В» с механической и автоматической трансмиссией открыта на отделении дополнительного профессионального образования ТТЖТ - филиала РГУПС и работает на рынке образовательных услуг с октября 2010 года.
-                                </p>
-                                <div className="mt-6 bg-white rounded-lg p-4 border border-blue-100">
+                            <CardContent className="flex-1 flex flex-col">
+                                <div className="text-gray-700 leading-relaxed text-base rich-text-content mb-6" dangerouslySetInnerHTML={{__html: data.description}} />
+                                <div className="mt-auto bg-white/60 rounded-xl p-5 border border-blue-100 shadow-sm">
                                     <h3 className="text-lg font-semibold text-blue-700 mb-2 flex items-center">
                                         <Target className="w-5 h-5 mr-2 text-blue-500"/> Цели обучения
                                     </h3>
-                                    <p className="text-gray-600 leading-relaxed text-sm">
-                                        Основная цель работы автошколы – обучение основам безопасного управления, практическая отработка наиболее важных элементов управления автомобилем, преодоление психологического барьера непонимания между действиями новичка-водителя и поведением автомобиля на дороге.
-                                    </p>
+                                    <div className="text-gray-600 leading-relaxed text-sm rich-text-content" dangerouslySetInnerHTML={{__html: data.goals_text}} />
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="p-8 bg-gradient-to-br from-green-50 to-teal-50 border-green-200 shadow-md flex flex-col items-center justify-center text-center h-full">
-                            <h3 className="text-xl font-semibold text-green-800 mb-3">Стоимость обучения</h3>
-                            <p className="text-5xl font-bold text-green-700 mb-1">60 000 ₽</p>
-                            <p className="text-base text-gray-600">с 1 сентября 2025 г.</p>
-                        </Card>
-                    </section>
-
-                    <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div 
-                            className="rounded-xl overflow-hidden shadow-lg group relative cursor-pointer"
-                            onClick={() => openLightbox(0)} 
-                        >
-                            <img src={images[0].src} alt={images[0].alt} className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"/>
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                            <p className="absolute bottom-4 left-4 text-white font-semibold text-lg z-10">{images[0].alt}</p>
-                        </div>
-                        <div 
-                            className="rounded-xl overflow-hidden shadow-lg group relative cursor-pointer"
-                            onClick={() => openLightbox(1)} 
-                        >
-                            <img src={images[1].src} alt={images[1].alt} className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"/>
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                            <p className="absolute bottom-4 left-4 text-white font-semibold text-lg z-10">{images[1].alt}</p>
-                        </div>
-                    </section>
-
-                    <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <Card className="p-6 border-gray-200 shadow-sm">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="text-xl font-semibold text-gray-800 flex items-center">
-                                    <Building className="w-6 h-6 mr-3 text-gray-500"/> Материально-техническая база
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <ul className="space-y-2 text-base text-gray-700 list-disc list-inside">
-                                    <li>2 учебных класса с методическими материалами</li>
-                                    <li>Компьютерный класс на 15 мест</li>
-                                    <li>Автодром площадью 3 га</li>
-                                    <li>Учебные автомобили с двойным управлением</li>
-                                    <li>Современное оборудование и тренажеры</li>
-                                </ul>
-                            </CardContent>
-                        </Card>
                         
-                        <Card className="p-6 border-gray-200 shadow-sm">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="text-xl font-semibold text-gray-800 flex items-center">
-                                    <Car className="w-6 h-6 mr-3 text-gray-500"/> Автопарк
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <ul className="space-y-2 text-base text-gray-700 list-disc list-inside">
-                                    <li>Шевролет-Авео</li>
-                                    <li>Рено Логан</li>
-                                    <li>Педали дополнительного управления</li>
-                                    <li>Камеры видеонаблюдения</li>
-                                    <li>Современное техническое оснащение</li>
-                                </ul>
-                            </CardContent>
-                        </Card>
+                        <div className="flex flex-col gap-6 h-full">
+                             <Card className="p-8 bg-gradient-to-br from-green-50 to-teal-50 border-green-200 shadow-sm flex flex-col items-center justify-center text-center h-full hover:shadow-md transition-shadow">
+                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 text-green-600">
+                                    <Car className="w-8 h-8" />
+                                </div>
+                                <h3 className="text-2xl font-bold text-green-800 mb-2">Стоимость обучения</h3>
+                                <p className="text-5xl md:text-6xl font-extrabold text-green-600 mb-2 tracking-tight">{data.price}</p>
+                                <p className="text-sm font-medium text-green-700 bg-green-100/80 px-4 py-1.5 rounded-full">Категория "B"</p>
+                            </Card>
+
+                            <Card className="p-6 bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200 shadow-sm flex-1">
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-xl font-semibold text-orange-800 flex items-center">
+                                        <FileText className="w-6 h-6 mr-3 text-orange-600"/> Документы для зачисления
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <ul className="space-y-3">
+                                        {data.docs_list.map((item, i) => (
+                                            <li key={i} className="flex items-center text-base text-orange-900 bg-white/60 p-3 rounded-lg border border-orange-100/50">
+                                                <div className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center mr-3 text-orange-600 font-bold text-xs shrink-0">
+                                                    {i + 1}
+                                                </div>
+                                                {item}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </CardContent>
+                            </Card>
+                        </div>
                     </section>
 
-                    <section className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 p-8 shadow-sm">
-                        <h2 className="text-2xl font-semibold text-indigo-800 mb-6 text-center">Наши преимущества</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {[
-                                'Качественная подготовка водителей', 'Поэтапная оплата', 'Вечернее время теории',
-                                'Индивидуальный график вождения', 'Обучение в выходные', 'Широкий выбор авто',
-                                'Свидетельство гос. образца', 'Сдача в ГИБДД с нами', 'Сопровождение до прав',
-                                'Профессиональные инструкторы'
-                            ].map((item, index) => (
-                                <div key={index} className="flex items-start p-4 bg-white rounded-lg shadow-sm border border-indigo-100 hover:border-indigo-300 transition-colors duration-200">
-                                    <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                                    <span className="text-gray-700">{item}</span>
+                    {/* Блок 2: Галерея */}
+                    <section>
+                        <h2 className="text-2xl font-bold text-primary mb-6 text-center flex items-center justify-center gap-2">
+                            <span className="w-8 h-1 bg-primary rounded-full hidden sm:block"></span>
+                            Наш автопарк и учебные классы
+                            <span className="w-8 h-1 bg-primary rounded-full hidden sm:block"></span>
+                        </h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {data.slides.map((src, i) => (
+                                <div 
+                                    key={i} 
+                                    className="group relative aspect-[4/3] rounded-xl overflow-hidden shadow-sm cursor-pointer hover:shadow-xl transition-all duration-300 border border-gray-100" 
+                                    onClick={() => openLightbox(i)}
+                                >
+                                    <img src={src} alt="Slide" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"/>
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                                        <div className="bg-white/90 rounded-full p-3 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg">
+                                            <ChevronRight className="w-6 h-6 text-primary" />
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     </section>
 
-                    <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <Card className="lg:col-span-2 p-8 bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200 shadow-sm">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="text-2xl font-semibold text-gray-800">Контакты и запись</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4 text-base text-gray-700">
-                                <p className="flex items-center"><MapPin className="w-5 h-5 mr-3 text-gray-500"/> <strong>Адрес:</strong> ТТЖТ – филиал РГУПС, ул. Красноармейская, 57, каб. 116, 106а</p>
-                                <p className="flex items-center"><Phone className="w-5 h-5 mr-3 text-gray-500"/> <strong>Телефон:</strong> 8(86196) 6-20-03, доб. 125, 135</p>
-                                <p className="flex items-center"><Phone className="w-5 h-5 mr-3 text-gray-500"/> <strong>Мобильный:</strong> 89884728160</p>
-                                <p className="flex items-center"><User className="w-5 h-5 mr-3 text-gray-500"/> <strong>Заведующий отделом:</strong> Токарев Максим Викторович</p>
-                            </CardContent>
-                        </Card>
-                        <Card className="p-6 bg-blue-50 border-blue-200 shadow-sm">
-                            <CardHeader className="pb-3">
-                                <CardTitle className="text-lg font-semibold text-blue-800 flex items-center">
-                                    <FileText className="w-5 h-5 mr-2 text-blue-600"/> Документы для зачисления
+                    {/* Блок 3: Списки (Автопарк и Преимущества) - ОБНОВЛЕННЫЙ ДИЗАЙН */}
+                    <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <Card className="border-none shadow-lg ring-1 ring-gray-100 h-full flex flex-col">
+                            <CardHeader className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-100 pb-4">
+                                <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
+                                    <div className="p-2 bg-blue-100 rounded-lg mr-3 text-blue-600">
+                                        <Car className="w-6 h-6"/> 
+                                    </div>
+                                    Автопарк и Оснащение
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent>
-                                <ul className="text-base text-blue-900 space-y-2 list-disc list-inside">
-                                    <li>Паспорт</li>
-                                    <li>Действующая мед. справка</li>
-                                    <li>Фото 3×4 см (1 шт.)</li>
+                            <CardContent className="pt-6 flex-1">
+                                <ul className="space-y-3">
+                                    {data.cars_list.map((item, i) => (
+                                        <li key={i} className="flex items-start text-base text-gray-700 p-3 rounded-lg hover:bg-blue-50/50 transition-colors border border-transparent hover:border-blue-100">
+                                            <CheckCircle className="w-5 h-5 mr-3 text-blue-500 flex-shrink-0 mt-0.5" />
+                                            <span className="font-medium">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="border-none shadow-lg ring-1 ring-gray-100 h-full flex flex-col">
+                            <CardHeader className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-100 pb-4">
+                                <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
+                                    <div className="p-2 bg-green-100 rounded-lg mr-3 text-green-600">
+                                        <Target className="w-6 h-6"/>
+                                    </div>
+                                    Преимущества обучения
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="pt-6 flex-1">
+                                <ul className="grid grid-cols-1 gap-3">
+                                    {data.advantages_list.map((item, i) => (
+                                        <li key={i} className="flex items-start text-base text-gray-700 p-3 rounded-lg hover:bg-green-50/50 transition-colors border border-transparent hover:border-green-100">
+                                            <div className="w-2 h-2 bg-green-500 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
                                 </ul>
                             </CardContent>
                         </Card>
                     </section>
 
-                    <section className="text-center bg-gradient-to-r from-primary to-blue-700 rounded-xl p-10 shadow-lg text-white">
-                        <h2 className="text-3xl font-bold mb-4">До встречи в нашем техникуме!</h2>
-                        <p className="text-lg font-medium max-w-2xl mx-auto">
-                            Уметь качественно управлять транспортным средством – нелегкая задача.
-                            Так не лучше ли учиться этому у профессионалов?!
-                        </p>
-                    </section>
+                    {/* Блок 4: Контакты - ОБНОВЛЕННЫЙ ДИЗАЙН (Светлый) */}
+                    <Card className="bg-white border border-gray-200 shadow-xl overflow-hidden relative">
+                        {/* Декоративная полоса слева */}
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-blue-500 to-purple-600"></div>
+                        
+                        <CardHeader className="pb-6 border-b border-gray-100 bg-gray-50/50">
+                            <CardTitle className="text-2xl font-bold flex items-center text-gray-800">
+                                <MapPin className="w-7 h-7 mr-3 text-red-500"/> 
+                                Контакты и запись
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pt-8 px-6 md:px-10">
+                             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                                {/* Адрес */}
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex items-center text-blue-600 font-semibold mb-1">
+                                        <MapPin className="w-5 h-5 mr-2" />
+                                        Адрес
+                                    </div>
+                                    <p className="text-lg text-gray-700 leading-relaxed">
+                                        {data.contacts_text.split('\n')[0].replace('Адрес:', '').trim()}
+                                    </p>
+                                    <div className="mt-auto pt-2 text-sm text-gray-400">Главный корпус</div>
+                                </div>
+
+                                {/* Телефоны */}
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex items-center text-green-600 font-semibold mb-1">
+                                        <Phone className="w-5 h-5 mr-2" />
+                                        Связь
+                                    </div>
+                                    <div className="space-y-1">
+                                        {data.contacts_text.split('\n').slice(1, 3).map((line, idx) => (
+                                            <p key={idx} className="text-lg font-medium text-gray-800">
+                                                {line.replace('Телефон:', '').replace('Мобильный:', '').trim()}
+                                            </p>
+                                        ))}
+                                    </div>
+                                    <div className="mt-auto pt-2 text-sm text-gray-400">Звоните в рабочее время</div>
+                                </div>
+
+                                {/* Заведующий */}
+                                <div className="flex flex-col gap-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                    <div className="flex items-center text-amber-600 font-semibold mb-1">
+                                        <User className="w-5 h-5 mr-2" />
+                                        Руководство
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-500 mb-1">Заведующий отделом</p>
+                                        <p className="text-xl font-bold text-gray-900">
+                                            {data.contacts_text.split('\n').find(l => l.includes('Заведующий'))?.replace('Заведующий отделом:', '').trim() || 'Токарев Максим Викторович'}
+                                        </p>
+                                    </div>
+                                </div>
+                             </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
-            
-            {/* Лайтбокс */}
+
+            {/* Lightbox */}
             {lightboxOpen && (
-                <div 
-                    className="fixed inset-0 bg-black/80 z-[70] flex items-center justify-center p-4" 
-                    onClick={closeLightbox} 
-                >
+                <div className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200" onClick={closeLightbox}>
                     <img 
-                        src={images[currentImageIndex].src} 
-                        alt={images[currentImageIndex].alt} 
-                        className="max-w-full max-h-full object-contain"
-                        onClick={(e) => e.stopPropagation()} 
+                        src={data.slides[currentImageIndex]} 
+                        className="max-w-full max-h-[90vh] object-contain rounded-md shadow-2xl" 
+                        onClick={e => e.stopPropagation()} 
+                        alt="Просмотр"
                     />
-
-                    <button 
-                        onClick={closeLightbox} 
-                        className="absolute top-4 right-4 text-white bg-black/30 rounded-full p-2 hover:bg-black/50 transition-colors"
-                    >
-                        <X className="w-7 h-7" />
+                    <button onClick={closeLightbox} className="absolute top-4 right-4 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition-all">
+                        <X className="w-8 h-8" />
                     </button>
-
-                    {images.length > 1 && (
+                    
+                    {data.slides.length > 1 && (
                         <>
                             <button 
                                 onClick={(e) => { e.stopPropagation(); goToPrevImage(); }} 
-                                className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-black/30 rounded-full p-3 hover:bg-black/50 transition-colors"
+                                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-3 transition-all"
                             >
                                 <ChevronLeft className="w-8 h-8" />
                             </button>
                             <button 
                                 onClick={(e) => { e.stopPropagation(); goToNextImage(); }} 
-                                className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-black/30 rounded-full p-3 hover:bg-black/50 transition-colors"
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-3 transition-all"
                             >
                                 <ChevronRight className="w-8 h-8" />
                             </button>

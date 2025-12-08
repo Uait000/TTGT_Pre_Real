@@ -1,5 +1,5 @@
+import { useState, useEffect } from 'react';
 import MainLayout from '@/components/MainLayout';
-
 import { 
     FileText, 
     Phone, 
@@ -14,37 +14,66 @@ import {
 import corp1 from '@/assets/pictures/corp.jpg';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { settingsApi, CorruptionDocument } from '@/api/settings';
 
+// Дефолтные документы
 import planMeropriyatiy from '@/assets/file/corp/Plan_mer_korr_30_08_2024.pdf';
 import polozhenieOKomissii from '@/assets/file/corp/Pol_korr.pdf';
 import prikazOKomissii from '@/assets/file/corp/Plan_mer_korr_30_08_2024.pdf'; 
 import izmeneniyaVPrikaz from '@/assets/file/corp/pr_o_kom_korr_izm_03_09_2024.pdf';
 import zapretNaPodarki from '@/assets/file/corp/podarki.pdf';
 
+const DEFAULT_DOCUMENTS: CorruptionDocument[] = [
+    {
+        title: 'План мероприятий ТТЖТ - филиала РГУПС по противодействию коррупции... на 2024-2025 учебный год',
+        url: planMeropriyatiy
+    },
+    {
+        title: 'Положение о комиссии по противодействию коррупции ТТЖТ - филиала РГУПС',
+        url: polozhenieOKomissii
+    },
+    {
+        title: 'Приказ "О комиссии по противодействию коррупции и урегулированию конфликта интересов..."',
+        url: prikazOKomissii
+    },
+    {
+        title: 'Изменения в приказ "О комиссии по противодействию коррупции..."',
+        url: izmeneniyaVPrikaz
+    },
+    {
+        title: 'Запрет на дарение подарков',
+        url: zapretNaPodarki
+    }
+];
 
 const CorruptionReport = () => {
-    const documents = [
-        {
-            title: 'План мероприятий ТТЖТ - филиала РГУПС по противодействию коррупции... на 2024-2025 учебный год',
-            url: planMeropriyatiy
-        },
-        {
-            title: 'Положение о комиссии по противодействию коррупции ТТЖТ - филиала РГУПС',
-            url: polozhenieOKomissii
-        },
-        {
-            title: 'Приказ "О комиссии по противодействию коррупции и урегулированию конфликта интересов..."',
-            url: prikazOKomissii
-        },
-        {
-            title: 'Изменения в приказ "О комиссии по противодействию коррупции..."',
-            url: izmeneniyaVPrikaz
-        },
-        {
-            title: 'Запрет на дарение подарков',
-            url: zapretNaPodarki
-        }
-    ];
+    const [documents, setDocuments] = useState<CorruptionDocument[]>(DEFAULT_DOCUMENTS);
+
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const data = await settingsApi.getPageData('corruption_report_page');
+                if (data && data.documents) {
+                    // Объединяем данные с дефолтными, сохраняя структуру
+                    // Если документов в базе меньше чем дефолтных, берем из базы.
+                    // Если в базе URL пустой, берем дефолтный URL (если есть совпадение по индексу)
+                    const loadedDocs = data.documents;
+                    
+                    if (loadedDocs.length > 0) {
+                        const processedDocs = loadedDocs.map((doc: any, index: number) => ({
+                            title: doc.title,
+                            // Если URL пришел пустой, пытаемся взять дефолтный по индексу
+                            url: doc.url || (DEFAULT_DOCUMENTS[index]?.url || '#')
+                        }));
+                        setDocuments(processedDocs);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading corruption report data:', error);
+            }
+        };
+        loadData();
+    }, []);
 
     return (
         <MainLayout>
@@ -64,7 +93,7 @@ const CorruptionReport = () => {
 
             <div className="relative flex flex-col items-start pl-10 md:pl-12">
                 
-                {/* Вертикальная линия, которая была в коде */}
+                {/* Вертикальная линия */}
                 <div className="absolute left-4 md:left-6 top-1 bottom-1 w-1.5 bg-gradient-to-b from-primary via-blue-700 to-red-500 rounded-full"></div>
 
                 {/* Блок 1: Сообщить о факте коррупции */}

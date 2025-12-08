@@ -3,23 +3,51 @@ import { filesApi } from './files';
 import { getAuthHeaders } from "@/api/auth.ts";
 
 export const POST_TAGS = [
-  "Новости",
-  "Достижения",
-  "Образование",
-  "Событие"
+  "Новости",                    // type 0
+  "Достижения",                 // type 1
+  "Образование",                // type 2
+  "Событие",                    // type 3
+  "Галерея (Сетка картинок)",   // type 4
+  "История (Таймлайн)",         // type 5
+  "Сотрудник (Карточка)",       // type 6 
+  "Отделение (Карточка)",       // type 7 
+  "Документ (НОКО)"             // type 8 
 ];
-
 
 export interface BackendFile {
   id: string;
   name: string;
   mime: string;
+  url?: string; 
 }
 
 export enum PostCategory {
   News = 0,
   Professionals = 1,
   Contests = 2,
+  Documents = 3,
+  AccessibleEnvironment = 4,
+  PaymentReceipts = 5,
+  IOS = 6,
+  AdmissionNumbers = 7,
+  AdmissionRules = 8,
+  Memo = 9,
+  StateExam = 10,
+  StartInScience = 11,
+  RussiaBelarus = 12,
+  RailwayEmployers = 13,
+  Schedule = 14,
+  ScheduleGeneral = 15,
+  ScheduleCorrespondence = 16,
+  Victory80 = 17,
+  Anniversary95 = 18,
+  Pride = 19,
+  History = 20,
+  Administration = 21,
+  Departments = 22,
+  NOKO = 23,
+  Workshops = 24,
+  ExamSchedule = 25,
 }
 
 export enum PostStatus {
@@ -85,46 +113,40 @@ export const postsApi = {
     return await response.json();
   },
 
-	
-	getPublicAll: async (
-		params: {
-			limit?: number;
-			offset?: number;
-			category: PostCategory; 
-		}
-	): Promise<Post[]> => {
-		const queryParams = new URLSearchParams();
-		queryParams.append('category', params.category.toString());
-		queryParams.append('offset', params.offset?.toString() || '0');
-		queryParams.append('limit', params.limit?.toString() || '10');
+  getPublicAll: async (
+    params: {
+      limit?: number;
+      offset?: number;
+      category: PostCategory; 
+    }
+  ): Promise<Post[]> => {
+    const queryParams = new URLSearchParams();
+    queryParams.append('category', params.category.toString());
+    queryParams.append('offset', params.offset?.toString() || '0');
+    queryParams.append('limit', params.limit?.toString() || '100'); 
 
-		
-		const url = `${BASE_URL}/content/posts/?${queryParams.toString()}`;
-		
-		
-		const response = await fetch(url); 
+    const url = `${BASE_URL}/content/posts/?${queryParams.toString()}`;
+    
+    const response = await fetch(url); 
 
-		if (!response.ok) {
-			const errorDetails = await response.json().catch(() => ({ detail: response.statusText }));
-			console.error('API Error (getPublicAll):', errorDetails);
-			throw new Error(`Failed to fetch public posts: ${errorDetails.detail || response.statusText}`);
-		}
-		return await response.json();
-	},
+    if (!response.ok) {
+      const errorDetails = await response.json().catch(() => ({ detail: response.statusText }));
+      console.error('API Error (getPublicAll):', errorDetails);
+      throw new Error(`Failed to fetch public posts: ${errorDetails.detail || response.statusText}`);
+    }
+    return await response.json();
+  },
 
-	getPublicById: async (id: number): Promise<Post> => {
-		
-		const url = `${BASE_URL}/content/posts/${id}`;
-		
-		
-		const response = await fetch(url); 
+  getPublicById: async (id: number): Promise<Post> => {
+    const url = `${BASE_URL}/content/posts/${id}`;
+    
+    const response = await fetch(url); 
 
-		if (!response.ok) {
-			throw new Error('Failed to fetch public post');
-		}
-		return await response.json();
-	},
-	
+    if (!response.ok) {
+      throw new Error('Failed to fetch public post');
+    }
+    return await response.json();
+  },
 
   getById: async (id: number): Promise<Post> => { 
     const response = await fetch(`${BASE_URL}/admin/posts/${id}`, { headers: getAuthHeaders() });
@@ -155,13 +177,12 @@ export const postsApi = {
         uploadedFileIds = uploadResults.filter((id): id is string => id !== null);
     }
 
-    
     const finalPayload = {
       ...payload,
       publish_date: Math.floor(payload.publish_date), 
       category: Number(payload.category), 
       type: Number(payload.type),         
-      status: Number(payload.status),     
+      status: Number(payload.status),      
       files: uploadedFileIds, 
     };
 
@@ -175,17 +196,21 @@ export const postsApi = {
 
     if (!response.ok) {
       const errorDetails = await response.json().catch(() => ({ detail: 'Не удалось прочитать ошибку сервера' }));
+      console.error('Ошибка сервера при создании поста:', response.status, errorDetails);
+      
       if (response.status === 409) {
-        console.error('Ошибка 409 (Конфликт). Ответ сервера:', errorDetails);
         throw new ConflictError('Пост с таким заголовком, вероятно, уже существует. Пожалуйста, измените заголовок.');
       }
       if (response.status === 422) {
-          console.error('Ошибка 422 (Validation Error). Ответ сервера:', errorDetails);
           const errorMsg = errorDetails.detail?.[0]?.msg || 'Ошибка валидации данных';
           const errorLoc = errorDetails.detail?.[0]?.loc?.join('.') || 'неизвестное поле';
           throw new Error(`Ошибка валидации (422): ${errorMsg} в поле "${errorLoc}"`);
       }
-      const errorMessage = typeof errorDetails.detail === 'string' ? errorDetails.detail : 'Ошибка данных запроса.';
+      if (response.status === 400) {
+          throw new Error(`Ошибка 400: ${typeof errorDetails.detail === 'string' ? errorDetails.detail : 'Некорректный запрос'}`);
+      }
+
+      const errorMessage = typeof errorDetails.detail === 'string' ? errorDetails.detail : `Ошибка ${response.status}: ${response.statusText}`;
       throw new Error(errorMessage);
     }
     return response.json();
@@ -197,13 +222,13 @@ export const postsApi = {
     
     if (filesToUpload && filesToUpload.length > 0) {
       const uploadPromises = filesToUpload.map(async (file) => {
-          try {
-            const fileId = await filesApi.upload(file);
-            return typeof fileId === 'string' ? fileId : null;
-          } catch (error) {
-            console.error(`Failed to upload file ${file.name}:`, error);
-          }
-          return null;
+        try {
+          const fileId = await filesApi.upload(file);
+          return typeof fileId === 'string' ? fileId : null;
+        } catch (error) {
+          console.error(`Failed to upload file ${file.name}:`, error);
+        }
+        return null;
       });
       const newUploadResults = await Promise.all(uploadPromises);
       newUploadedFileIds = newUploadResults.filter((id): id is string => id !== null);
@@ -222,7 +247,7 @@ export const postsApi = {
                 finalPayload[key] = Number(value);
             }
         } else if (key === 'publish_date') {
-              if (value !== undefined && value !== null) {
+             if (value !== undefined && value !== null) {
                 finalPayload[key] = Math.floor(Number(value)); 
             }
         } else if (value !== undefined) { 
@@ -232,7 +257,6 @@ export const postsApi = {
     }
     finalPayload['files'] = allFileIds;
 
-
     console.log('Отправляемый Payload (Update):', finalPayload);
 
     const response = await fetch(`${BASE_URL}/admin/posts/${id}`, { 
@@ -240,12 +264,13 @@ export const postsApi = {
       headers: getAuthHeaders(),
       body: JSON.stringify(finalPayload),
     });
+    
     if (!response.ok) {
         const status = response.status;
         let errorDetails;
         try {
             errorDetails = await response.json();
-          console.error(`Ошибка ${status} (Update). Ответ сервера:`, errorDetails); 
+            console.error(`Ошибка ${status} (Update). Ответ сервера:`, errorDetails); 
         } catch (e) {
             errorDetails = { detail: `Failed to parse error response. Status: ${status}` };
         }

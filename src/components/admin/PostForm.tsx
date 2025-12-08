@@ -51,9 +51,11 @@ interface PostFormProps {
   onClose: () => void;
   onSuccess: () => void;
   editPost?: Post | null;
+  isScheduleUser?: boolean;
+  fixedCategory?: PostCategory; 
 }
 
-export default function PostForm({ open, onClose, onSuccess, editPost }: PostFormProps) {
+export default function PostForm({ open, onClose, onSuccess, editPost, isScheduleUser = false, fixedCategory }: PostFormProps) {
   const [loading, setLoading] = useState(false);
   
   const [teacherList, setTeacherList] = useState<Teacher[]>([]);
@@ -69,33 +71,35 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
   const [formData, setFormData] = useState<CreatePostPayload & { isDraft: boolean }>({
     title: '',
     body: '',
-    author: '',
+    author: isScheduleUser ? '' : '', 
     type: 0,
     files: [],
     publish_date: Math.floor(new Date().getTime() / 1000),
-    category: PostCategory.News,
+    category: fixedCategory !== undefined ? fixedCategory : PostCategory.News,
     status: PostStatus.Draft,
     isDraft: true,
   });
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
+  const isPrideCategory = fixedCategory === PostCategory.Pride;
+
   useEffect(() => {
+    if (isScheduleUser || isPrideCategory) return;
+
     setIsTeacherSearching(true);
     const timerId = setTimeout(() => {
       teachersApi.getAll({ search: teacherSearch, limit: 1000 })
         .then(setTeacherList)
         .catch((err) => {
           console.error("Failed to search teachers:", err);
-          toast({ title: 'Ошибка', description: 'Не удалось найти автора', variant: 'destructive' });
         })
         .finally(() => setIsTeacherSearching(false));
     }, 300); 
 
     return () => clearTimeout(timerId);
-  }, [teacherSearch, toast]); 
+  }, [teacherSearch, isScheduleUser, isPrideCategory]); 
 
-  
   useEffect(() => {
     setTitleError(null);
     const postDate = editPost ? new Date(editPost.publish_date * 1000) : new Date();
@@ -110,65 +114,87 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
         type: editPost.type,
         files: fileIds,
         publish_date: editPost.publish_date,
-        category: editPost.category || PostCategory.News,
+        category: editPost.category,
         status: editPost.status || PostStatus.Draft,
         isDraft: editPost.status === PostStatus.Draft,
       });
       setSelectedDate(postDate);
       setImageFiles([]);
+      setToBeDeleted([]);
       
-      setTeacherSearch(editPost.author);
+      if (!isScheduleUser && !isPrideCategory) {
+        setTeacherSearch(editPost.author);
+      }
     } else if (open && !editPost) {
       const initialDate = new Date();
       setFormData({
-        title: '',
+        title: '', 
         body: '',
-        author: '',
+        author: isScheduleUser ? '' : '',
         type: 0,
         files: [],
         publish_date: Math.floor(initialDate.getTime() / 1000),
-        category: PostCategory.News,
+        category: fixedCategory !== undefined ? fixedCategory : PostCategory.News,
         status: PostStatus.Draft,
         isDraft: true,
       });
       setSelectedDate(initialDate);
       setImageFiles([]);
+      setToBeDeleted([]);
       
-      setTeacherSearch('');
+      if (!isScheduleUser) {
+        setTeacherSearch('');
+      }
     }
-  }, [editPost, open]);
+  }, [editPost, open, isScheduleUser, fixedCategory, isPrideCategory]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setTitleError(null);
 
-    if (!(formData.title || '').trim() || !(formData.body || '').trim() || !formData.author) {
-      toast({ title: 'Ошибка', description: 'Пожалуйста, заполните все обязательные поля (*)', variant: 'destructive' });
-      return;
+    if (!isPrideCategory) {
+        if (!formData.title.trim()) {
+            toast({ title: 'Ошибка', description: 'Заголовок обязателен', variant: 'destructive' });
+            return;
+        }
     }
 
     setLoading(true);
     try {
+      let finalTitle = formData.title;
+      
+      if (isPrideCategory) {
+          if (!finalTitle.trim() && imageFiles.length > 0) {
+              finalTitle = imageFiles[0].name.replace(/\.[^/.]+$/, "");
+          } else if (!finalTitle.trim()) {
+              finalTitle = "Студент";
+          }
+      }
+
       const finalPayload: CreatePostPayload = {
         ...formData,
-          files: formData.files.filter(file => !toBeDeleted.includes(file)),
+        title: finalTitle,
+        author: isPrideCategory ? 'Администрация' : (formData.author || 'Администрация'),
+        body: (isPrideCategory || !formData.body) ? ' ' : formData.body,
+        
+        files: formData.files.filter(file => !toBeDeleted.includes(file)),
         publish_date: Math.floor(selectedDate.getTime() / 1000), 
         status: formData.isDraft ? PostStatus.Draft : PostStatus.Published,
       };
 
       if (editPost) {
         await postsApi.update(editPost.id, finalPayload, imageFiles.length > 0 ? imageFiles : undefined);
-        toast({ title: 'Успешно', description: 'Пост обновлен' });
+        toast({ title: 'Успешно', description: 'Запись обновлена' });
       } else {
         await postsApi.create(finalPayload, imageFiles.length > 0 ? imageFiles : undefined);
-        toast({ title: 'Успешно', description: 'Пост создан' });
+        toast({ title: 'Успешно', description: 'Запись создана' });
       }
       onSuccess();
     } catch (error) {
       if (error instanceof ConflictError) {
         setTitleError(error.message);
       } else {
-        toast({ title: 'Ошибка', description: error instanceof Error ? error.message : 'Не удалось сохранить пост', variant: 'destructive' });
+        toast({ title: 'Ошибка', description: error instanceof Error ? error.message : 'Не удалось сохранить', variant: 'destructive' });
       }
     } finally {
       setLoading(false);
@@ -176,22 +202,6 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
   };
 
   const handleClose = () => {
-    const initialDate = new Date();
-    setFormData({
-      title: '',
-      body: '',
-      author: '',
-      type: 0,
-      files: [],
-      publish_date: Math.floor(initialDate.getTime() / 1000),
-      category: PostCategory.News,
-      status: PostStatus.Draft,
-      isDraft: true,
-    });
-    setSelectedDate(initialDate);
-    setImageFiles([]);
-    setTitleError(null);
-    setTeacherSearch('');
     onClose();
   };
   
@@ -201,101 +211,123 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{editPost ? 'Редактировать пост' : 'Создать новый пост'}</DialogTitle>
-          <DialogDescription>Заполните форму для {editPost ? 'обновления' : 'создания'} поста</DialogDescription>
+          <DialogTitle>{editPost ? 'Редактировать' : 'Создать'}</DialogTitle>
+          <DialogDescription>
+             {isPrideCategory 
+                ? 'Загрузите фотографию студента.' 
+                : 'Заполните поля формы.'}
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Заголовок *</Label>
-            <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} placeholder="Введите заголовок поста" required />
-            {titleError && (
-              <p className="text-sm font-medium text-destructive">{titleError}</p>
-            )}
-          </div>
-
-          <RichTextEditor value={formData.body} onChange={handleBodyChange} label="Основной текст *" placeholder="Полный текст поста" required rows={8} />
           
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="author">Автор *</Label>
-              {/* --- Combobox --- */}
-              <Popover open={isTeacherPopoverOpen} onOpenChange={setIsTeacherPopoverOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={isTeacherPopoverOpen}
-                    className="w-full justify-between"
-                  >
-                    {formData.author
-                      ? formData.author
-                      : "Выберите автора..."}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-                  <Command>
-                    <CommandInput
-                      placeholder="Поиск по фамилии..."
-                      value={teacherSearch}
-                      onValueChange={setTeacherSearch} 
+          {!isPrideCategory && (
+            <>
+                <div className="space-y-2">
+                    <Label htmlFor="title">Заголовок *</Label>
+                    <Input 
+                    id="title" 
+                    value={formData.title} 
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })} 
+                    placeholder="Введите заголовок" 
+                    required 
                     />
-                    <CommandList>
-                      {isTeacherSearching && (
-                        <div className="p-2 flex justify-center items-center">
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        </div>
-                      )}
-                      {!isTeacherSearching && teacherList.length === 0 && (
-                         <CommandEmpty>Авторы не найдены.</CommandEmpty>
-                      )}
-                      <CommandGroup>
-                        {teacherList.map((teacher) => (
-                          <CommandItem
-                            key={teacher.id}
-                            value={teacher.initials}
-                            onSelect={() => {
-                              const selectedInitials = teacher.initials;
-                              setFormData({ ...formData, author: selectedInitials });
-                              
-                              setTeacherSearch(selectedInitials); 
-                              setIsTeacherPopoverOpen(false);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                formData.author === teacher.initials ? "opacity-100" : "opacity-0"
-                              )}
-                            />
-                            {teacher.initials}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </div>
+                    {titleError && (
+                    <p className="text-sm font-medium text-destructive">{titleError}</p>
+                    )}
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="type">Тип поста *</Label>
-              <Select value={formData.type.toString()} onValueChange={(value) => setFormData({ ...formData, type: parseInt(value) })}>
-                <SelectTrigger><SelectValue placeholder="Выберите тип" /></SelectTrigger>
-                <SelectContent>
-                  {POST_TAGS.map((tag, index) => (
-                    <SelectItem key={index} value={index.toString()}>
-                      {tag}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+                <RichTextEditor 
+                    value={formData.body} 
+                    onChange={handleBodyChange} 
+                    label="Основной текст" 
+                    placeholder="Текст..." 
+                    rows={8} 
+                />
+            
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {!isScheduleUser && (
+                    <div className="space-y-2">
+                        <Label htmlFor="author">Автор</Label>
+                        <Popover open={isTeacherPopoverOpen} onOpenChange={setIsTeacherPopoverOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={isTeacherPopoverOpen}
+                            className="w-full justify-between"
+                            >
+                            {formData.author
+                                ? formData.author
+                                : "Выберите автора"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                            <Command>
+                            <CommandInput
+                                placeholder="Поиск..."
+                                value={teacherSearch}
+                                onValueChange={setTeacherSearch} 
+                            />
+                            <CommandList>
+                                {isTeacherSearching && (
+                                <div className="p-2 flex justify-center items-center">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                </div>
+                                )}
+                                <CommandGroup>
+                                {teacherList.map((teacher) => (
+                                    <CommandItem
+                                    key={teacher.id}
+                                    value={teacher.initials}
+                                    onSelect={() => {
+                                        setFormData({ ...formData, author: teacher.initials });
+                                        setTeacherSearch(teacher.initials); 
+                                        setIsTeacherPopoverOpen(false);
+                                    }}
+                                    >
+                                    <Check
+                                        className={cn(
+                                        "mr-2 h-4 w-4",
+                                        formData.author === teacher.initials ? "opacity-100" : "opacity-0"
+                                        )}
+                                    />
+                                    {teacher.initials}
+                                    </CommandItem>
+                                ))}
+                                </CommandGroup>
+                            </CommandList>
+                            </Command>
+                        </PopoverContent>
+                        </Popover>
+                    </div>
+                    )}
+
+                    {/* Поле выбора типа поста теперь доступно всегда, кроме расписания и гордости */}
+                    {!isScheduleUser && (
+                        <div className="space-y-2">
+                        <Label htmlFor="type">Тип отображения *</Label>
+                        <Select value={formData.type.toString()} onValueChange={(value) => setFormData({ ...formData, type: parseInt(value) })}>
+                            <SelectTrigger>
+                            <SelectValue placeholder="Выберите тип" />
+                            </SelectTrigger>
+                            <SelectContent>
+                            {POST_TAGS.map((tag, index) => (
+                                <SelectItem key={index} value={index.toString()}>
+                                {tag}
+                                </SelectItem>
+                            ))}
+                            </SelectContent>
+                        </Select>
+                        </div>
+                    )}
+                </div>
+            </>
+          )}
 
           <div className="space-y-2">
-            <Label>Дата публикации *</Label>
+            <Label>Дата создания</Label>
             <CalendarPopover>
               <CalendarPopoverTrigger asChild>
                 <Button variant="outline" className="w-full justify-start text-left font-normal">
@@ -304,7 +336,12 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
                 </Button>
               </CalendarPopoverTrigger>
               <CalendarPopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={selectedDate} onSelect={(date) => date && setSelectedDate(date)} initialFocus />
+                <Calendar 
+                  mode="single" 
+                  selected={selectedDate} 
+                  onSelect={(date) => date && setSelectedDate(date)} 
+                  initialFocus 
+                />
               </CalendarPopoverContent>
             </CalendarPopover>
           </div>
@@ -315,8 +352,8 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
             onDelete={(id) => {
                 setToBeDeleted([...toBeDeleted, id]);
             }}
-            label="Изображения" 
-            maxFiles={20} 
+            label={isPrideCategory ? "Фотография студента" : "Изображения"} 
+            maxFiles={100} 
           />
           
           <div className="flex items-center space-x-2 pt-2">
@@ -325,12 +362,16 @@ export default function PostForm({ open, onClose, onSuccess, editPost }: PostFor
               checked={formData.isDraft}
               onCheckedChange={(checked) => setFormData({ ...formData, isDraft: !!checked })}
             />
-            <Label htmlFor="isDraft">Сохранить как черновик</Label>
+            <Label htmlFor="isDraft">Черновик (скрыть с сайта)</Label>
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose} disabled={loading}>Отмена</Button>
-            <Button type="submit" disabled={loading}>{loading ? 'Сохранение...' : editPost ? 'Обновить' : 'Создать'}</Button>
+            <Button type="button" variant="outline" onClick={handleClose} disabled={loading}>
+              Отмена
+            </Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Сохранение...' : editPost ? 'Обновить' : 'Создать'}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
